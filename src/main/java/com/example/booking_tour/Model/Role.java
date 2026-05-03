@@ -2,7 +2,6 @@ package com.example.booking_tour.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import jakarta.persistence.*;
 
 @Data
 @Entity
@@ -19,4 +18,3 @@ public class Role {
     @Column(name = "description")
     private String description;
 }
-
