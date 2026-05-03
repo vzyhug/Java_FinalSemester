@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Vietnam Expeditions | Trải Nghiệm Du Lịch Tuyển Chọn</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,700;0,900;1,900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f0f0f9",
+                        "surface-bright": "#f9f9ff",
+                        "on-primary-container": "#bbd0ff",
+                        "surface-container": "#ededf6",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e1e2ea",
+                        "primary-container": "#0056b3",
+                        "secondary": "#a43c12",
+                        "surface": "#f9f9ff",
+                        "primary-fixed-dim": "#acc7ff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e7e8f0",
+                        "on-secondary-fixed-variant": "#822800",
+                        "primary-fixed": "#d7e2ff",
+                        "on-surface": "#191c21",
+                        "on-tertiary-container": "#ffc2a7",
+                        "tertiary-fixed-dim": "#ffb694",
+                        "background": "#f9f9ff",
+                        "outline-variant": "#c2c6d4",
+                        "on-secondary-container": "#6b1f00",
+                        "surface-container-low": "#f2f3fc",
+                        "on-background": "#191c21",
+                        "on-secondary-fixed": "#380c00",
+                        "primary": "#003f87",
+                        "inverse-surface": "#2e3037",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#424752",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#722b00",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#983c00",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#acc7ff",
+                        "on-primary-fixed-variant": "#004491",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#727784",
+                        "surface-dim": "#d9d9e2",
+                        "secondary-fixed": "#ffdbcf",
+                        "surface-container-highest": "#e1e2ea",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-tint": "#115cb9",
+                        "on-tertiary-fixed": "#351000",
+                        "secondary-container": "#fe7e4f",
+                        "on-primary-fixed": "#001a40",
+                        "secondary-fixed-dim": "#ffb59c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Be Vietnam Pro"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-shadow-sm {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm dark:shadow-none">
+    <div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+        <div class="text-2xl font-black text-blue-900 dark:text-white italic font-['Be_Vietnam_Pro'] tracking-tight">
+            Vietnam Expeditions
+        </div>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="text-blue-800 dark:text-blue-300 border-b-2 border-orange-700 dark:border-orange-500 pb-1 font-['Be_Vietnam_Pro'] font-bold tracking-tight" href="#">Điểm đến</a>
+            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" href="#">Tour</a>
+            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" href="#">Ưu đãi</a>
+            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" href="#">Giới thiệu</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="px-6 py-2 rounded-full font-bold text-blue-800 dark:text-blue-400 hover:bg-slate-100/50 transition-transform active:scale-90">Đăng nhập</button>
+            <button class="px-8 py-2.5 bg-gradient-to-br from-primary to-primary-container text-white rounded-full font-bold shadow-lg hover:opacity-90 transition-transform active:scale-95">Đặt ngay</button>
+        </div>
+    </div>
+</nav>
+<main class="pt-20">
+    <!-- Hero Section -->
+    <section class="relative h-[870px] w-full flex items-center justify-center overflow-hidden">
+        <img alt="Vịnh Hạ Long" class="absolute inset-0 w-full h-full object-cover" data-alt="cinematic wide shot of limestone karsts rising from turquoise waters in Ha Long Bay at sunrise with ethereal mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhdhIjx_-xQRHFnYU782H1S_vpv8DpQuongNapXQLTWpbtbyA5Mpe4nE6p1Kd1y2drn5Xk4nu-KQrG34I8e5GjBOQJQg14bkEvmRowfLQM-lltin4OBHnvVg_0wCaFDYMFBMerKG29uEdjozg3JyqC3zz_UUit9pt3T7yD5TreQn9yvs-qQRy9-g61H46OIClr33mUsfjlgJCQ-GRy0kyCSoZ31H2oAeWINROk8mhiXFiWmAhOeNeoGD3GK_dThvG8-YiIWd28ymPq"/>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-surface"></div>
+        <div class="relative z-10 text-center px-6 max-w-4xl">
+            <span class="inline-block px-4 py-1.5 mb-6 bg-secondary text-white rounded-full text-xs font-bold uppercase tracking-widest">Hành trình tuyển chọn</span>
+            <h1 class="text-5xl md:text-7xl font-headline font-black text-white mb-8 tracking-tighter leading-none text-shadow-sm">
+                Khám phá Tâm hồn <span class="italic text-secondary-container">Việt Nam</span>
+            </h1>
+            <!-- Search Bar Container -->
+            <div class="bg-surface-container-lowest/90 backdrop-blur-md p-2 rounded-full shadow-2xl flex flex-col md:flex-row items-center gap-2 max-w-4xl mx-auto border border-white/20">
+                <div class="flex-1 flex items-center gap-3 px-6 py-3 border-r-0 md:border-r border-outline-variant/30">
+                    <span class="material-symbols-outlined text-primary">location_on</span>
+                    <div class="text-left">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Điểm đến</label>
+                        <input class="bg-transparent border-none p-0 text-sm focus:ring-0 placeholder:text-slate-400 w-full font-semibold" placeholder="Bạn muốn đi đâu?" type="text"/>
+                    </div>
+                </div>
+                <div class="flex-1 flex items-center gap-3 px-6 py-3 border-r-0 md:border-r border-outline-variant/30">
+                    <span class="material-symbols-outlined text-primary">calendar_month</span>
+                    <div class="text-left">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Ngày bắt đầu</label>
+                        <input class="bg-transparent border-none p-0 text-sm focus:ring-0 w-full font-semibold" type="date"/>
+                    </div>
+                </div>
+                <div class="flex-1 flex items-center gap-3 px-6 py-3">
+                    <span class="material-symbols-outlined text-primary">flight_takeoff</span>
+                    <div class="text-left">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Khởi hành</label>
+                        <input class="bg-transparent border-none p-0 text-sm focus:ring-0 placeholder:text-slate-400 w-full font-semibold" placeholder="Từ đâu?" type="text"/>
+                    </div>
+                </div>
+                <button class="bg-primary hover:bg-primary-container text-white w-full md:w-auto px-10 py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-all">
+                    <span class="material-symbols-outlined">search</span> Tìm kiếm
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- Region Categories -->
+    <section class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="mb-16">
+            <span class="text-secondary font-bold text-sm tracking-[0.2em] uppercase">Tinh túy vùng miền</span>
+            <h2 class="text-4xl md:text-5xl font-headline font-black mt-2 text-primary">Ba Thế giới, Một Hành trình</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="group relative rounded-xl overflow-hidden aspect-[4/5] bg-surface-container-low shadow-lg">
+                <img alt="Miền Bắc Việt Nam" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="scenic emerald green rice terraces of Sapa winding along steep mountain slopes under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsqJOVk5fZxLeMZWOZltNRzNDNiXaUregqiD_uD-tfBBEAaqJi5_YnNQfwVJJr8YsnP-ZAO1lhWc_EAH-dBa1Syb0W2yH44HsJQ4FWkU3PLNrkvdoIBOq30DgWs2WJrMt9mUcLcqo43T04yTEMmHB3iY-XrzTdsxeEuN2TfYQMFNOl7Av08YkAreoIRFm6zP01ygidOZoxYGoKr1Xbc5-1I8O5tIilKb7fg6638V9Yh9InQG4Em8UwmbFSrAni0GFWEZWJZsRaDVcR"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 p-8">
+                    <h3 class="text-3xl font-headline font-bold text-white mb-2">Miền Bắc</h3>
+                    <p class="text-white/80 text-sm mb-4 line-clamp-2">Những đỉnh núi mờ sương, truyền thống dân tộc cổ xưa và Vịnh Hạ Long hùng vĩ.</p>
+                    <button class="text-white font-bold flex items-center gap-2 hover:gap-4 transition-all">Khám phá miền Bắc <span class="material-symbols-outlined">arrow_forward</span></button>
+                </div>
+            </div>
+            <div class="group relative rounded-xl overflow-hidden aspect-[4/5] bg-surface-container-low shadow-lg translate-y-12">
+                <img alt="Miền Trung Việt Nam" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="colorful hand-crafted silk lanterns illuminating a quiet street in Hoi An ancient town at dusk with warm glows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzDiqa2UCtWbSTruOQL7ZqvUMGyoyG1KIjLKPDmPqQhmNIKyYFUFN5_gkvajv5ALfd56-Qv8jcGCo3Na7aJuqrQjCan1xR7TLKLZGx0FnT1FZAc7NgezrJkEfStwoy62TFbTBU48bQ48g39QlWcj7ND9ql7BaUQx_4UJDh-cLKQ9JR5PpTZ7rzI21Ockkd6gd5qUCK5RksLQgrNYrZaTr2TpIXsqu62iCbDTd06CkZQqXyJs4sqdYEpzr1-GmfRm4o87CKemQqm8fq"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 p-8">
+                    <h3 class="text-3xl font-headline font-bold text-white mb-2">Miền Trung</h3>
+                    <p class="text-white/80 text-sm mb-4 line-clamp-2">Vùng đất di sản. Cố đô cổ kính, những bãi biển vàng và tinh hoa ẩm thực.</p>
+                    <button class="text-white font-bold flex items-center gap-2 hover:gap-4 transition-all">Khám phá miền Trung <span class="material-symbols-outlined">arrow_forward</span></button>
+                </div>
+            </div>
+            <div class="group relative rounded-xl overflow-hidden aspect-[4/5] bg-surface-container-low shadow-lg">
+                <img alt="Miền Nam Việt Nam" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="vibrant floating market in the Mekong Delta with wooden boats filled with tropical fruits and vegetables at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6t8Hhb_QCKH2kKthbhnfYJDp2c1bTs_WNabXoOmLHuxjP2mC-y0mvcViw6aw54g3pmu9HubxwnkTaiJnvgIXht9FedPWPu3gPHWybPPBhUqlvIb-6hjkCWxdt5AS_YVQIH75YoBNzRfOmjysGXHDaHJ_xKNmuTbgFpJBbKiXGqcnquS1zGdwCUalYuPUdJKGaWtZcO5uryWH2U8NYv0wCpUkZilN8fobLTa7Pw1prbfVzsBsKOUnIZXWvR0qX3UzLUtO3_b1SNG3m"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 p-8">
+                    <h3 class="text-3xl font-headline font-bold text-white mb-2">Miền Nam</h3>
+                    <p class="text-white/80 text-sm mb-4 line-clamp-2">Nhịp đập của quốc gia. Sài Gòn sôi động và mê cung sông nước Cửu Long thanh bình.</p>
+                    <button class="text-white font-bold flex items-center gap-2 hover:gap-4 transition-all">Khám phá miền Nam <span class="material-symbols-outlined">arrow_forward</span></button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Promotional Banner -->
+    <section class="py-24 bg-surface-container-low">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="relative bg-primary rounded-xl overflow-hidden flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 p-12 lg:p-20 z-10">
+                    <span class="text-secondary-container font-bold text-xs uppercase tracking-widest">Ưu đãi mùa hè</span>
+                    <h2 class="text-4xl lg:text-6xl font-headline font-black text-white mt-4 mb-6 leading-tight">Kỳ nghỉ hè <br/>tại Việt Nam</h2>
+                    <p class="text-on-primary-container text-lg mb-8 max-w-md">Đặt hành trình trong tháng 8 ngay hôm nay và nhận tour ẩm thực di sản miễn phí tại Hà Nội. Giảm giá tới 25% cho một số tour được chọn.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="bg-secondary hover:bg-secondary/90 text-white px-8 py-3.5 rounded-full font-bold transition-all transform hover:scale-105">Nhận ưu đãi</button>
+                        <button class="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-8 py-3.5 rounded-full font-bold transition-all">Xem các ưu đãi</button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 h-64 md:h-[500px] relative w-full">
+                    <img alt="Mùa hè tại Việt Nam" class="absolute inset-0 w-full h-full object-cover" data-alt="luxury infinity pool overlooking a tropical beach with palm trees and a bright sunny summer sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZwZx_IutiW5IzKCtBsH6bw_eDLqVa84qHSMO1u3D37P1Dt3hi7Y3b2WSLNXL-EN0t68a1Lc17JWhnUQmi_5Qd8aMxhIP32Cw8PcWGo39OgGW7KkxN34pnBcD7FZWA4E9xbGb2isn0zOd3ChFSAl3Nr8pRMWsD4Dmwq2UxKsUdAKuq4NPfSVu4sJBR-Zaz9E_j9XGtSGw3afWkkJLojf-8kcQv7PxvkHc-K8s6p2XsKW0f2be7bbqqtQ0RHHENry4ATFWVgqzHud-N"/>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Trending Tours (Asymmetric Grid) -->
+    <section class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+                <span class="text-secondary font-bold text-sm tracking-[0.2em] uppercase">Được yêu thích nhất</span>
+                <h2 class="text-4xl md:text-5xl font-headline font-black mt-2 text-primary">Đang thịnh hành</h2>
+            </div>
+            <button class="flex items-center gap-2 text-primary font-bold hover:underline underline-offset-8">Xem tất cả hành trình <span class="material-symbols-outlined">east</span></button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+            <!-- Large Card -->
+            <div class="md:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow">
+                <div class="relative h-[400px]">
+                    <img alt="Du thuyền hạng sang" class="w-full h-full object-cover" data-alt="elegant wooden luxury cruise ship sailing between dramatic limestone peaks of Lan Ha Bay under a clear sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDenNrpMYWqk0VQ6SVbMowthku3uTwk3TIvZzYJOmaldilIWkFL2PfZfHXxdCfOqsX55LXljmcZ-2zPc8nKbpQCkcu6snsDZ1xhDULv-ET9L72apL8NCDMZC0QUP7eys9ut3akKBhJOBV2FNDh1nPlorHZ5E-2txvDhczQ1FamROTAdi1zJFh8QDm1eFx1YVl2qREkMXeLd5RmEXLdh3l9Qni92UFd7zg7ijEvOd9fevthd3iY8Ow9Hr7PgOSxQuc3Elsv_bRS_8R2y"/>
+                    <div class="absolute top-6 left-6 px-4 py-1.5 bg-white/90 backdrop-blur text-primary text-[10px] font-black uppercase rounded-full">Di sản UNESCO</div>
+                    <div class="absolute bottom-6 left-6 bg-secondary-container text-on-secondary-container px-4 py-1 rounded-lg text-sm font-bold">4 Ngày / 3 Đêm</div>
+                </div>
+                <div class="p-8 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-2xl font-headline font-black text-primary">Vịnh Lan Hạ: Tuyến đường ẩn giấu</h3>
+                        <p class="text-slate-500 mt-2">Trải nghiệm tàu riêng qua những vùng nước ngọc bích hẻo lánh.</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-xs font-bold text-slate-400 uppercase">Từ</span>
+                        <span class="text-3xl font-black text-secondary">$1,299</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Smaller Card 1 -->
+            <div class="md:col-span-4 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow">
+                <div class="relative h-[250px]">
+                    <img alt="Leo núi Sapa" class="w-full h-full object-cover" data-alt="majestic terraced rice fields in Sapa with a small wooden hut and cloud-covered peaks in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDn1XwiAuFTAM5SUzbozxD4Gwl91gbSppjQNjKRDxEhdobm9YFrKDydlrSz4OYBCxqxU0AnvX3Q8mTk0jP8ehfSxSReH1XxaoWffQbr5ZVGD15629k8KGX6zkj6H0NjvcKZ_-HUHca1C71ANy8MmqQm6RyL8TCboHUm6lULZTz_ZzkfP7BIe_ImT7W3XCROFPHM0lUm0BLjRCvNHG2bF4nDYgyE4pOIH4onWs8VUZ_mEgLuc5yHohBe-m3oak7VrgMJ9j7lgvijUCGA"/>
+                    <div class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur text-primary text-[10px] font-black uppercase rounded-full">Năng động</div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-headline font-bold text-primary">Hiking đỉnh núi Sapa</h3>
+                    <p class="text-slate-500 text-sm mt-2">Hòa mình vào văn hóa của các bộ tộc thiểu số.</p>
+                    <div class="mt-6 flex justify-between items-center">
+                        <span class="text-2xl font-black text-secondary">$450</span>
+                        <button class="p-2 text-primary hover:bg-slate-50 rounded-full transition-colors"><span class="material-symbols-outlined">favorite</span></button>
+                    </div>
+                </div>
+            </div>
+            <!-- Smaller Card 2 -->
+            <div class="md:col-span-4 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow">
+                <div class="relative h-[250px]">
+                    <img alt="Ẩm thực Hội An" class="w-full h-full object-cover" data-alt="colorful fresh spring rolls and traditional Vietnamese street food served on a rustic wooden table with herbs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfe0HFmXSTrnHseHyNkiPyX6Arbccn35rhAbJ2HpQJaAg5nVEZpzNJzGeahIh_FM6MdSVXnChAZAUg5l-1VPgtYezcA-EOhJPMOhRo6xhR4tVZAjwaHZjU3JEPuIAHJtRBlJMIMUA7sHL_-yQHXr5x_tu3YRnulv5jiwYRgXNwSDbMcy1ytoiDePZKmYRhWBhQ0UhXgpBrd6RS1u6cWVNgtGXQTo00Hqs_P3oKFHQp5ilVkATHoBeidySXG1TIQD4OvlEAEP86AIch"/>
+                    <div class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur text-primary text-[10px] font-black uppercase rounded-full">Ẩm thực</div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-headline font-bold text-primary">Hương vị Hội An</h3>
+                    <p class="text-slate-500 text-sm mt-2">Khám phá ẩm thực đường phố và đi bộ chụp ảnh phố cổ.</p>
+                    <div class="mt-6 flex justify-between items-center">
+                        <span class="text-2xl font-black text-secondary">$180</span>
+                        <button class="p-2 text-primary hover:bg-slate-50 rounded-full transition-colors"><span class="material-symbols-outlined">favorite</span></button>
+                    </div>
+                </div>
+            </div>
+            <!-- Medium Card -->
+            <div class="md:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow">
+                <div class="relative h-[300px]">
+                    <img alt="Đại nội Huế" class="w-full h-full object-cover" data-alt="ornate golden traditional Vietnamese imperial gates of the Hue Citadel with intricate dragon carvings" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-hNkPUqAlKciNdls6w7CBVK8heP1NEUyQQOBqidGmVuOP_kkbOh67VCo86aGaiaWmKndfFy64myKOCRUGLTHkw3zfw2Y556W6MtUKo7Z7Sxp6LbM4Wt1K3c-2I4OSWV5jqv3omFdKL3GDfz57Fs4bYnXb8E6ijmh_0K4lJfOY8lJ8p-fIKIBY4mxlCQdElSrbnJMkosIGDPI_zSVc7UJqj9AgBi7obz6JphhRbjOKUp8ZsppTG8C7yF9xh4fL-u4NszfMRvthzht5"/>
+                    <div class="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur text-primary text-[10px] font-black uppercase rounded-full">Lịch sử</div>
+                </div>
+                <div class="p-8 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-2xl font-headline font-black text-primary">Tour Triều đại Hoàng gia Huế</h3>
+                        <div class="flex gap-4 mt-2">
+                            <span class="flex items-center gap-1 text-slate-500 text-sm"><span class="material-symbols-outlined text-sm">schedule</span> 1 Ngày</span>
+                            <span class="flex items-center gap-1 text-slate-500 text-sm"><span class="material-symbols-outlined text-sm">group</span> Nhóm nhỏ</span>
+                        </div>
+                    </div>
+                    <button class="bg-primary text-white px-8 py-3 rounded-full font-bold">Chi tiết</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Testimonials -->
+    <section class="py-24 bg-surface-container">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <span class="text-secondary font-bold text-sm tracking-[0.2em] uppercase">Tiếng nói hành trình</span>
+                <h2 class="text-4xl md:text-5xl font-headline font-black mt-2 text-primary mb-8 leading-tight">Những kỷ niệm từ du khách của chúng tôi</h2>
+                <div class="flex gap-2">
+                    <button class="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><span class="material-symbols-outlined">west</span></button>
+                    <button class="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><span class="material-symbols-outlined">east</span></button>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="bg-surface-container-lowest p-10 rounded-xl shadow-sm relative z-10">
+                    <span class="material-symbols-outlined text-secondary text-5xl absolute -top-6 -left-2 opacity-20">format_quote</span>
+                    <div class="flex text-orange-500 mb-6">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                    </div>
+                    <p class="text-xl font-medium text-slate-700 italic leading-relaxed mb-8">"Sự chú trọng đến từng chi tiết trong tour Tây Nguyên là không gì sánh được. Chúng tôi đã thấy những nơi dường như chưa hề bị thời gian chạm đến, nhưng vẫn được tận hưởng dịch vụ lưu trú cao cấp nhất. Một hành trình thực sự tinh tế."</p>
+                    <div class="flex items-center gap-4">
+                        <img alt="Marcus J." class="w-14 h-14 rounded-full object-cover" data-alt="portrait of a smiling man in his 40s wearing a linen shirt with a soft tropical garden background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDxiMLyj4-Ip2vxPLmtRWAsBcVe4ZZY8NiuSbWQitkKEZgt0znNfhzKdEmzNS-fr6sOYwY1NvwftEiRGS1PSJacrObXdxLS7SKe5LeSu12zb9z00WCC_9TWQvyCSpMmDwcnC6MwHCayfcz2Hyq1zPFYyQgNRDAx1DukzYZWbcK7R8SpJ9wQ7lRqgA2-DstgChmtrYDuYDn71nzN6vKDuqrSPd_qaO-cGJnEdVKxosxEQ74shQAJjkH0p7gIiLfb9zG_CWi1zOF7jfB"/>
+                        <div>
+                            <h4 class="font-bold text-primary">Marcus J.</h4>
+                            <span class="text-sm text-slate-500">London, Anh</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Decor element -->
+                <div class="absolute -bottom-4 -right-4 w-full h-full bg-secondary-container/20 rounded-xl -z-0"></div>
+            </div>
+        </div>
+    </section>
+</main>
+<!-- Footer -->
+<footer class="w-full rounded-t-[2rem] mt-20 bg-slate-50 dark:bg-slate-950">
+    <div class="w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto">
+        <div class="mb-8 md:mb-0">
+            <div class="font-black text-xl text-blue-900 dark:text-white mb-4">Vietnam Expeditions</div>
+            <p class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm leading-relaxed max-w-xs">
+                © 2024 Vietnam Expeditions. Những trải nghiệm du lịch được chế tác tỉ mỉ.
+            </p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-8 md:gap-12">
+            <a class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm hover:text-blue-800 dark:hover:text-blue-300 transition-opacity opacity-80 hover:opacity-100" href="#">Chính sách bảo mật</a>
+            <a class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm hover:text-blue-800 dark:hover:text-blue-300 transition-opacity opacity-80 hover:opacity-100" href="#">Điều khoản dịch vụ</a>
+            <a class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm hover:text-blue-800 dark:hover:text-blue-300 transition-opacity opacity-80 hover:opacity-100" href="#">Liên hệ</a>
+            <a class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm hover:text-blue-800 dark:hover:text-blue-300 transition-opacity opacity-80 hover:opacity-100" href="#">Hỏi đáp</a>
+            <a class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm hover:text-blue-800 dark:hover:text-blue-300 transition-opacity opacity-80 hover:opacity-100" href="#">Cẩm nang du lịch</a>
+        </div>
+        <div class="flex gap-4 mt-8 md:mt-0">
+            <button class="w-10 h-10 rounded-full flex items-center justify-center bg-white shadow-sm hover:bg-primary hover:text-white transition-all text-primary border border-slate-100">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'opsz' 20;">public</span>
+            </button>
+            <button class="w-10 h-10 rounded-full flex items-center justify-center bg-white shadow-sm hover:bg-primary hover:text-white transition-all text-primary border border-slate-100">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'opsz' 20;">share</span>
+            </button>
+        </div>
+    </div>
+</footer>
+</body></html>

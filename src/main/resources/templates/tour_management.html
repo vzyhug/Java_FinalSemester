@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Quản lý Tour - VietExpedition Admin</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface": "#f9f9ff",
+            "inverse-primary": "#acc7ff",
+            "on-tertiary-container": "#ffc2a7",
+            "surface-tint": "#115cb9",
+            "tertiary-fixed-dim": "#ffb694",
+            "secondary": "#a43c12",
+            "on-primary": "#ffffff",
+            "outline-variant": "#c2c6d4",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "on-primary-fixed": "#001a40",
+            "on-primary-container": "#bbd0ff",
+            "surface-container": "#ededf6",
+            "secondary-fixed": "#ffdbcf",
+            "primary-fixed": "#d7e2ff",
+            "primary-fixed-dim": "#acc7ff",
+            "secondary-fixed-dim": "#ffb59c",
+            "on-secondary-fixed-variant": "#822800",
+            "on-tertiary": "#ffffff",
+            "on-secondary-container": "#6b1f00",
+            "on-background": "#191c21",
+            "on-error-container": "#93000a",
+            "background": "#f9f9ff",
+            "surface-dim": "#d9d9e2",
+            "on-surface-variant": "#424752",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#983c00",
+            "surface-container-low": "#f2f3fc",
+            "surface-variant": "#e1e2ea",
+            "error-container": "#ffdad6",
+            "inverse-surface": "#2e3037",
+            "surface-bright": "#f9f9ff",
+            "on-primary-fixed-variant": "#004491",
+            "primary": "#003f87",
+            "primary-container": "#0056b3",
+            "tertiary": "#722b00",
+            "outline": "#727784",
+            "inverse-on-surface": "#f0f0f9",
+            "on-error": "#ffffff",
+            "surface-container-high": "#e7e8f0",
+            "on-surface": "#191c21",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#fe7e4f",
+            "surface-container-highest": "#e1e2ea",
+            "tertiary-fixed": "#ffdbcc",
+            "on-tertiary-fixed": "#351000",
+            "on-secondary-fixed": "#380c00"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Be Vietnam Pro"],
+            "body": ["Plus Jakarta Sans"],
+            "label": ["Plus Jakarta Sans"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Be Vietnam Pro', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-background flex h-screen overflow-hidden">
+<!-- SideNavBar Shell -->
+<aside class="bg-slate-50 dark:bg-slate-950 h-screen w-72 left-0 top-0 flex flex-col h-full p-4 border-r border-slate-200 dark:border-slate-800 shrink-0">
+  <div class="mb-8 px-4">
+    <h1 class="font-['Be_Vietnam_Pro'] font-bold text-blue-900 dark:text-blue-50 text-2xl tracking-tight">VietExpedition</h1>
+    <p class="text-xs text-slate-500 font-medium">Hệ quản trị hệ thống</p>
+  </div>
+  <nav class="flex-grow space-y-1">
+    <a class="text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 flex items-center transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">dashboard</span>
+      <span class="font-['Plus_Jakarta_Sans'] text-sm">Dashboard</span>
+    </a>
+    <a class="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-semibold rounded-xl px-4 py-3 mb-1 flex items-center transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">travel_explore</span>
+      <span class="font-['Plus_Jakarta_Sans'] text-sm">Quản lý Tour</span>
+    </a>
+    <a class="text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 flex items-center transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">group</span>
+      <span class="font-['Plus_Jakarta_Sans'] text-sm">Quản lý Khách hàng</span>
+    </a>
+    <a class="text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 flex items-center transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">route</span>
+      <span class="font-['Plus_Jakarta_Sans'] text-sm">Quản lý Chuyến đi</span>
+    </a>
+    <a class="text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 flex items-center transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">location_on</span>
+      <span class="font-['Plus_Jakarta_Sans'] text-sm">Quản lý Địa điểm</span>
+    </a>
+    <a class="text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 flex items-center transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">payments</span>
+      <span class="font-['Plus_Jakarta_Sans'] text-sm">Quản lý Giao dịch</span>
+    </a>
+    <a class="text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 flex items-center transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">badge</span>
+      <span class="font-['Plus_Jakarta_Sans'] text-sm">Quản lý Nhân viên</span>
+    </a>
+  </nav>
+  <div class="mt-auto pt-6 border-t border-slate-200 px-4 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+      <img alt="Admin Profile" class="w-full h-full rounded-full object-cover" data-alt="Professional headshot of a mature businessman in a sharp navy suit with a friendly and confident expression, studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2jCYAO1OJsRP20qB9vNt5HMu7S8TTCJh-Svy6Ixp9EE-sxnBx2FSGL5IO_IEP7FAfy1Xk9pX19bebZz86uoJLdX3qpFmRA2jcOwiOITQqDpzqZoKFEpxhJedconEZOpgJgJLMwsMntl6cIjs_xbCq2r5G8I1RSeLNvRmpG60QXKKEvmIDv4eLFSfEYYabPLv5Pe8bBWRhgwx0PB0ta-vHEW2cgGei1V0anK6JAtVfkUOXbYc0vtDJLHqyOcW__UaZ3SwllFbeBQkf"/>
+    </div>
+    <div>
+      <p class="text-sm font-bold text-on-surface">Admin VietExpedition</p>
+      <p class="text-xs text-slate-500">Quản trị viên cao cấp</p>
+    </div>
+  </div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-grow overflow-y-auto bg-surface relative">
+  <!-- Top Header Navigation (Integrated) -->
+  <header class="sticky top-0 bg-white/80 backdrop-blur-xl z-20 px-8 py-6 flex justify-between items-center shadow-sm">
+    <div>
+      <h2 class="text-2xl font-black text-blue-900 tracking-tight">Quản lý danh sách tour</h2>
+      <p class="text-on-surface-variant text-sm mt-1">Hệ thống quản lý 248 chương trình du lịch hiện hành</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative group">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+        <input class="bg-surface-container-high border-none rounded-full py-2.5 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200" placeholder="Tìm kiếm tour..." type="text"/>
+      </div>
+      <button class="bg-gradient-to-tr from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-95 transition-transform duration-200">
+        <span class="material-symbols-outlined">add_circle</span>
+        Thêm tour mới
+      </button>
+    </div>
+  </header>
+  <!-- Stats Overview (Asymmetric Grid) -->
+  <div class="p-8 grid grid-cols-12 gap-6">
+    <div class="col-span-12 md:col-span-4 bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined">explore</span>
+        </div>
+        <span class="text-xs font-bold text-secondary bg-secondary-fixed px-2 py-1 rounded-full">+12% tháng này</span>
+      </div>
+      <h3 class="text-slate-500 text-sm font-medium">Tổng số Tour</h3>
+      <p class="text-3xl font-black text-on-surface mt-1">248</p>
+    </div>
+    <div class="col-span-12 md:col-span-4 bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-secondary">
+          <span class="material-symbols-outlined">trending_up</span>
+        </div>
+        <span class="text-xs font-bold text-primary bg-primary-fixed px-2 py-1 rounded-full">Ổn định</span>
+      </div>
+      <h3 class="text-slate-500 text-sm font-medium">Tour đang hoạt động</h3>
+      <p class="text-3xl font-black text-on-surface mt-1">212</p>
+    </div>
+    <div class="col-span-12 md:col-span-4 bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-700">
+          <span class="material-symbols-outlined">payments</span>
+        </div>
+        <span class="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded-full">+8.4%</span>
+      </div>
+      <h3 class="text-slate-500 text-sm font-medium">Doanh thu dự kiến</h3>
+      <p class="text-3xl font-black text-on-surface mt-1">1.2B ₫</p>
+    </div>
+  </div>
+  <!-- Table Container (Tonal Layering) -->
+  <div class="px-8 pb-12">
+    <div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+          <tr class="bg-surface-container-low border-none">
+            <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Tên tour</th>
+            <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Giá niêm yết</th>
+            <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Thời gian</th>
+            <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Trạng thái</th>
+            <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider text-right">Thao tác</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-surface-container">
+          <!-- Tour Item 1 -->
+          <tr class="hover:bg-surface-container-low/50 transition-colors">
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                  <img alt="Ha Long Bay" class="w-full h-full object-cover" data-alt="Stunning aerial view of Ha Long Bay limestone karsts rising from emerald waters under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdzfBVuLw0zfQPPwHpVo1JTstOEV0dR7ndj3WUiYuKEIb5rCbUAnxUrIXraKQmzdsDeevecWpWcEWaAWCNZK0w58MFfqkyrzyiU_PUSx7GB2elWIUIQ50c5N4LS0S3J7Q3RwfremLDYDRpwKdOxKZRLNxFNzk81NqmGk7rp-UEOZkcKo-QLDYzRGso9mzOMOI7qooPM59p-Gj9PVQjgvM9_Xtg3ooH5Su1xWxaGNvRtROqTcfsVZSgve8aWVW5fZpWdGT10tJHnHZo"/>
+                </div>
+                <div>
+                  <p class="font-bold text-on-surface leading-tight">Hạ Long - Di sản thiên nhiên</p>
+                  <p class="text-xs text-on-surface-variant mt-0.5">Mã: VX-HL-001</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-5">
+              <span class="font-semibold text-primary">3.500.000 ₫</span>
+            </td>
+            <td class="px-6 py-5">
+              <div class="flex items-center text-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-sm mr-1">schedule</span>
+                2 Ngày 1 Đêm
+              </div>
+            </td>
+            <td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+<span class="w-1.5 h-1.5 rounded-full bg-green-700"></span>
+                                        Đang bán
+                                    </span>
+            </td>
+            <td class="px-6 py-5 text-right">
+              <div class="flex justify-end gap-2">
+                <button class="p-2 text-primary hover:bg-primary-fixed rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">edit_note</span>
+                </button>
+                <button class="p-2 text-error hover:bg-error-container rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <!-- Tour Item 2 -->
+          <tr class="hover:bg-surface-container-low/50 transition-colors">
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                  <img alt="Hoi An Ancient Town" class="w-full h-full object-cover" data-alt="Golden colored buildings of Hoi An ancient town reflected in the Thu Bon river at sunset with warm lanterns lighting up" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgO3i8JyxS3iLlVhlqyZ7aT48HaDRkExjiSo_Hfc1wvzYKzNoE3uhHwnya-ly8DYp4KnWBLz6ImqzdflW1euPMeATvezKaDq14CO8AlfohPPs68rMayrtd723YozAVX-R64ThWhvXCJoUuJvPJwpGQNVYfQhie9ca9h9HPaVzmf9euKC571mgjnP4gLOoPp7LF1bq1KdaDjFjy6v3Rfeb6hET1k19IYSiilF0br0v2Vzm0tXKFCzT1lawnLfJdFpftkp9-idjvUuNm"/>
+                </div>
+                <div>
+                  <p class="font-bold text-on-surface leading-tight">Hội An - Nét đẹp thời gian</p>
+                  <p class="text-xs text-on-surface-variant mt-0.5">Mã: VX-HA-004</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-5">
+              <span class="font-semibold text-primary">2.200.000 ₫</span>
+            </td>
+            <td class="px-6 py-5">
+              <div class="flex items-center text-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-sm mr-1">schedule</span>
+                1 Ngày
+              </div>
+            </td>
+            <td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+<span class="w-1.5 h-1.5 rounded-full bg-green-700"></span>
+                                        Đang bán
+                                    </span>
+            </td>
+            <td class="px-6 py-5 text-right">
+              <div class="flex justify-end gap-2">
+                <button class="p-2 text-primary hover:bg-primary-fixed rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">edit_note</span>
+                </button>
+                <button class="p-2 text-error hover:bg-error-container rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <!-- Tour Item 3 -->
+          <tr class="hover:bg-surface-container-low/50 transition-colors">
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                  <img alt="Sapa Rice Terraces" class="w-full h-full object-cover" data-alt="Lush green rice terrace mountains in Sapa shrouded in mysterious white clouds during early morning sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBs-MX5PJRkvmiai24zCn90nIVuYCIC1rBpMlNEkKv5vnTMAxnvG2dE_8z8dTPKa4cIlmLyfTPRiE6bskFQEjIeQh4vgjhqMLkZpRBXbOneOx5ipHH4t9wkGAholPtTrTV7yYRZvMjsd1rHNGntq_fDFqdtQScBuNCJTgUMPKlMtkQ9tzsmKxGEgwq02ZbmyBBuEIm0Qstkc7lGU2GNRLsHWCYiuELLGXxMo6xNW2uh4f5xgj_cHz9p41wIAfQ7aQgb9TQcDS3A3Zl"/>
+                </div>
+                <div>
+                  <p class="font-bold text-on-surface leading-tight">Sapa - Bản làng trong mây</p>
+                  <p class="text-xs text-on-surface-variant mt-0.5">Mã: VX-SP-002</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-5">
+              <span class="font-semibold text-primary">4.800.000 ₫</span>
+            </td>
+            <td class="px-6 py-5">
+              <div class="flex items-center text-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-sm mr-1">schedule</span>
+                3 Ngày 2 Đêm
+              </div>
+            </td>
+            <td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        Tạm ngưng
+                                    </span>
+            </td>
+            <td class="px-6 py-5 text-right">
+              <div class="flex justify-end gap-2">
+                <button class="p-2 text-primary hover:bg-primary-fixed rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">edit_note</span>
+                </button>
+                <button class="p-2 text-error hover:bg-error-container rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <!-- Tour Item 4 -->
+          <tr class="hover:bg-surface-container-low/50 transition-colors">
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                  <img alt="Hue Imperial City" class="w-full h-full object-cover" data-alt="Intricate traditional architecture of the Imperial City in Hue with vibrant red and gold details on ancient wooden structures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZqvOpW7Ym1eYJo5JgG7iYlVgRCE7rNdROObuI00SEJ0OTHO7-o7252rWNqw_z4Oyscmm4IdC55b4a1ad7oqP2difP2MlhWYYDVMADnBnxG1AK_4JNbjyrJVOuT-U1kSMWJ2aZ4avyZJZQV266qRfvK2_agT0Pn0bMHRmLrDeczIl5n3cSppY2SJA2t8NyhGbTDN646HBEqZUfiqPjEMTfBY3u0L0My0FgMFNjDjQ8fQM6L-AzNLBjw2gSod7A9-kpkPkamF4QnywJ"/>
+                </div>
+                <div>
+                  <p class="font-bold text-on-surface leading-tight">Huế - Cố đô trầm mặc</p>
+                  <p class="text-xs text-on-surface-variant mt-0.5">Mã: VX-HU-003</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-5">
+              <span class="font-semibold text-primary">2.900.000 ₫</span>
+            </td>
+            <td class="px-6 py-5">
+              <div class="flex items-center text-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-sm mr-1">schedule</span>
+                2 Ngày 1 Đêm
+              </div>
+            </td>
+            <td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+<span class="w-1.5 h-1.5 rounded-full bg-green-700"></span>
+                                        Đang bán
+                                    </span>
+            </td>
+            <td class="px-6 py-5 text-right">
+              <div class="flex justify-end gap-2">
+                <button class="p-2 text-primary hover:bg-primary-fixed rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">edit_note</span>
+                </button>
+                <button class="p-2 text-error hover:bg-error-container rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Pagination -->
+      <div class="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-surface-container">
+        <p class="text-sm text-on-surface-variant">Hiển thị <span class="font-bold">1 - 10</span> trong số <span class="font-bold">248</span> tour</p>
+        <div class="flex items-center gap-2">
+          <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-colors">
+            <span class="material-symbols-outlined text-lg">chevron_left</span>
+          </button>
+          <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold text-sm shadow-sm">1</button>
+          <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-high text-on-surface-variant font-bold text-sm transition-colors">2</button>
+          <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-high text-on-surface-variant font-bold text-sm transition-colors">3</button>
+          <span class="text-on-surface-variant">...</span>
+          <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-high text-on-surface-variant font-bold text-sm transition-colors">25</button>
+          <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-colors">
+            <span class="material-symbols-outlined text-lg">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <footer class="bg-slate-50 dark:bg-slate-950 w-full py-12 border-t border-slate-100 dark:border-slate-900">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="col-span-1 md:col-span-2">
+        <h4 class="font-['Be_Vietnam_Pro'] font-bold text-blue-900 text-lg mb-4">VietExpedition</h4>
+        <p class="text-slate-500 max-w-sm">Hệ thống quản lý chuyên sâu dành cho các đơn vị lữ hành cao cấp tại Việt Nam. Nâng tầm trải nghiệm khám phá Việt.</p>
+        <p class="mt-6 text-xs text-slate-400">© 2024 VietExpedition. Tinh hoa du lịch Việt Nam.</p>
+      </div>
+      <div>
+        <h5 class="font-bold text-blue-900 mb-4">Điều hướng</h5>
+        <ul class="space-y-2 text-sm">
+          <li><a class="text-slate-500 hover:text-orange-600 transition-opacity" href="#">Về chúng tôi</a></li>
+          <li><a class="text-slate-500 hover:text-orange-600 transition-opacity" href="#">Điều khoản sử dụng</a></li>
+          <li><a class="text-slate-500 hover:text-orange-600 transition-opacity" href="#">Chính sách bảo mật</a></li>
+          <li><a class="text-slate-500 hover:text-orange-600 transition-opacity" href="#">Liên hệ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-bold text-blue-900 mb-4">Liên hệ hỗ trợ</h5>
+        <p class="text-sm text-slate-500 mb-2">Email: admin@vietexpedition.vn</p>
+        <p class="text-sm text-slate-500">Hotline: 1900 8888</p>
+        <div class="flex gap-4 mt-6">
+<span class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center cursor-pointer hover:bg-primary-container hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-sm">help</span>
+</span>
+          <span class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center cursor-pointer hover:bg-primary-container hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-sm">notifications</span>
+</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</main>
+</body></html>

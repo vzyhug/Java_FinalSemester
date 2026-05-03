@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Bảng điều khiển khách hàng - Vietnam Expeditions</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-on-surface": "#f0f0f9",
+            "surface-bright": "#f9f9ff",
+            "on-primary-container": "#bbd0ff",
+            "surface-container": "#ededf6",
+            "on-primary": "#ffffff",
+            "surface-variant": "#e1e2ea",
+            "primary-container": "#0056b3",
+            "secondary": "#a43c12",
+            "surface": "#f9f9ff",
+            "primary-fixed-dim": "#acc7ff",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "error": "#ba1a1a",
+            "surface-container-high": "#e7e8f0",
+            "on-secondary-fixed-variant": "#822800",
+            "primary-fixed": "#d7e2ff",
+            "on-surface": "#191c21",
+            "on-tertiary-container": "#ffc2a7",
+            "tertiary-fixed-dim": "#ffb694",
+            "background": "#f9f9ff",
+            "outline-variant": "#c2c6d4",
+            "on-secondary-container": "#6b1f00",
+            "surface-container-low": "#f2f3fc",
+            "on-background": "#191c21",
+            "on-secondary-fixed": "#380c00",
+            "primary": "#003f87",
+            "inverse-surface": "#2e3037",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#424752",
+            "error-container": "#ffdad6",
+            "tertiary": "#722b00",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#983c00",
+            "on-error": "#ffffff",
+            "inverse-primary": "#acc7ff",
+            "on-primary-fixed-variant": "#004491",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#727784",
+            "surface-dim": "#d9d9e2",
+            "secondary-fixed": "#ffdbcf",
+            "surface-container-highest": "#e1e2ea",
+            "tertiary-fixed": "#ffdbcc",
+            "surface-tint": "#115cb9",
+            "on-tertiary-fixed": "#351000",
+            "secondary-container": "#fe7e4f",
+            "on-primary-fixed": "#001a40",
+            "secondary-fixed-dim": "#ffb59c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Be Vietnam Pro"],
+            "body": ["Plus Jakarta Sans"],
+            "label": ["Plus Jakarta Sans"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Be Vietnam Pro', sans-serif; }
+  </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Sidebar Navigation -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50 dark:bg-slate-950 flex flex-col py-8 z-40">
+  <div class="px-6 mb-10">
+    <h1 class="font-black text-lg text-blue-900 dark:text-white italic">Vietnam Expeditions</h1>
+    <p class="text-xs text-slate-500 font-medium mt-1">Bảng điều khiển khách hàng</p>
+  </div>
+  <nav class="flex-1 space-y-1 px-3">
+    <a class="flex items-center px-4 py-3 bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 font-bold border-r-4 border-orange-700 transition-colors duration-200 translate-x-1" href="#">
+      <span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+      <span class="text-sm font-label">Tổng quan</span>
+    </a>
+    <a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors duration-200" href="#">
+      <span class="material-symbols-outlined mr-3" data-icon="person">person</span>
+      <span class="text-sm font-label">Hồ sơ cá nhân</span>
+    </a>
+    <a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors duration-200" href="#">
+      <span class="material-symbols-outlined mr-3" data-icon="receipt_long">receipt_long</span>
+      <span class="text-sm font-label">Chuyến đi của tôi</span>
+    </a>
+    <a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors duration-200" href="#">
+      <span class="material-symbols-outlined mr-3" data-icon="payments">payments</span>
+      <span class="text-sm font-label">Lịch sử thanh toán</span>
+    </a>
+    <a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors duration-200" href="#">
+      <span class="material-symbols-outlined mr-3" data-icon="stars">stars</span>
+      <span class="text-sm font-label">Điểm thưởng</span>
+    </a>
+  </nav>
+  <div class="mt-auto px-3 space-y-1">
+    <a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors duration-200" href="#">
+      <span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+      <span class="text-sm font-label">Cài đặt</span>
+    </a>
+    <a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors duration-200" href="#">
+      <span class="material-symbols-outlined mr-3" data-icon="logout">logout</span>
+      <span class="text-sm font-label">Đăng xuất</span>
+    </a>
+  </div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 min-h-screen p-8 lg:p-12 max-w-screen-2xl mx-auto">
+  <!-- Header & Tier -->
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+    <div>
+      <span class="label-md uppercase tracking-widest text-secondary font-bold mb-2 block">Chào mừng bạn trở lại</span>
+      <h2 class="text-4xl font-black text-primary tracking-tight">Xin chào, Nguyễn Minh</h2>
+    </div>
+    <!-- Membership Tier Card -->
+    <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border-0 w-full md:w-80 relative overflow-hidden group">
+      <div class="relative z-10">
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-xs font-bold text-secondary uppercase tracking-tighter">Hạng Hoa Sen Elite</span>
+          <span class="material-symbols-outlined text-primary" data-icon="military_tech">military_tech</span>
+        </div>
+        <div class="flex items-end gap-2 mb-2">
+          <span class="text-3xl font-black text-primary">12,450</span>
+          <span class="text-sm text-on-surface-variant pb-1">Điểm</span>
+        </div>
+        <!-- Progress Bar -->
+        <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+          <div class="h-full bg-gradient-to-r from-primary to-primary-container w-[75%] rounded-full"></div>
+        </div>
+        <p class="text-[10px] text-on-surface-variant mt-2 font-medium">Còn 2,550 điểm để đạt hạng Lục Bảo</p>
+      </div>
+      <!-- Decorative element -->
+      <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:scale-110 transition-transform duration-700">
+        <span class="material-symbols-outlined text-9xl" data-icon="eco">eco</span>
+      </div>
+    </div>
+  </header>
+  <!-- Bento Layout Content -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <!-- Active Bookings Summary (Column Span 8) -->
+    <section class="lg:col-span-8 space-y-8">
+      <div class="flex justify-between items-center px-2">
+        <h3 class="text-2xl font-bold text-on-surface">Chuyến đi sắp tới</h3>
+        <button class="text-primary text-sm font-bold flex items-center hover:underline underline-offset-4">
+          Xem tất cả <span class="material-symbols-outlined text-sm ml-1" data-icon="arrow_forward">arrow_forward</span>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Booking Card 1 -->
+        <div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col group border-0">
+          <div class="h-48 relative overflow-hidden">
+            <img alt="Du thuyền Vịnh Hạ Long" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="luxury traditional wooden junk boat sailing through the limestone karsts of Ha Long Bay at sunrise with ethereal mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwVjzuQDO95uN9O89VKbj3BWMWTpet2kxg1PvI93AD3jlLZq7nGMOXhkTh6SeX-h47GuGmGPvtVlD8GqwoWE1A6QOBSWHAVs5u8QYjY8p0VdTOkrloMsfw2RE0t1_iIV-Im0ZUJQEoL8soDgpXYdUwtSDH0ETYy7seMbRFsEVbW767TZjGvPT65GeRlaVcoeMktgReTChttK6UhAJx9-e5MebTglIU4UKgUHo6uOFV7h-01-hWDYajUyluRhXySPqfLhVmY6zHQjo5"/>
+            <div class="absolute top-4 left-4">
+              <span class="bg-primary/90 text-white text-[10px] font-black uppercase px-3 py-1 rounded-full backdrop-blur-md">Đã xác nhận</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <h4 class="text-xl font-bold text-primary mb-2">Du thuyền cao cấp Vịnh Hạ Long</h4>
+            <div class="space-y-2 mb-6">
+              <div class="flex items-center text-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-base mr-2 text-secondary" data-icon="calendar_today">calendar_today</span>
+                12 Th10 - 14 Th10, 2024
+              </div>
+              <div class="flex items-center text-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-base mr-2 text-secondary" data-icon="location_on">location_on</span>
+                Quảng Ninh, Việt Nam
+              </div>
+            </div>
+            <button class="w-full py-3 rounded-full bg-surface-container-highest text-primary font-bold text-sm hover:bg-primary hover:text-white transition-all duration-300">
+              Quản lý đặt chỗ
+            </button>
+          </div>
+        </div>
+        <!-- Booking Card 2 -->
+        <div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col group border-0">
+          <div class="h-48 relative overflow-hidden">
+            <img alt="Ruộng bậc thang Sapa" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="emerald green rice terraces of Sapa vietnam carved into high mountain slopes under a clear blue sky with fluffy white clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMYwTg_09FgcqHE8I_PdU5l2Oeeq7rkeS3JiowGA_DroPA2yKTI6WGiVrUkMblnb_4IrKsM2K5xwc1VLmOSJ5DST1Hdqk_i3doNtgihIth4Wyt3936QYiQ9UfSt5qhSzSFa4w-mrfg73raTX57Sub3ikUsS9v8eUbedLJNeXVQ8Va4HWDegGVlT272W8I-DID9mIu5NpMRh_wcCvNa_DMLp5HE0FZ4HUlDKuy-H0cT-k-GfvQ1IEo71X99fzyXtf6KwSwAjzS-Duw2"/>
+            <div class="absolute top-4 left-4">
+              <span class="bg-secondary/90 text-white text-[10px] font-black uppercase px-3 py-1 rounded-full backdrop-blur-md">Chờ thanh toán</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <h4 class="text-xl font-bold text-primary mb-2">Trekking vùng cao Sapa</h4>
+            <div class="space-y-2 mb-6">
+              <div class="flex items-center text-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-base mr-2 text-secondary" data-icon="calendar_today">calendar_today</span>
+                05 Th11 - 09 Th11, 2024
+              </div>
+              <div class="flex items-center text-sm text-on-surface-variant">
+                <span class="material-symbols-outlined text-base mr-2 text-secondary" data-icon="location_on">location_on</span>
+                Tỉnh Lào Cai
+              </div>
+            </div>
+            <button class="w-full py-3 rounded-full bg-gradient-to-r from-primary to-primary-container text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all">
+              Hoàn tất thanh toán
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Recent Transactions (Inside Main Content) -->
+      <div class="bg-surface-container-low rounded-xl p-8">
+        <h3 class="text-xl font-bold text-on-surface mb-6">Giao dịch gần đây</h3>
+        <div class="space-y-4">
+          <div class="bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between group hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-green-50 text-green-700 flex items-center justify-center">
+                <span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+              </div>
+              <div>
+                <p class="font-bold text-on-surface">Kỳ nghỉ Resort cao cấp - Đà Nẵng</p>
+                <p class="text-xs text-on-surface-variant">24 Th9 2024 • Mã: #VE-9832</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-primary">$1,240.00</p>
+              <p class="text-[10px] font-black text-green-600 uppercase">Đã thanh toán</p>
+            </div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between group hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-orange-50 text-orange-700 flex items-center justify-center">
+                <span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+              </div>
+              <div>
+                <p class="font-bold text-on-surface">Tour ẩm thực đường phố Hà Nội</p>
+                <p class="text-xs text-on-surface-variant">18 Th9 2024 • Mã: #VE-9721</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-primary">$85.00</p>
+              <p class="text-[10px] font-black text-green-600 uppercase">Đã thanh toán</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Profile Edit Section (Column Span 4) -->
+    <section class="lg:col-span-4 space-y-8">
+      <div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm border-0 sticky top-12">
+        <div class="flex flex-col items-center text-center mb-8">
+          <div class="relative mb-4 group">
+            <img alt="Ảnh đại diện người dùng" class="w-24 h-24 rounded-full object-cover ring-4 ring-primary-fixed" data-alt="professional portrait of a young vietnamese man with friendly expression wearing casual linen shirt soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt4qQhFg5B2CEQNtz0kW6WOby4OGJph3IkFhY2kLtWOoljAe2KyLCFgIjVgGg2-OWcqL8V9qO_Xh4g9P8pN5Xx0nzAT07mEfUTqdEGL-mD0NbBSdyHT9HloxnQZbhwIC4TOHoKM-LOPS5CGZsE2JEHQSy42IoAYxzAdbrGPLUygI5IzY50gYmbm3EcjEjW4-C2VwYAUbJEksgHy6QUap5KWl4w14pCJfOPtjRT8iEKyDoUdRCfSFt8fa9xyfeeDcrhEaLc2RWORN6h"/>
+            <button class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg scale-0 group-hover:scale-100 transition-transform">
+              <span class="material-symbols-outlined text-sm" data-icon="photo_camera">photo_camera</span>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-primary">Nguyễn Minh</h3>
+          <p class="text-sm text-on-surface-variant font-medium">Khám phá từ năm 2022</p>
+        </div>
+        <div class="space-y-6">
+          <div>
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Họ và tên</label>
+            <input class="w-full bg-surface-container-high border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-surface-tint focus:bg-surface-container-lowest transition-all" type="text" value="Nguyễn Minh"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Địa chỉ Email</label>
+            <input class="w-full bg-surface-container-high border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-surface-tint focus:bg-surface-container-lowest transition-all" type="email" value="minh.nguyen@example.com"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Số điện thoại</label>
+            <input class="w-full bg-surface-container-high border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-surface-tint focus:bg-surface-container-lowest transition-all" type="tel" value="+84 90 123 4567"/>
+          </div>
+          <div class="pt-4 space-y-3">
+            <button class="w-full py-3 rounded-full bg-gradient-to-r from-primary to-primary-container text-white font-bold text-sm shadow-sm hover:shadow-lg transition-all">
+              Lưu thay đổi hồ sơ
+            </button>
+            <button class="w-full py-3 rounded-full bg-transparent text-primary font-bold text-sm hover:bg-slate-100 transition-colors">
+              Cập nhật mật khẩu
+            </button>
+          </div>
+        </div>
+        <div class="mt-10 p-4 rounded-xl bg-orange-50 border-0">
+          <div class="flex gap-3">
+            <span class="material-symbols-outlined text-secondary" data-icon="info">info</span>
+            <p class="text-xs text-secondary font-medium leading-relaxed">Hoàn thiện sở thích du lịch để nhận thêm 500 điểm thưởng.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+<!-- Footer Area -->
+<footer class="ml-64 w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto rounded-t-[2rem] bg-slate-50 dark:bg-slate-950 mt-20">
+  <div class="mb-6 md:mb-0">
+    <h4 class="font-black text-xl text-blue-900 dark:text-white">Vietnam Expeditions</h4>
+    <p class="text-slate-500 dark:text-slate-400 text-xs mt-2">© 2024 Vietnam Expeditions. Những trải nghiệm du lịch được chế tác tỉ mỉ.</p>
+  </div>
+  <div class="flex flex-wrap justify-center gap-6">
+    <a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-opacity" href="#">Chính sách bảo mật</a>
+    <a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-opacity" href="#">Điều khoản dịch vụ</a>
+    <a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-opacity" href="#">Hướng dẫn du lịch</a>
+    <a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-opacity" href="#">Liên hệ hỗ trợ</a>
+  </div>
+</footer>
+</body></html>

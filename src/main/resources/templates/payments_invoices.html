@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f9f9ff",
+                        "inverse-primary": "#acc7ff",
+                        "on-tertiary-container": "#ffc2a7",
+                        "surface-tint": "#115cb9",
+                        "tertiary-fixed-dim": "#ffb694",
+                        "secondary": "#a43c12",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c2c6d4",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-primary-fixed": "#001a40",
+                        "on-primary-container": "#bbd0ff",
+                        "surface-container": "#ededf6",
+                        "secondary-fixed": "#ffdbcf",
+                        "primary-fixed": "#d7e2ff",
+                        "primary-fixed-dim": "#acc7ff",
+                        "secondary-fixed-dim": "#ffb59c",
+                        "on-secondary-fixed-variant": "#822800",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#6b1f00",
+                        "on-background": "#191c21",
+                        "on-error-container": "#93000a",
+                        "background": "#f9f9ff",
+                        "surface-dim": "#d9d9e2",
+                        "on-surface-variant": "#424752",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#983c00",
+                        "surface-container-low": "#f2f3fc",
+                        "surface-variant": "#e1e2ea",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#2e3037",
+                        "surface-bright": "#f9f9ff",
+                        "on-primary-fixed-variant": "#004491",
+                        "primary": "#003f87",
+                        "primary-container": "#0056b3",
+                        "tertiary": "#722b00",
+                        "outline": "#727784",
+                        "inverse-on-surface": "#f0f0f9",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e7e8f0",
+                        "on-surface": "#191c21",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#fe7e4f",
+                        "surface-container-highest": "#e1e2ea",
+                        "tertiary-fixed": "#ffdbcc",
+                        "on-tertiary-fixed": "#351000",
+                        "on-secondary-fixed": "#380c00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Be Vietnam Pro"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-gradient {
+            background: linear-gradient(135deg, #003f87 0%, #0056b3 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm">
+    <div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto font-['Be_Vietnam_Pro'] tracking-tight">
+        <div class="text-2xl font-black text-blue-900 dark:text-blue-50">VietExpedition</div>
+        <div class="hidden md:flex gap-8 items-center">
+            <a class="text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors" href="#">Điểm đến</a>
+            <a class="text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors" href="#">Tour</a>
+            <a class="text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors" href="#">Khuyến mãi</a>
+            <a class="text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors" href="#">Giới thiệu</a>
+        </div>
+        <div class="flex gap-4 items-center">
+            <button class="px-6 py-2 rounded-full font-bold editorial-gradient text-white transition-all scale-95 duration-200 active:scale-90">Đặt ngay</button>
+        </div>
+    </div>
+</nav>
+<main class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto">
+    <div class="mb-12">
+        <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-primary tracking-tight mb-2">Thanh toán &amp; Xác nhận</h1>
+        <p class="text-on-surface-variant max-w-2xl">Hoàn tất thủ tục thanh toán để bắt đầu hành trình khám phá di sản Việt Nam cùng chúng tôi.</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-8 space-y-8">
+            <section class="bg-surface-container-low rounded-2xl p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">payments</span>
+                    <h2 class="font-headline font-bold text-2xl">Phương thức thanh toán</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="relative group cursor-pointer">
+                        <input checked="" class="peer hidden" id="card" name="payment_method" type="radio"/>
+                        <label class="block p-6 rounded-2xl bg-surface-container-lowest border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary-fixed/20 transition-all" for="card">
+                            <span class="material-symbols-outlined text-3xl mb-4 text-primary">credit_card</span>
+                            <p class="font-bold text-primary">Thẻ quốc tế</p>
+                            <p class="text-xs text-on-surface-variant">Visa, Mastercard, JCB</p>
+                        </label>
+                    </div>
+                    <div class="relative group cursor-pointer">
+                        <input class="peer hidden" id="bank" name="payment_method" type="radio"/>
+                        <label class="block p-6 rounded-2xl bg-surface-container-lowest border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary-fixed/20 transition-all" for="bank">
+                            <span class="material-symbols-outlined text-3xl mb-4 text-primary">account_balance</span>
+                            <p class="font-bold text-primary">Chuyển khoản</p>
+                            <p class="text-xs text-on-surface-variant">QR Pay / Internet Banking</p>
+                        </label>
+                    </div>
+                    <div class="relative group cursor-pointer">
+                        <input class="peer hidden" id="e-wallet" name="payment_method" type="radio"/>
+                        <label class="block p-6 rounded-2xl bg-surface-container-lowest border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary-fixed/20 transition-all" for="e-wallet">
+                            <span class="material-symbols-outlined text-3xl mb-4 text-primary">account_balance_wallet</span>
+                            <p class="font-bold text-primary">Ví điện tử</p>
+                            <p class="text-xs text-on-surface-variant">MoMo, ZaloPay, VNPay</p>
+                        </label>
+                    </div>
+                </div>
+                <div class="mt-8 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold px-2">Số thẻ</label>
+                            <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container transition-all" placeholder="**** **** **** ****" type="text"/>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold px-2">Tên trên thẻ</label>
+                            <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container transition-all" placeholder="NGUYEN VAN A" type="text"/>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="space-y-2 col-span-1">
+                            <label class="text-sm font-semibold px-2">Ngày hết hạn</label>
+                            <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container transition-all" placeholder="MM/YY" type="text"/>
+                        </div>
+                        <div class="space-y-2 col-span-1">
+                            <label class="text-sm font-semibold px-2">CVV</label>
+                            <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container transition-all" placeholder="***" type="password"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm">
+                <div class="editorial-gradient p-6 text-white flex justify-between items-center">
+                    <div>
+                        <h2 class="font-headline font-bold text-xl">Mẫu hóa đơn điện tử</h2>
+                        <p class="text-sm opacity-80">Mã giao dịch: #VX-88992211</p>
+                    </div>
+                    <span class="material-symbols-outlined text-4xl">receipt_long</span>
+                </div>
+                <div class="p-8 space-y-6">
+                    <div class="flex flex-col md:flex-row justify-between gap-6">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-1">Bên cung cấp</p>
+                            <p class="font-bold text-primary">Công ty CP VietExpedition</p>
+                            <p class="text-sm text-on-surface-variant">45 Lê Thánh Tôn, Quận 1, TP. HCM</p>
+                            <p class="text-sm text-on-surface-variant">MST: 0312456789</p>
+                        </div>
+                        <div class="md:text-right">
+                            <p class="text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-1">Khách hàng</p>
+                            <p class="font-bold">Trần Hoàng Nam</p>
+                            <p class="text-sm text-on-surface-variant">nam.tran@email.com</p>
+                            <p class="text-sm text-on-surface-variant">0908 123 456</p>
+                        </div>
+                    </div>
+                    <div class="border-y-2 border-surface-container border-dashed py-6 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-on-surface-variant">Tour: Tuyệt tác vịnh Hạ Long 3N2Đ</span>
+                            <span class="font-bold">12.500.000 VNĐ</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-on-surface-variant">Hành khách (2 Người lớn x 6.250.000)</span>
+                            <span class="font-bold text-xs">Bao gồm</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-on-surface-variant">Phí dịch vụ &amp; VAT (10%)</span>
+                            <span class="font-bold">1.250.000 VNĐ</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-secondary font-bold">Mã giảm giá (VIET2024)</span>
+                            <span class="text-secondary font-bold">-500.000 VNĐ</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <div class="bg-surface-container-high p-4 rounded-xl inline-block mb-2">
+                                <img alt="QR Mã hóa đơn" class="w-20 h-20" data-alt="minimalist black and white QR code on a light background for digital invoice verification" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSVxXHUhKrDry3pb1EtgWerUpEn0kHu29tGKysJwX8EB1BT74c1x4Mmv1yDQ4ZT-dc7bjb3Mn8kUX6M_tvG8YDThRVH6lpHckPxstetnchR6SaowCIIOhz2tPYi_ONzApqzOmJB4-sfHjv9x3oZWxuDdKjmnQ1VWFlpdmS3zHZODlHbbYq92iTwbFBtpZT8bg1-HqFsf1nL5x44-g-RBXYp_fbj-xTDHT_XovrcCBUpTtWCeD47W2vCTzb6Ie87YdLVm4Pvmty21pt"/>
+                            </div>
+                            <p class="text-[10px] text-on-surface-variant italic">Quét để kiểm tra hóa đơn điện tử chính gốc</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-on-surface-variant font-medium">Tổng thanh toán</p>
+                            <p class="text-4xl font-headline font-black text-primary">13.250.000 <span class="text-lg">VNĐ</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="lg:col-span-4 space-y-6">
+            <aside class="sticky top-28">
+                <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm mb-6 border border-surface-container-high">
+                    <h3 class="font-headline font-bold text-xl mb-4">Tóm tắt đơn hàng</h3>
+                    <div class="rounded-xl overflow-hidden mb-4 relative h-40">
+                        <img alt="Ha Long Bay" class="w-full h-full object-cover" data-alt="cinematic wide shot of ha long bay karst mountains emerald water at sunrise with traditional wooden junk boat sailing smoothly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlkhdMNB-MwCWm3H0WMiXNpnhHaIPxVf6NCpYUZZJ3MYx7F9ddZvYuJfH0h3WMcJMmp3Kj0Nl_7wPrGIQzjNsOr0gBIoOgwMWUjyNhaw8z5PYkjv3GK7lP5W9OTaV_gvI3uX34jW6rBVtDRiilF0WM2HF9XxR3qfVpVRG8Z0w23PAp6AFrmFy6-VE9VzpzqdJtUpeI0g8OajwYdgndz-yr4RdOnKjv6F02evpcIh_6y555D1vfYwcNk0YgxW2c9cOInLoV_0QZwEJh"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                            <span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Bán chạy nhất</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-bold text-primary">Tuyệt tác vịnh Hạ Long 3N2Đ</h4>
+                            <div class="flex items-center gap-1 text-xs text-on-surface-variant mt-1">
+                                <span class="material-symbols-outlined text-sm">calendar_today</span>
+                                15 Tháng 10, 2024 - 17 Tháng 10, 2024
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 py-3 bg-surface-container-low rounded-xl px-4">
+                            <span class="material-symbols-outlined text-primary">group</span>
+                            <div>
+                                <p class="text-xs font-bold text-on-surface-variant">Khách hàng</p>
+                                <p class="text-sm font-bold">2 Người lớn, 0 Trẻ em</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 pt-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-on-surface-variant">Giá tour gốc</span>
+                                <span>12.500.000 đ</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-on-surface-variant">Phụ phí &amp; Thuế</span>
+                                <span>1.250.000 đ</span>
+                            </div>
+                            <div class="flex justify-between text-lg font-bold border-t border-surface-container-high pt-3 mt-3">
+                                <span>Tổng cộng</span>
+                                <span class="text-primary">13.250.000 đ</span>
+                            </div>
+                        </div>
+                        <button class="w-full py-4 rounded-full font-bold editorial-gradient text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 mt-4">
+                            <span class="material-symbols-outlined">lock</span>
+                            Xác nhận thanh toán
+                        </button>
+                        <p class="text-[11px] text-center text-on-surface-variant px-4">
+                            Bằng cách nhấn nút, bạn đồng ý với <a class="underline text-primary" href="#">Điều khoản dịch vụ</a> và chính sách của VietExpedition.
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-surface-container-low rounded-2xl p-6 border border-dashed border-primary/20">
+                    <div class="flex gap-4 items-center mb-4">
+                        <span class="material-symbols-outlined text-secondary text-3xl">verified_user</span>
+                        <div>
+                            <h4 class="font-bold">Đảm bảo an toàn</h4>
+                            <p class="text-xs text-on-surface-variant">Dữ liệu được mã hóa SSL 256-bit chuẩn quốc tế.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 opacity-50 grayscale hover:grayscale-0 transition-all">
+                        <div class="h-6 w-10 bg-surface-container-high rounded flex items-center justify-center font-bold text-[8px]">VISA</div>
+                        <div class="h-6 w-10 bg-surface-container-high rounded flex items-center justify-center font-bold text-[8px]">MC</div>
+                        <div class="h-6 w-10 bg-surface-container-high rounded flex items-center justify-center font-bold text-[8px]">PCI</div>
+                        <div class="h-6 w-10 bg-surface-container-high rounded flex items-center justify-center font-bold text-[8px]">SSL</div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</main>
+<footer class="bg-slate-50 dark:bg-slate-950 w-full py-12 border-t border-slate-100 dark:border-slate-900 mt-20">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="col-span-1 md:col-span-1">
+            <div class="font-['Be_Vietnam_Pro'] font-bold text-2xl text-blue-900 dark:text-blue-50 mb-4">VietExpedition</div>
+            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                Khám phá vẻ đẹp bất tận của dải đất hình chữ S với những hành trình được thiết kế riêng biệt và đẳng cấp.
+            </p>
+        </div>
+        <div>
+            <h4 class="font-bold text-blue-900 dark:text-blue-100 mb-4 uppercase tracking-wider text-xs">Khám phá</h4>
+            <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+                <li><a class="hover:text-orange-600 transition-colors" href="#">Về chúng tôi</a></li>
+                <li><a class="hover:text-orange-600 transition-colors" href="#">Đội ngũ hướng dẫn</a></li>
+                <li><a class="hover:text-orange-600 transition-colors" href="#">Cảm hứng du lịch</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold text-blue-900 dark:text-blue-100 mb-4 uppercase tracking-wider text-xs">Hỗ trợ</h4>
+            <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+                <li><a class="hover:text-orange-600 transition-colors" href="#">Trung tâm trợ giúp</a></li>
+                <li><a class="hover:text-orange-600 transition-colors" href="#">Điều khoản sử dụng</a></li>
+                <li><a class="hover:text-orange-600 transition-colors" href="#">Chính sách bảo mật</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold text-blue-900 dark:text-blue-100 mb-4 uppercase tracking-wider text-xs">Liên hệ</h4>
+            <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-sm text-primary">phone</span>
+                <span class="text-sm text-slate-500">1900 1234 (24/7)</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm text-primary">mail</span>
+                <span class="text-sm text-slate-500">contact@vietexpedition.com</span>
+            </div>
+        </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 text-center text-slate-400 text-xs font-medium">
+        © 2024 VietExpedition. Tinh hoa du lịch Việt Nam.
+    </div>
+</footer>
+</body></html>

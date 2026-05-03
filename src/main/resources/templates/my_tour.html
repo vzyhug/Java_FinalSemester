@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-bright": "#f9f9ff",
+            "secondary-fixed-dim": "#ffb59c",
+            "inverse-surface": "#2e3037",
+            "surface-variant": "#e1e2ea",
+            "on-tertiary": "#ffffff",
+            "on-primary-container": "#bbd0ff",
+            "on-secondary-container": "#6b1f00",
+            "tertiary": "#722b00",
+            "inverse-primary": "#acc7ff",
+            "error": "#ba1a1a",
+            "on-secondary-fixed": "#380c00",
+            "outline": "#727784",
+            "on-surface-variant": "#424752",
+            "surface-container": "#ededf6",
+            "primary-fixed-dim": "#acc7ff",
+            "tertiary-fixed-dim": "#ffb694",
+            "surface-container-high": "#e7e8f0",
+            "surface-dim": "#d9d9e2",
+            "secondary-fixed": "#ffdbcf",
+            "on-tertiary-container": "#ffc2a7",
+            "on-secondary": "#ffffff",
+            "surface": "#f9f9ff",
+            "surface-container-low": "#f2f3fc",
+            "tertiary-fixed": "#ffdbcc",
+            "on-error-container": "#93000a",
+            "on-primary-fixed-variant": "#004491",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "primary-fixed": "#d7e2ff",
+            "tertiary-container": "#983c00",
+            "surface-container-lowest": "#ffffff",
+            "surface-tint": "#115cb9",
+            "on-background": "#191c21",
+            "surface-container-highest": "#e1e2ea",
+            "primary": "#003f87",
+            "outline-variant": "#c2c6d4",
+            "on-primary-fixed": "#001a40",
+            "on-secondary-fixed-variant": "#822800",
+            "primary-container": "#0056b3",
+            "background": "#f9f9ff",
+            "secondary": "#a43c12",
+            "secondary-container": "#fe7e4f",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "on-tertiary-fixed": "#351000",
+            "on-surface": "#191c21",
+            "on-primary": "#ffffff",
+            "inverse-on-surface": "#f0f0f9"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Be Vietnam Pro"],
+            "body": ["Plus Jakarta Sans"],
+            "label": ["Plus Jakarta Sans"]
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Be Vietnam Pro', sans-serif; }
+  </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-primary min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl font-['Be_Vietnam_Pro'] antialiased shadow-sm shadow-[0_1px_0_0_rgba(0,0,0,0.05)] flex justify-between items-center px-8 h-20">
+  <div class="text-2xl font-bold tracking-tighter text-blue-900 dark:text-blue-400 cursor-pointer active:scale-95 duration-200">
+    Vietnam Expeditions
+  </div>
+  <div class="flex items-center gap-6">
+    <div class="hidden md:flex items-center bg-surface-container rounded-full px-4 py-2 gap-2">
+      <span class="material-symbols-outlined text-slate-500">search</span>
+      <input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface w-64 placeholder:text-slate-400" placeholder="Tìm kiếm chuyến đi..." type="text"/>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="p-2 rounded-full hover:bg-surface-container transition-all cursor-pointer text-slate-500 dark:text-slate-400">
+        <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+      </div>
+      <div class="p-2 rounded-full hover:bg-surface-container transition-all cursor-pointer text-slate-500 dark:text-slate-400">
+        <span class="material-symbols-outlined" data-icon="settings">settings</span>
+      </div>
+      <div class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden cursor-pointer active:scale-95 duration-200">
+        <img alt="User avatar" class="w-full h-full object-cover" data-alt="Close-up portrait of a stylish young man with a friendly expression in soft outdoor natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsX8xlbuLu2lKSHkjN4DMTq0T1Aui3ubr8jVgt_cT4WAnkdrpPihC7ETcSAjWhyNC1fFNQDG9Ep7ff3LQzhuUBP8rZbkouJMiWUC2n6zuoBmGsUB8KMx1fnaD2pdBcEG3pECnnaI-nX86WR2gBH3h32vXE1qjkVhbMYcHcOV2neBTnkfuNuE5KGTrbjcLS2PBFKReGUbDa09kgHu7PB3FpaPudJ6fpeEy0VGvmQQg0To0qxKs26RobLh3hW-yh_UkB9Uowe8CHrm-4"/>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="flex pt-20">
+  <!-- SideNavBar -->
+  <aside class="hidden md:flex h-screen w-72 flex-col fixed left-0 top-0 pt-24 bg-slate-50 dark:bg-slate-900 px-4 py-6 gap-2">
+    <div class="px-4 mb-8">
+      <p class="text-xs font-bold uppercase tracking-widest text-secondary mb-1">Elite Explorer</p>
+      <h2 class="text-xl font-black text-blue-900 dark:text-blue-400 font-headline">Chào mừng trở lại</h2>
+    </div>
+    <nav class="flex flex-col gap-2">
+      <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 transition-transform duration-300 hover:translate-x-1 rounded-xl font-medium text-sm" href="#">
+        <span class="material-symbols-outlined" data-icon="person">person</span>
+        <span>Profile</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-blue-900 dark:text-white rounded-xl shadow-sm font-bold transition-transform duration-300 hover:translate-x-1 text-sm" href="#">
+        <span class="material-symbols-outlined" data-icon="travel_explore">travel_explore</span>
+        <span>My Bookings</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 transition-transform duration-300 hover:translate-x-1 rounded-xl font-medium text-sm" href="#">
+        <span class="material-symbols-outlined" data-icon="payments">payments</span>
+        <span>Payment History</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 transition-transform duration-300 hover:translate-x-1 rounded-xl font-medium text-sm" href="#">
+        <span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+        <span>Reward Points</span>
+      </a>
+    </nav>
+    <div class="mt-auto flex flex-col gap-2 border-t border-slate-200 dark:border-slate-800 pt-6">
+      <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 transition-transform duration-300 hover:translate-x-1 rounded-xl font-medium text-sm" href="#">
+        <span class="material-symbols-outlined" data-icon="help">help</span>
+        <span>Help Center</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 transition-transform duration-300 hover:translate-x-1 rounded-xl font-medium text-sm" href="#">
+        <span class="material-symbols-outlined" data-icon="logout">logout</span>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </aside>
+  <!-- Main Content Area -->
+  <main class="flex-1 md:ml-72 p-6 md:p-12">
+    <div class="max-w-6xl mx-auto">
+      <header class="mb-12">
+        <span class="text-secondary font-bold text-sm uppercase tracking-widest block mb-2">Hành trình của bạn</span>
+        <h1 class="text-4xl md:text-5xl font-black text-primary tracking-tight font-headline">Chuyến đi của tôi</h1>
+      </header>
+      <!-- Filters / Tabs -->
+      <div class="flex gap-4 mb-10 overflow-x-auto pb-2 scrollbar-hide">
+        <button class="px-6 py-2.5 bg-primary text-white rounded-full font-semibold shadow-lg shadow-primary/20 whitespace-nowrap active:scale-95 duration-200">
+          Sắp tới
+        </button>
+        <button class="px-6 py-2.5 bg-surface-container-high text-on-surface-variant rounded-full font-medium whitespace-nowrap hover:bg-surface-container-highest transition-colors active:scale-95 duration-200">
+          Đã hoàn thành
+        </button>
+        <button class="px-6 py-2.5 bg-surface-container-high text-on-surface-variant rounded-full font-medium whitespace-nowrap hover:bg-surface-container-highest transition-colors active:scale-95 duration-200">
+          Đã hủy
+        </button>
+      </div>
+      <!-- Trips Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Trip Card 1: Upcoming & Large (Asymmetric Focus) -->
+        <div class="group relative bg-surface-container-lowest rounded-xl overflow-hidden flex flex-col md:flex-row transition-all duration-500 hover:translate-y-[-4px]">
+          <div class="md:w-2/5 relative h-64 md:h-auto overflow-hidden">
+            <img alt="Ha Long Bay" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Breathtaking aerial view of limestone karsts rising from emerald waters in Ha Long Bay at sunrise with ethereal mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRFiKxyVbINAf8BaN0FOteJ6LFd7wuzpwABjjb-ne4IbH6Fct2tJ7gX_eBYbE1z7i-bsK0iOvhiGDFs8hv9ZDjuK59NF4t8KU2FwNzD8aeTJdOf6Nzm4AZs0GjKeqZ2jsaKNfKJfFDCwqeEXsd5XgDR3wL4hwOxGPdCejoWCZrU5dagFRU1PrHEyctuMPOj4Zz8pJB7AxMxu-Bh1YdT4XVxUsLJz6e0ZMqgUu1t46P7H9ZtJIh45KMxNl4blpqbCF8KtPbhEx437eK"/>
+            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-primary">Sắp tới</div>
+          </div>
+          <div class="md:w-3/5 p-6 md:p-8 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-primary leading-tight font-headline">Kỳ quan Hạ Long: Du thuyền 5 sao &amp; Kayak</h3>
+                <span class="text-[10px] bg-secondary-fixed text-on-secondary-fixed px-2 py-1 rounded font-bold">LX-9902</span>
+              </div>
+              <div class="space-y-3 mb-8">
+                <div class="flex items-center gap-3 text-slate-500">
+                  <span class="material-symbols-outlined text-lg">calendar_today</span>
+                  <span class="text-sm font-medium">15 Tháng 10, 2024</span>
+                </div>
+                <div class="flex items-center gap-3 text-slate-500">
+                  <span class="material-symbols-outlined text-lg">location_on</span>
+                  <span class="text-sm font-medium">Vịnh Hạ Long, Quảng Ninh</span>
+                </div>
+                <div class="flex items-center gap-3 text-slate-500">
+                  <span class="material-symbols-outlined text-lg">confirmation_number</span>
+                  <span class="text-sm font-medium">Mã: <span class="text-on-surface font-bold">VNE-2847192</span></span>
+                </div>
+              </div>
+            </div>
+            <button class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-bold flex items-center justify-center gap-2 group-hover:shadow-xl transition-all active:scale-95 duration-200">
+              Xem chi tiết
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+        <!-- Trip Card 2 -->
+        <div class="group relative bg-surface-container-lowest rounded-xl overflow-hidden flex flex-col md:flex-row transition-all duration-500 hover:translate-y-[-4px]">
+          <div class="md:w-2/5 relative h-64 md:h-auto overflow-hidden">
+            <img alt="Sapa Terraces" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Vibrant green terraced rice fields in Sapa winding down mountain slopes under a soft blue sky with scattered clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAghb_ULq6kMh11IWZQ2y_2jiJSV8RGSBtU_QS2svApWRWVCS8G3nYJoHu7K59q5Q3wNbeEVfiueUeeYFYJnfYVG1Fx1rGGgqoKm7rpaCP9Rb5GWfBYH5NvXXGeXZFVVYxurVZpsZkHXVJlrpG4cJnOTJceRFVIpspwSm5ih5Z1wpTZlnP9_NSNYRNlKwXKS6nbcbl8epA4fy4YxOwIYJBYbvTO9oWGE97qdBLyy8A7OVXXlOajQ86dQTZGNdX07uLe_atcWbuNkVps"/>
+            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-primary">Sắp tới</div>
+          </div>
+          <div class="md:w-3/5 p-6 md:p-8 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-primary leading-tight font-headline">Chinh phục Fansipan &amp; Bản làng Sapa</h3>
+                <span class="text-[10px] bg-secondary-fixed text-on-secondary-fixed px-2 py-1 rounded font-bold">AD-4412</span>
+              </div>
+              <div class="space-y-3 mb-8">
+                <div class="flex items-center gap-3 text-slate-500">
+                  <span class="material-symbols-outlined text-lg">calendar_today</span>
+                  <span class="text-sm font-medium">02 Tháng 11, 2024</span>
+                </div>
+                <div class="flex items-center gap-3 text-slate-500">
+                  <span class="material-symbols-outlined text-lg">location_on</span>
+                  <span class="text-sm font-medium">Sapa, Lào Cai</span>
+                </div>
+                <div class="flex items-center gap-3 text-slate-500">
+                  <span class="material-symbols-outlined text-lg">confirmation_number</span>
+                  <span class="text-sm font-medium">Mã: <span class="text-on-surface font-bold">VNE-3958102</span></span>
+                </div>
+              </div>
+            </div>
+            <button class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-bold flex items-center justify-center gap-2 group-hover:shadow-xl transition-all active:scale-95 duration-200">
+              Xem chi tiết
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+        <!-- Signature Component: The "Expedition Scroller" Style Info Card -->
+        <div class="lg:col-span-2 bg-primary-container text-white rounded-xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-10 overflow-hidden relative">
+          <div class="relative z-10 md:w-1/2">
+            <span class="text-secondary-fixed-dim font-bold text-xs uppercase tracking-[0.3em] mb-4 block">Đặc quyền Elite</span>
+            <h2 class="text-3xl md:text-5xl font-black mb-6 font-headline leading-[1.1]">Mở khóa những hành trình bí mật</h2>
+            <p class="text-on-primary-container text-lg mb-8 leading-relaxed font-body">Là một thành viên Elite Explorer, bạn có quyền truy cập sớm vào các chuyến thám hiểm hang động Sơn Đoòng mùa 2025.</p>
+            <button class="px-8 py-4 bg-secondary text-white rounded-full font-bold hover:bg-secondary-container transition-all active:scale-95 duration-200 shadow-xl shadow-black/10">
+              Khám phá ưu đãi
+            </button>
+          </div>
+          <div class="md:w-1/2 grid grid-cols-2 gap-4 relative">
+            <img class="w-full aspect-[3/4] object-cover rounded-xl shadow-2xl transform -rotate-3 transition-transform hover:rotate-0 duration-500" data-alt="Intense dramatic lighting inside a massive Vietnamese cave with a sunbeam hitting a turquoise pool" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnyC52myp43pOBjujwQhxa5jD7DdVdr0WVs9h_OQeSWovrR1V4ccvhhjV04XyhklTYHyR8EmnurCd22VNaYuxz9LrfIP8D3GqzTybOrnbnnjvyiHv5kWm0_8pmm9Vvz7Lv3kjO8FhmrW6DG8yXAbw9z9pCDRnKRGGbpBB-oFWBXARJ7mv4QgfzMZxx5DVbk0kEhNGVvF1VLR93r4cJSM5VBYsV6bWyQHMGxeJB_uXgXquI-PkwYliQAUhd9MwIYQW9_ULzWROTKrUJ"/>
+            <img class="w-full aspect-[3/4] object-cover rounded-xl shadow-2xl translate-y-8 transform rotate-6 transition-transform hover:rotate-0 duration-500" data-alt="Aerial view of colorful Vietnamese fishing boats docked in a perfectly turquoise coastal lagoon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhXCWFG8FN0cvGvFkqwaB7ZEkPr9PL9eqGqMm9waf40LOyJDFe2fxb3syL5eFfgh8QkyHQUjr2Plsy_H5pQPmsQLondC7bFSeTUeZymc62aWA_sH9w1pQSlAFAdgtgldFh7FdxLgghI6d8TH-0NO0soBHXIURoba6TyPB8-yMMP2fOPj00304-FDM_Uq-nUng4jBcXtcZ8nlohOgqz2CmwLCMDXYTo9-qtSZXB5w15MhI3-kLbluSq52fzSgOwoDBT8G2AXyTBvE1J"/>
+          </div>
+          <!-- Abstract Background Decoration -->
+          <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -mr-48 -mt-48"></div>
+        </div>
+      </div>
+      <!-- Empty State Suggestion / Footer of List -->
+      <div class="mt-20 text-center">
+        <div class="inline-block p-4 rounded-full bg-surface-container-low mb-6">
+          <span class="material-symbols-outlined text-4xl text-primary/40">explore</span>
+        </div>
+        <p class="text-slate-400 font-medium mb-6">Bạn muốn tìm kiếm thêm những trải nghiệm mới?</p>
+        <button class="text-primary font-bold flex items-center gap-2 mx-auto hover:gap-4 transition-all active:scale-95 duration-200">
+          Xem tất cả các tour khả dụng
+          <span class="material-symbols-outlined">east</span>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+<!-- Mobile Bottom Navigation (Platform Pivot Rule) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 flex justify-around items-center h-20 px-4 z-50">
+  <button class="flex flex-col items-center gap-1 text-slate-400">
+    <span class="material-symbols-outlined" data-icon="home">home</span>
+    <span class="text-[10px] font-bold">Trang chủ</span>
+  </button>
+  <button class="flex flex-col items-center gap-1 text-primary">
+    <span class="material-symbols-outlined" data-icon="travel_explore" style="font-variation-settings: 'FILL' 1;">travel_explore</span>
+    <span class="text-[10px] font-bold">Chuyến đi</span>
+  </button>
+  <button class="flex flex-col items-center gap-1 text-slate-400">
+    <span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+    <span class="text-[10px] font-bold">Yêu thích</span>
+  </button>
+  <button class="flex flex-col items-center gap-1 text-slate-400">
+    <span class="material-symbols-outlined" data-icon="person">person</span>
+    <span class="text-[10px] font-bold">Hồ sơ</span>
+  </button>
+</nav>
+</body></html>
