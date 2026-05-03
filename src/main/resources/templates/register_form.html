@@ -73,7 +73,7 @@
                         <p class="text-muted">Tạo tài khoản để nhận ưu đãi tour sớm nhất</p>
                     </div>
 
-                    <form th:action="@{/register}" th:object="${customer}" method="post">
+                    <form th:action="@{/customer/register}" th:object="${customer}" method="post">
 
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Họ và Tên</label>
@@ -107,6 +107,15 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label small fw-bold">Địa chỉ</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-house"></i></span>
+                                <input type="text" th:field="*{address}" class="form-control" placeholder="Số nhà, tên đường, phường/xã, quận/huyện...">
+                            </div>
+                            <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="error-text"></p>
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label small fw-bold">Mật khẩu</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light text-muted"><i
@@ -133,7 +142,7 @@
 
                         <div class="text-center">
                             <p class="small mb-0">Bạn đã có tài khoản?
-                                <a th:href="@{/login}" class="fw-bold text-decoration-none" style="color: #2D318C;">Đăng
+                                <a th:href="@{/customer/loginForm}" class="fw-bold text-decoration-none" style="color: #2D318C;">Đăng
                                     nhập tại đây</a>
                             </p>
                         </div>
