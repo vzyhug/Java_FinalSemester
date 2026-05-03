@@ -21,4 +21,15 @@ public class CutomerServices {
         // Lưu thông tin vào database
         customerRepository.save(customer);
     }
+
+    // đăng nhập tài khoản khách hàng
+    public Customer login(String email, String password) {
+        // Tìm khách hàng trong database
+        Customer existingCustomer = customerRepository.findByEmail(email);
+        // Nếu tìm thấy khách hàng và mật khẩu khớp thì trả về đối tượng Customer
+        if (existingCustomer != null && existingCustomer.getPasswordHash().equals(password)) {
+            return existingCustomer;
+        }
+        return null; // Đăng nhập thất bại
+    }
 }

@@ -3,6 +3,8 @@ package com.example.booking_tour.Controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,29 @@ public class CustomerController {
         // hiển thị form đăng nhập
         model.addAttribute("customer", new Customer());
         return "login_form"; // Trả về tên của view (customer_login.html)
+    }
+
+    // Đăng nhập tài khoản khách hàng
+    @PostMapping("login")
+    public String login(@RequestParam("email") String email, 
+                        @RequestParam("password") String password, 
+                        HttpSession session, 
+                        Model model) {
+        Customer loggedInCustomer = customerServices.login(email, password);
+        if (loggedInCustomer != null) {
+            session.setAttribute("loggedInCustomer", loggedInCustomer);
+            return "redirect:/home";
+        } else {
+            model.addAttribute("error", "Email hoặc mật khẩu không chính xác!");
+            return "login_form";
+        }
+    }
+
+    // Đăng xuất
+    @GetMapping("logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute("loggedInCustomer");
+        return "redirect:/home";
     }
 
     // Hiển thị trang đăng ký cho khách hàng
