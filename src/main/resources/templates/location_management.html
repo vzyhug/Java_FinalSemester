@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface": "#f9f9ff",
+            "inverse-primary": "#acc7ff",
+            "on-tertiary-container": "#ffc2a7",
+            "surface-tint": "#115cb9",
+            "tertiary-fixed-dim": "#ffb694",
+            "secondary": "#a43c12",
+            "on-primary": "#ffffff",
+            "outline-variant": "#c2c6d4",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "on-primary-fixed": "#001a40",
+            "on-primary-container": "#bbd0ff",
+            "surface-container": "#ededf6",
+            "secondary-fixed": "#ffdbcf",
+            "primary-fixed": "#d7e2ff",
+            "primary-fixed-dim": "#acc7ff",
+            "secondary-fixed-dim": "#ffb59c",
+            "on-secondary-fixed-variant": "#822800",
+            "on-tertiary": "#ffffff",
+            "on-secondary-container": "#6b1f00",
+            "on-background": "#191c21",
+            "on-error-container": "#93000a",
+            "background": "#f9f9ff",
+            "surface-dim": "#d9d9e2",
+            "on-surface-variant": "#424752",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#983c00",
+            "surface-container-low": "#f2f3fc",
+            "surface-variant": "#e1e2ea",
+            "error-container": "#ffdad6",
+            "inverse-surface": "#2e3037",
+            "surface-bright": "#f9f9ff",
+            "on-primary-fixed-variant": "#004491",
+            "primary": "#003f87",
+            "primary-container": "#0056b3",
+            "tertiary": "#722b00",
+            "outline": "#727784",
+            "inverse-on-surface": "#f0f0f9",
+            "on-error": "#ffffff",
+            "surface-container-high": "#e7e8f0",
+            "on-surface": "#191c21",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#fe7e4f",
+            "surface-container-highest": "#e1e2ea",
+            "tertiary-fixed": "#ffdbcc",
+            "on-tertiary-fixed": "#351000",
+            "on-secondary-fixed": "#380c00"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Be Vietnam Pro"],
+            "body": ["Plus Jakarta Sans"],
+            "label": ["Plus Jakarta Sans"]
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Be Vietnam Pro', sans-serif; }
+  </style>
+</head>
+<body class="bg-surface text-on-surface flex min-h-screen">
+<!-- SideNavBar Component -->
+<aside class="flex flex-col h-screen w-72 left-0 top-0 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 p-4 sticky top-0 transition-all duration-200 ease-in-out font-['Plus_Jakarta_Sans'] text-sm">
+  <div class="mb-8 px-4 py-2">
+    <h1 class="font-['Be_Vietnam_Pro'] font-bold text-blue-900 dark:text-blue-50 text-2xl tracking-tight">VietExpedition</h1>
+    <p class="text-slate-500 dark:text-slate-400 text-xs mt-1 uppercase tracking-widest">Hệ quản trị hệ thống</p>
+  </div>
+  <nav class="flex-1 space-y-1">
+    <a class="flex items-center text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">dashboard</span>
+      Dashboard
+    </a>
+    <a class="flex items-center text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">travel_explore</span>
+      Quản lý Tour
+    </a>
+    <a class="flex items-center text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">group</span>
+      Quản lý Khách hàng
+    </a>
+    <a class="flex items-center text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">route</span>
+      Quản lý Chuyến đi
+    </a>
+    <!-- Active Tab: Quản lý Địa điểm -->
+    <a class="flex items-center bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-semibold rounded-xl px-4 py-3 mb-1 transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">location_on</span>
+      Quản lý Địa điểm
+    </a>
+    <a class="flex items-center text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">payments</span>
+      Quản lý Giao dịch
+    </a>
+    <a class="flex items-center text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 px-4 py-3 rounded-xl mb-1 transition-all duration-200 ease-in-out" href="#">
+      <span class="material-symbols-outlined mr-3">badge</span>
+      Quản lý Nhân viên
+    </a>
+  </nav>
+  <div class="mt-auto p-4 flex items-center gap-3 bg-slate-100 dark:bg-slate-900 rounded-2xl">
+    <img alt="Admin Profile" class="w-10 h-10 rounded-full object-cover" data-alt="professional portrait of a confident male executive in a modern office setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmIiIuCI6qVUTvkHYJ302nR3-YjurOg76gdAVqZ6rnFFGT3Na7Y3YKiV-udR5KWzsv65ppKBNwRD7bQ9hV40Q0ExwbEvJWarNQVsnUX5gWgwQzBsZFOSIrA884SmnWb9zh5XtNpz7ZjrvQOmkLeH03gGNdDTEno6jvpXoFIFgBDhjDiNDRtRXIoU6I1-GKgXhAxuLuHhCx6kPRptz4KLcV7dHPn2ROM0sFmrl_AdOI1aocMJvuO4tt-m4pBlwTPCX3-Fscbl2t8hAg"/>
+    <div class="overflow-hidden">
+      <p class="font-bold text-on-surface truncate">Admin Profile</p>
+      <p class="text-xs text-slate-500 truncate">Quản trị viên cao cấp</p>
+    </div>
+  </div>
+</aside>
+<main class="flex-1 p-8 lg:p-12 overflow-y-auto">
+  <!-- Header Section -->
+  <header class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+    <div>
+      <h2 class="text-4xl font-black text-primary tracking-tight mb-2">Quản lý Địa điểm</h2>
+      <p class="text-on-surface-variant font-body">Cập nhật hệ thống các tỉnh thành, điểm tham quan và đầu mối giao thông khởi hành.</p>
+    </div>
+    <button class="flex items-center gap-2 bg-gradient-to-br from-primary to-primary-container text-white px-8 py-4 rounded-full font-bold shadow-lg hover:scale-95 transition-transform duration-200">
+      <span class="material-symbols-outlined">add_location_alt</span>
+      Thêm địa điểm mới
+    </button>
+  </header>
+  <!-- Stats Grid (Bento Style) -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <div class="bg-surface-container-low p-6 rounded-xl flex items-center justify-between">
+      <div>
+        <p class="text-sm font-label text-on-surface-variant">Tổng tỉnh thành</p>
+        <p class="text-3xl font-black text-primary">63</p>
+      </div>
+      <div class="bg-primary-fixed p-3 rounded-full text-primary">
+        <span class="material-symbols-outlined">map</span>
+      </div>
+    </div>
+    <div class="bg-surface-container-low p-6 rounded-xl flex items-center justify-between border-l-4 border-secondary">
+      <div>
+        <p class="text-sm font-label text-on-surface-variant">Điểm tham quan</p>
+        <p class="text-3xl font-black text-secondary">1,284</p>
+      </div>
+      <div class="bg-secondary-fixed p-3 rounded-full text-secondary">
+        <span class="material-symbols-outlined">photo_camera</span>
+      </div>
+    </div>
+    <div class="bg-surface-container-low p-6 rounded-xl flex items-center justify-between">
+      <div>
+        <p class="text-sm font-label text-on-surface-variant">Cảng/Sân bay</p>
+        <p class="text-3xl font-black text-primary">45</p>
+      </div>
+      <div class="bg-primary-fixed p-3 rounded-full text-primary">
+        <span class="material-symbols-outlined">flight_takeoff</span>
+      </div>
+    </div>
+  </div>
+  <!-- Search & Filter Bar -->
+  <div class="bg-surface-container-high rounded-xl p-4 flex flex-wrap gap-4 items-center mb-8">
+    <div class="flex-1 min-w-[300px] relative">
+      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+      <input class="w-full pl-12 pr-4 py-3 bg-surface-container-lowest border-none rounded-xl focus:ring-2 focus:ring-primary" placeholder="Tìm kiếm địa điểm, mã sân bay..." type="text"/>
+    </div>
+    <select class="bg-surface-container-lowest border-none rounded-xl px-4 py-3 min-w-[150px] font-medium text-on-surface-variant focus:ring-2 focus:ring-primary">
+      <option>Tất cả vùng miền</option>
+      <option>Miền Bắc</option>
+      <option>Miền Trung</option>
+      <option>Miền Nam</option>
+    </select>
+    <select class="bg-surface-container-lowest border-none rounded-xl px-4 py-3 min-w-[150px] font-medium text-on-surface-variant focus:ring-2 focus:ring-primary">
+      <option>Loại địa điểm</option>
+      <option>Tỉnh/Thành</option>
+      <option>Điểm tham quan</option>
+      <option>Cảng hàng không</option>
+    </select>
+  </div>
+  <!-- Bento Grid for Categories -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <!-- Province Section (Wide) -->
+    <section class="lg:col-span-8 bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-xl font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">apartment</span>
+          Tỉnh &amp; Thành phố phổ biến
+        </h3>
+        <button class="text-primary font-bold text-sm hover:underline">Xem tất cả 63 tỉnh thành</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Province Card 1 -->
+        <div class="group flex gap-4 p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors duration-300">
+          <img alt="Da Nang" class="w-20 h-20 rounded-lg object-cover" data-alt="stunning golden bridge held by giant stone hands in ba na hills da nang during sunrise with soft fog" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBu-W6yNyoS5sxzVCKngkifhHJ6hTi_WElx2p_CwkNFeJxUNb3tM6TVlwwrsFYct7E7YVByByG7l1meOOIR7AXg3PnkXWC4mb3pKEZ8qUhzO4Evinfkwx9J4Vh4lSUjvUIN3-vBGGk_QPp2CKlMMeN5180cbD0GiCXdZ4sHDNPPTgZhERMtf4vVz4qAnXnW2LmORbgNuBqxg30leudoZiu3utd_dpXSuKNRSJGqwchNpmNlcKK_IvSbidohXino2mBJgN2guHglcDbt"/>
+          <div class="flex-1">
+            <h4 class="font-bold">Đà Nẵng</h4>
+            <p class="text-xs text-on-surface-variant mb-2">Miền Trung • 24 Điểm tham quan</p>
+            <div class="flex gap-2">
+              <span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">Dân cư: 1.1M</span>
+              <span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded-full font-bold">Du lịch: Hot</span>
+            </div>
+          </div>
+          <button class="self-start text-outline hover:text-primary"><span class="material-symbols-outlined">edit_square</span></button>
+        </div>
+        <!-- Province Card 2 -->
+        <div class="group flex gap-4 p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors duration-300">
+          <img alt="Ha Noi" class="w-20 h-20 rounded-lg object-cover" data-alt="aerial view of hoan kiem lake in hanoi with turtle tower on the small island and green lush trees surrounding the water" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKBz5AW9thXd4CKOwyKQVXvlkDHh2hkil76XJ34rmEZnObeZIae4qiJiFKt9bYe0wnUEWsqFtcITmEh1zrimlIA8ee0nU1gt3bUPMtWaQpRic5BhzSLXXs_JNnZyhhLWbAS4icrffs3zMrdkk3OoALhkDxF0lxnZRaUcCVQXBvtEF-5VjrIULc9iqHV0x3wS-0VONWxqsNgC2u2tWrKsWfqKwcCrmwjTRmRgKBez6L-0h7HC34iH2KueoidXs3h_L2uk8lYNYsdF60"/>
+          <div class="flex-1">
+            <h4 class="font-bold">Hà Nội</h4>
+            <p class="text-xs text-on-surface-variant mb-2">Miền Bắc • 42 Điểm tham quan</p>
+            <div class="flex gap-2">
+              <span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">Thủ đô</span>
+              <span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded-full font-bold">Văn hóa</span>
+            </div>
+          </div>
+          <button class="self-start text-outline hover:text-primary"><span class="material-symbols-outlined">edit_square</span></button>
+        </div>
+        <!-- Province Card 3 -->
+        <div class="group flex gap-4 p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors duration-300">
+          <img alt="Ho Chi Minh City" class="w-20 h-20 rounded-lg object-cover" data-alt="vibrant neon lights of saigon skyline at night reflecting in the river with bustling traffic and modern skyscrapers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVxfeYpmpLCtH6PVK7bxtZHvjnBfS3nNruRATEueGJTwNrq7PyWZkdmyALyMteU29A1DlZncutvONFC1x0bEzCeBZmGQ05px8mFRhMkgOc1VrWUBO9E5wE-5YtTmtyDwMg1ffTBOJhCnUc_euXtRy0uZ4ENXzAsepvDai71BRtuYqoXEWMfCkl_54yxWnwT_F-kBRfZyOIvb21QPctmZ1T7hbgIdOS6MPoOTXpV04KhVNC5jhVtZDAMEQVvY7kBV9MUMZNl5q17qZO"/>
+          <div class="flex-1">
+            <h4 class="font-bold">TP. Hồ Chí Minh</h4>
+            <p class="text-xs text-on-surface-variant mb-2">Miền Nam • 35 Điểm tham quan</p>
+            <div class="flex gap-2">
+              <span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">Kinh tế</span>
+              <span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded-full font-bold">Ẩm thực</span>
+            </div>
+          </div>
+          <button class="self-start text-outline hover:text-primary"><span class="material-symbols-outlined">edit_square</span></button>
+        </div>
+        <!-- Province Card 4 -->
+        <div class="group flex gap-4 p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors duration-300">
+          <img alt="Ha Giang" class="w-20 h-20 rounded-lg object-cover" data-alt="dramatic limestone karst mountains and winding roads of ha giang loop with traditional terraced rice fields in northern vietnam" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTzFN4IwSer0xZuf0FYtc3A3asusa0A7qhEs62FKNBt2brdY2oPc8Ya6URinu6ZycOrnTR0foKnYyIrjuCm46jw4r0g89RIWbOc57D3LxWO3fuX6LaxPYKtpgQ5JFWd-rGaAwCOESRNqISC0TBW9IqOwk1DNGjdPMExDa4OuFcBKC7MFlXBMiXfIYLkePFaKIqgtCmTid6OZQMaM5rt2owsuixVwIZeOMceT0L6mGyAN3FIpvefwvz4rPtCO5m8_vkPxncH9vyaCLb"/>
+          <div class="flex-1">
+            <h4 class="font-bold">Hà Giang</h4>
+            <p class="text-xs text-on-surface-variant mb-2">Miền Bắc • 18 Điểm tham quan</p>
+            <div class="flex gap-2">
+              <span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">Khám phá</span>
+              <span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded-full font-bold">Kỳ quan</span>
+            </div>
+          </div>
+          <button class="self-start text-outline hover:text-primary"><span class="material-symbols-outlined">edit_square</span></button>
+        </div>
+      </div>
+    </section>
+    <!-- Airports/Departure Points (Narrow) -->
+    <section class="lg:col-span-4 space-y-6">
+      <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
+        <h3 class="text-xl font-bold flex items-center gap-2 mb-6">
+          <span class="material-symbols-outlined text-secondary">hub</span>
+          Điểm khởi hành
+        </h3>
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+            <div class="w-10 h-10 flex items-center justify-center bg-white rounded-lg text-primary font-black shadow-sm">VVTS</div>
+            <div>
+              <p class="font-bold text-sm">Sân bay Tân Sơn Nhất</p>
+              <p class="text-[10px] text-on-surface-variant uppercase tracking-wide">Mã: SGN • TP. Hồ Chí Minh</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+            <div class="w-10 h-10 flex items-center justify-center bg-white rounded-lg text-primary font-black shadow-sm">VVNB</div>
+            <div>
+              <p class="font-bold text-sm">Sân bay Nội Bài</p>
+              <p class="text-[10px] text-on-surface-variant uppercase tracking-wide">Mã: HAN • Hà Nội</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+            <div class="w-10 h-10 flex items-center justify-center bg-white rounded-lg text-primary font-black shadow-sm">VVDN</div>
+            <div>
+              <p class="font-bold text-sm">Sân bay Đà Nẵng</p>
+              <p class="text-[10px] text-on-surface-variant uppercase tracking-wide">Mã: DAD • Đà Nẵng</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+            <div class="w-10 h-10 flex items-center justify-center bg-white rounded-lg text-secondary font-black shadow-sm">PORT</div>
+            <div>
+              <p class="font-bold text-sm">Cảng Du thuyền Hạ Long</p>
+              <p class="text-[10px] text-on-surface-variant uppercase tracking-wide">Mã: HLP • Quảng Ninh</p>
+            </div>
+          </div>
+        </div>
+        <button class="w-full mt-6 py-3 border-2 border-dashed border-outline-variant rounded-xl text-sm font-bold text-on-surface-variant hover:border-primary hover:text-primary transition-colors">
+          + Thêm trạm trung chuyển
+        </button>
+      </div>
+      <!-- Quick Insight -->
+      <div class="bg-primary text-white rounded-xl p-6 relative overflow-hidden">
+        <div class="relative z-10">
+          <p class="text-xs font-bold uppercase tracking-widest text-primary-container mb-2">Xu hướng 2024</p>
+          <h4 class="text-lg font-bold mb-4">Phú Quốc &amp; Quy Nhơn đang tăng trưởng mạnh.</h4>
+          <div class="w-full bg-white/20 h-2 rounded-full overflow-hidden">
+            <div class="bg-white h-full w-3/4"></div>
+          </div>
+          <p class="text-[10px] mt-2 text-primary-fixed">+15% lượt đặt tour so với tháng trước</p>
+        </div>
+        <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-8xl opacity-10 rotate-12">trending_up</span>
+      </div>
+    </section>
+    <!-- Attractions Table (Full Width Bottom) -->
+    <section class="lg:col-span-12 bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <h3 class="text-xl font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">landscape</span>
+          Quản lý Điểm tham quan (Gần đây)
+        </h3>
+        <div class="flex gap-2">
+          <button class="px-4 py-2 bg-surface-container-low rounded-lg text-xs font-bold hover:bg-surface-container">Nhập dữ liệu (CSV)</button>
+          <button class="px-4 py-2 bg-surface-container-low rounded-lg text-xs font-bold hover:bg-surface-container">Xuất báo cáo</button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+          <tr class="border-b border-surface-container-high text-on-surface-variant text-xs font-label uppercase tracking-widest">
+            <th class="pb-4 font-bold">Tên địa danh</th>
+            <th class="pb-4 font-bold">Vị trí</th>
+            <th class="pb-4 font-bold">Phân loại</th>
+            <th class="pb-4 font-bold">Trạng thái</th>
+            <th class="pb-4 font-bold">Lượt xem</th>
+            <th class="pb-4 text-right font-bold">Hành động</th>
+          </tr>
+          </thead>
+          <tbody class="text-sm">
+          <tr class="hover:bg-surface-container-low transition-colors border-b border-surface-container">
+            <td class="py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-primary-fixed text-primary flex items-center justify-center font-bold">H</div>
+                <span class="font-bold">Vịnh Hạ Long</span>
+              </div>
+            </td>
+            <td class="py-4 text-on-surface-variant">Quảng Ninh</td>
+            <td class="py-4">
+              <span class="bg-tertiary-fixed text-tertiary px-2 py-0.5 rounded text-[10px] font-bold">Kỳ quan Thế giới</span>
+            </td>
+            <td class="py-4">
+<span class="flex items-center gap-1.5 text-green-600 font-bold text-xs">
+<span class="w-2 h-2 rounded-full bg-green-500"></span> Đang hoạt động
+                                    </span>
+            </td>
+            <td class="py-4 font-mono font-bold text-on-surface-variant">12,405</td>
+            <td class="py-4 text-right">
+              <div class="flex justify-end gap-2">
+                <button class="p-2 hover:bg-surface-container rounded-lg"><span class="material-symbols-outlined text-sm">visibility</span></button>
+                <button class="p-2 hover:bg-surface-container rounded-lg text-primary"><span class="material-symbols-outlined text-sm">edit</span></button>
+                <button class="p-2 hover:bg-surface-container rounded-lg text-error"><span class="material-symbols-outlined text-sm">delete</span></button>
+              </div>
+            </td>
+          </tr>
+          <tr class="hover:bg-surface-container-low transition-colors border-b border-surface-container">
+            <td class="py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-secondary-fixed text-secondary flex items-center justify-center font-bold">S</div>
+                <span class="font-bold">Đỉnh Fansipan</span>
+              </div>
+            </td>
+            <td class="py-4 text-on-surface-variant">Lào Cai</td>
+            <td class="py-4">
+              <span class="bg-primary-fixed text-primary px-2 py-0.5 rounded text-[10px] font-bold">Leo núi &amp; Cáp treo</span>
+            </td>
+            <td class="py-4">
+<span class="flex items-center gap-1.5 text-green-600 font-bold text-xs">
+<span class="w-2 h-2 rounded-full bg-green-500"></span> Đang hoạt động
+                                    </span>
+            </td>
+            <td class="py-4 font-mono font-bold text-on-surface-variant">8,291</td>
+            <td class="py-4 text-right">
+              <div class="flex justify-end gap-2">
+                <button class="p-2 hover:bg-surface-container rounded-lg"><span class="material-symbols-outlined text-sm">visibility</span></button>
+                <button class="p-2 hover:bg-surface-container rounded-lg text-primary"><span class="material-symbols-outlined text-sm">edit</span></button>
+                <button class="p-2 hover:bg-surface-container rounded-lg text-error"><span class="material-symbols-outlined text-sm">delete</span></button>
+              </div>
+            </td>
+          </tr>
+          <tr class="hover:bg-surface-container-low transition-colors">
+            <td class="py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-slate-200 text-slate-600 flex items-center justify-center font-bold">P</div>
+                <span class="font-bold">Cầu Vàng</span>
+              </div>
+            </td>
+            <td class="py-4 text-on-surface-variant">Đà Nẵng</td>
+            <td class="py-4">
+              <span class="bg-secondary-fixed text-secondary px-2 py-0.5 rounded text-[10px] font-bold">Kiến trúc</span>
+            </td>
+            <td class="py-4">
+<span class="flex items-center gap-1.5 text-orange-600 font-bold text-xs">
+<span class="w-2 h-2 rounded-full bg-orange-500"></span> Bảo trì định kỳ
+                                    </span>
+            </td>
+            <td class="py-4 font-mono font-bold text-on-surface-variant">15,702</td>
+            <td class="py-4 text-right">
+              <div class="flex justify-end gap-2">
+                <button class="p-2 hover:bg-surface-container rounded-lg"><span class="material-symbols-outlined text-sm">visibility</span></button>
+                <button class="p-2 hover:bg-surface-container rounded-lg text-primary"><span class="material-symbols-outlined text-sm">edit</span></button>
+                <button class="p-2 hover:bg-surface-container rounded-lg text-error"><span class="material-symbols-outlined text-sm">delete</span></button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-8 flex items-center justify-between">
+        <p class="text-xs text-on-surface-variant font-medium">Đang hiển thị 3 trên 1,284 điểm tham quan</p>
+        <div class="flex gap-2">
+          <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low text-on-surface hover:bg-primary hover:text-white transition-colors duration-200">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white font-bold">1</button>
+          <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low text-on-surface hover:bg-primary hover:text-white transition-colors duration-200 font-bold">2</button>
+          <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low text-on-surface hover:bg-primary hover:text-white transition-colors duration-200 font-bold">3</button>
+          <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low text-on-surface hover:bg-primary hover:text-white transition-colors duration-200">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+<!-- Global FAB for quick adding (suppressed as per rules but I'll add a context-aware one if needed) -->
+<!-- The prompt asks for a "Màn hình quản lý" and a "nút thêm mới", which is already in the header -->
+<footer class="fixed bottom-0 right-0 p-8">
+  <div class="bg-white/80 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-primary/10 flex items-center gap-4">
+    <span class="text-xs font-bold text-on-surface-variant">Hệ thống đồng bộ hóa: <span class="text-green-600">Đã kết nối</span></span>
+    <div class="h-4 w-px bg-outline-variant"></div>
+    <p class="text-xs text-on-surface-variant">© 2024 VietExpedition</p>
+  </div>
+</footer>
+</body></html>

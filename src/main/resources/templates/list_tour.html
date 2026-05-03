@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-on-surface": "#f0f0f9",
+            "surface-bright": "#f9f9ff",
+            "on-primary-container": "#bbd0ff",
+            "surface-container": "#ededf6",
+            "on-primary": "#ffffff",
+            "surface-variant": "#e1e2ea",
+            "primary-container": "#0056b3",
+            "secondary": "#a43c12",
+            "surface": "#f9f9ff",
+            "primary-fixed-dim": "#acc7ff",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "error": "#ba1a1a",
+            "surface-container-high": "#e7e8f0",
+            "on-secondary-fixed-variant": "#822800",
+            "primary-fixed": "#d7e2ff",
+            "on-surface": "#191c21",
+            "on-tertiary-container": "#ffc2a7",
+            "tertiary-fixed-dim": "#ffb694",
+            "background": "#f9f9ff",
+            "outline-variant": "#c2c6d4",
+            "on-secondary-container": "#6b1f00",
+            "surface-container-low": "#f2f3fc",
+            "on-background": "#191c21",
+            "on-secondary-fixed": "#380c00",
+            "primary": "#003f87",
+            "inverse-surface": "#2e3037",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#424752",
+            "error-container": "#ffdad6",
+            "tertiary": "#722b00",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#983c00",
+            "on-error": "#ffffff",
+            "inverse-primary": "#acc7ff",
+            "on-primary-fixed-variant": "#004491",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#727784",
+            "surface-dim": "#d9d9e2",
+            "secondary-fixed": "#ffdbcf",
+            "surface-container-highest": "#e1e2ea",
+            "tertiary-fixed": "#ffdbcc",
+            "surface-tint": "#115cb9",
+            "on-tertiary-fixed": "#351000",
+            "secondary-container": "#fe7e4f",
+            "on-primary-fixed": "#001a40",
+            "secondary-fixed-dim": "#ffb59c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Be Vietnam Pro"],
+            "body": ["Plus Jakarta Sans"],
+            "label": ["Plus Jakarta Sans"]
+          }
+        },
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .editorial-shadow {
+      shadow: 0 8px 24px rgba(0, 63, 135, 0.06);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-sm">
+  <div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+    <div class="text-2xl font-black text-blue-900 italic font-headline tracking-tight">Hành Trình Việt</div>
+    <div class="hidden md:flex items-center space-x-8">
+      <a class="text-slate-600 font-medium hover:text-blue-800 transition-all duration-300" href="#">Điểm đến</a>
+      <a class="text-blue-800 border-b-2 border-orange-700 pb-1 font-bold" href="#">Tour du lịch</a>
+      <a class="text-slate-600 font-medium hover:text-blue-800 transition-all duration-300" href="#">Ưu đãi</a>
+      <a class="text-slate-600 font-medium hover:text-blue-800 transition-all duration-300" href="#">Giới thiệu</a>
+    </div>
+    <div class="flex items-center space-x-4">
+      <button class="px-5 py-2 text-slate-600 font-medium hover:bg-slate-100/50 rounded-full transition-all">Đăng nhập</button>
+      <button class="px-6 py-2.5 bg-gradient-to-br from-primary to-primary-container text-white rounded-full font-bold shadow-md hover:scale-95 active:scale-90 transition-transform">Đặt ngay</button>
+    </div>
+  </div>
+</nav>
+<main class="pt-24 pb-20 px-6 max-w-screen-2xl mx-auto flex flex-col md:flex-row gap-8">
+  <!-- Sidebar Filters -->
+  <aside class="w-full md:w-72 flex-shrink-0">
+    <div class="sticky top-28 space-y-8">
+      <!-- Breadcrumbs -->
+      <nav aria-label="Breadcrumb" class="flex text-xs font-label text-outline mb-6">
+        <ol class="flex items-center space-x-2">
+          <li><a class="hover:text-primary" href="#">Trang chủ</a></li>
+          <li><span class="material-symbols-outlined text-[10px]">chevron_right</span></li>
+          <li><a class="hover:text-primary font-bold text-on-surface" href="#">Tour Việt Nam</a></li>
+        </ol>
+      </nav>
+      <div class="bg-surface-container-low p-6 rounded-xl">
+        <h2 class="font-headline font-bold text-lg mb-6 text-primary">Bộ lọc tìm kiếm</h2>
+        <!-- Tour Type -->
+        <div class="mb-8">
+          <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-3">Loại hình Tour</label>
+          <div class="space-y-2">
+            <label class="flex items-center space-x-3 cursor-pointer group">
+              <input class="rounded text-primary focus:ring-primary-fixed border-outline-variant w-5 h-5" type="checkbox"/>
+              <span class="text-sm font-medium text-on-surface-variant group-hover:text-primary">Khám phá</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer group">
+              <input class="rounded text-primary focus:ring-primary-fixed border-outline-variant w-5 h-5" type="checkbox"/>
+              <span class="text-sm font-medium text-on-surface-variant group-hover:text-primary">Nghỉ dưỡng</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer group">
+              <input checked="" class="rounded text-primary focus:ring-primary-fixed border-outline-variant w-5 h-5" type="checkbox"/>
+              <span class="text-sm font-medium text-on-surface-variant group-hover:text-primary">Văn hóa</span>
+            </label>
+          </div>
+        </div>
+        <!-- Price Range -->
+        <div class="mb-8">
+          <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-3">Khoảng giá</label>
+          <input class="w-full h-1.5 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary" type="range"/>
+          <div class="flex justify-between mt-3 text-xs font-medium text-outline">
+            <span>2tr VNĐ</span>
+            <span>100tr+ VNĐ</span>
+          </div>
+        </div>
+        <!-- Duration -->
+        <div class="mb-8">
+          <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-3">Thời gian</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button class="px-3 py-2 rounded-lg bg-surface-container-lowest text-xs font-semibold text-on-surface border border-transparent hover:border-primary transition-all">1-3 Ngày</button>
+            <button class="px-3 py-2 rounded-lg bg-primary text-white text-xs font-semibold">4-7 Ngày</button>
+            <button class="px-3 py-2 rounded-lg bg-surface-container-lowest text-xs font-semibold text-on-surface border border-transparent hover:border-primary transition-all">8-14 Ngày</button>
+            <button class="px-3 py-2 rounded-lg bg-surface-container-lowest text-xs font-semibold text-on-surface border border-transparent hover:border-primary transition-all">15+ Ngày</button>
+          </div>
+        </div>
+        <!-- Star Rating -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-3">Đánh giá tối thiểu</label>
+          <div class="space-y-2">
+            <button class="flex items-center space-x-1 text-primary hover:opacity-80">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold ml-1">Trở lên</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <!-- Main Content Area -->
+  <section class="flex-1">
+    <!-- Header & Sorting -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <span class="text-secondary font-bold text-xs uppercase tracking-[0.2em]">Bộ sưu tập chọn lọc</span>
+        <h1 class="text-4xl font-black font-headline text-primary mt-1 tracking-tight">Khám phá Việt Nam</h1>
+      </div>
+      <div class="flex items-center space-x-4 bg-surface-container-low px-4 py-2 rounded-full">
+        <span class="text-xs font-bold text-outline uppercase">Sắp xếp</span>
+        <select class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer">
+          <option>Phổ biến nhất</option>
+          <option>Giá: Thấp đến Cao</option>
+          <option>Giá: Cao đến Thấp</option>
+          <option>Mới nhất</option>
+        </select>
+      </div>
+    </div>
+    <!-- Tour Grid (Asymmetric Editorial Style) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Card 1 (Large Featured) -->
+      <div class="lg:col-span-2 group">
+        <div class="relative bg-surface-container-low rounded-xl overflow-hidden flex flex-col md:flex-row h-full">
+          <div class="md:w-3/5 relative h-80 md:h-auto overflow-hidden">
+            <img alt="Toàn cảnh Vịnh Hạ Long với những đảo đá vôi kỳ vĩ trên mặt nước xanh ngọc trong ánh hoàng hôn vàng rực" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHMcYaIsLRfIFF6O-eLYMdk4WDeFCVZa4vJOgh1HuFFcm6M-WNrI9gJl6qIaxBnPKvNw3YGl78PvHPx0p7nvEK07HwBepJWhQHPkKYcykv4pKt4mayUJy1f-N9GFPJqdrXgHIbajIvRndBsM0VwU-Wwi-3wBZazvIog0fUMeYsleTFpaHgrTP74wzn5uk1wV3fDeph73XtEsYTUVla7vrFC5YyP8qjWMt8RKti0PZZdarxCgxLEwHyqdryJsByM2wGMilqUYIxEVfc"/>
+            <div class="absolute top-6 left-6 flex space-x-2">
+              <span class="bg-white/90 backdrop-blur text-primary text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-sm">Di sản UNESCO</span>
+              <span class="bg-secondary text-white text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-sm">Bình chọn nhiều</span>
+            </div>
+          </div>
+          <div class="md:w-2/5 p-8 flex flex-col justify-between bg-surface-container-lowest">
+            <div>
+              <div class="flex items-center text-secondary mb-2">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                <span class="text-xs font-bold uppercase ml-1 tracking-wider">Vịnh Hạ Long &amp; Lan Hạ</span>
+              </div>
+              <h3 class="text-2xl font-black font-headline text-primary leading-tight mb-4 group-hover:text-secondary transition-colors">Sương Mù &amp; Núi Non: Hành Trình Phương Bắc</h3>
+              <div class="flex items-center space-x-4 text-outline mb-6">
+                <div class="flex items-center">
+                  <span class="material-symbols-outlined text-sm">schedule</span>
+                  <span class="text-xs font-medium ml-1">7 Ngày</span>
+                </div>
+                <div class="flex items-center">
+                  <span class="material-symbols-outlined text-sm text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+                  <span class="text-xs font-bold text-on-surface ml-1">4.9 (1.2k Đánh giá)</span>
+                </div>
+              </div>
+              <p class="text-on-surface-variant text-sm leading-relaxed mb-6">Hành trình trải nghiệm sâu sắc những cảnh quan huyền ảo của miền Bắc, từ các hang động ẩn mình đến các bản làng dân tộc.</p>
+            </div>
+            <div class="flex items-center justify-between pt-6 border-t border-outline-variant/20">
+              <div>
+                <span class="text-outline text-[10px] font-bold uppercase block">Giá từ</span>
+                <span class="text-2xl font-black text-primary">32.500.000₫</span>
+              </div>
+              <button class="px-8 py-3 bg-primary text-white rounded-full font-bold text-sm hover:bg-primary-container transition-all">Chi tiết</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="group bg-surface-container-low rounded-xl overflow-hidden flex flex-col">
+        <div class="relative h-64 overflow-hidden">
+          <img alt="Thuyền gỗ truyền thống trên sông Thu Bồn tại Hội An về đêm với hàng trăm đèn lồng lung linh" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN_deUDfd6_O8cNmSjleP6on-Qx0nUN7gZbu8ZOfVOUJTSDLUVwZ7OEwkPNR2_e0dB-DLj8FaLBLjqiTgyYrMEYQZkAIS2MnLIJoq2Axc8y8AMXdyvoa15ynLnStrikrh0WxXIARTAGRur8dOXM5TR2FibTWPpTChY7SnzBM4RZ0Qr3ZO2d5S3bck-f8hB_Ww8kSrkPYjDSZbbPAKSofRG-7cfcWmqzSVAk3kplQmCb7YnqFfv2RWY3zyz0LSmtjpjrp0JnLZ1s4yS"/>
+          <div class="absolute bottom-4 right-4 bg-primary text-white px-4 py-1 rounded-full text-xs font-bold">16.200.000₫</div>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between bg-surface-container-lowest">
+          <div>
+            <div class="flex items-center text-secondary mb-2">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
+              <span class="text-xs font-bold uppercase ml-1 tracking-wider">Phố Cổ Hội An</span>
+            </div>
+            <h3 class="text-xl font-bold font-headline text-primary mb-3">Di Sản &amp; Ẩm Thực Miền Trung</h3>
+            <div class="flex items-center space-x-3 text-outline text-xs mb-4">
+              <span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1">schedule</span>4 Ngày</span>
+              <span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1" style="font-variation-settings: 'FILL' 1;">star</span>4.8</span>
+            </div>
+          </div>
+          <button class="w-full py-3 bg-surface-container-highest text-primary rounded-full font-bold text-sm hover:bg-primary hover:text-white transition-all">Xem chi tiết</button>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="group bg-surface-container-low rounded-xl overflow-hidden flex flex-col">
+        <div class="relative h-64 overflow-hidden">
+          <img alt="Ruộng bậc thang xanh mướt tại Sa Pa với người nông dân bản địa tản bộ trong làn sương sớm nhẹ nhàng" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-mnM2UzGr2kLtrqd7sd2lh7w0Ype1XBQrwsKcVMGl51pdh4SHyVRXJ_DgBQQBE_AL9i1RGoNPVJiIIwYknM5bXI2T4G0hx7QxKOIPDDX_iGKNsWbBQxST7ipaRYz5sHZVq5MJfB1GQIFYgwnddUScXP0zCcgUba5IJUjzggeHud1zZ_Ner6p8KrQYZqZUnYOHHWeJJbQJicVa8TdP4KWaEug0H9ZNGkGi3Ar4L_oh_dKd5eAwEeCZRLzdMMy-6wCg8YmBGGmWd5ZP"/>
+          <div class="absolute bottom-4 right-4 bg-primary text-white px-4 py-1 rounded-full text-xs font-bold">22.250.000₫</div>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between bg-surface-container-lowest">
+          <div>
+            <div class="flex items-center text-secondary mb-2">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
+              <span class="text-xs font-bold uppercase ml-1 tracking-wider">Cao Nguyên Sa Pa</span>
+            </div>
+            <h3 class="text-xl font-bold font-headline text-primary mb-3">Trekking Đường Mây Sa Pa</h3>
+            <div class="flex items-center space-x-3 text-outline text-xs mb-4">
+              <span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1">schedule</span>5 Ngày</span>
+              <span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1" style="font-variation-settings: 'FILL' 1;">star</span>4.7</span>
+            </div>
+          </div>
+          <button class="w-full py-3 bg-surface-container-highest text-primary rounded-full font-bold text-sm hover:bg-primary hover:text-white transition-all">Xem chi tiết</button>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="group bg-surface-container-low rounded-xl overflow-hidden flex flex-col">
+        <div class="relative h-64 overflow-hidden">
+          <img alt="Toàn cảnh thành phố Hồ Chí Minh lúc chạng vạng với ánh đèn neon phản chiếu trên sông và giao thông nhộn nhịp" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjZz7Frd06HnJnr0k7ZCJv969igoWlX4IQXh5x3hbow8b4E6z_9zQARD3sBHurQUkDxSMoHeqhLkRGyYAU2NBmVITv-ttEDmD_WlYBWsJL58yT0lpAOIeCX967CKMCVwOAO1qkdeEhjtDuksjXz8Vm61vQd9K86EBkc_z3pBqmNmL0JsIA5tWrmjuoGS1vlERW8QxnHcn5cDlugga0WPfGdYqen9Ug2gP9x2u1mkQBJlIgfV7Ce6_YwAo9suAVEw373gsAMG9oXvb9"/>
+          <div class="absolute bottom-4 right-4 bg-primary text-white px-4 py-1 rounded-full text-xs font-bold">10.500.000₫</div>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between bg-surface-container-lowest">
+          <div>
+            <div class="flex items-center text-secondary mb-2">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
+              <span class="text-xs font-bold uppercase ml-1 tracking-wider">Sài Gòn (TP.HCM)</span>
+            </div>
+            <h3 class="text-xl font-bold font-headline text-primary mb-3">Nhịp Sống Neon: Tour Ẩm Thực Phố Phường</h3>
+            <div class="flex items-center space-x-3 text-outline text-xs mb-4">
+              <span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1">schedule</span>2 Ngày</span>
+              <span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1" style="font-variation-settings: 'FILL' 1;">star</span>5.0</span>
+            </div>
+          </div>
+          <button class="w-full py-3 bg-surface-container-highest text-primary rounded-full font-bold text-sm hover:bg-primary hover:text-white transition-all">Xem chi tiết</button>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="group bg-surface-container-low rounded-xl overflow-hidden flex flex-col">
+        <div class="relative h-64 overflow-hidden">
+          <img alt="Cầu Vàng được nâng đỡ bởi đôi bàn tay đá khổng lồ tại Bà Nà Hills, Đà Nẵng, bao quanh là rừng xanh và sương mù" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvNh_BJHDMfb4gCd-FZWnC0hnAlP-wfMWApdSCUBQ_I1gRbvazrAOxDnQ0UYX7DKjrGYrtBG7KLvTW3wqrcELZIWDHadLXsN8BVYf-7wBnaAS661x31yihATlRwNPVnSIkmGbDu_nz14kiXLC6SaiSeCCKJQyVtqwWqjV39Gj3GYSml1xQiHsTtsJUqWWxLFby59YeDbmV9RQUW0EyRjXRd69iwPkHXjcnDdOMqc_VKhwXgOOVT98StpIrVeGv6ctZgtnWI5xDHx5U"/>
+          <div class="absolute bottom-4 right-4 bg-primary text-white px-4 py-1 rounded-full text-xs font-bold">19.500.000₫</div>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between bg-surface-container-lowest">
+          <div>
+            <div class="flex items-center text-secondary mb-2">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
+              <span class="text-xs font-bold uppercase ml-1 tracking-wider">Đà Nẵng &amp; Bà Nà Hills</span>
+            </div>
+            <h3 class="text-xl font-bold font-headline text-primary mb-3">Trải Nghiệm Cầu Vàng Huyền Thoại</h3>
+            <div class="flex items-center space-x-3 text-outline text-xs mb-4">
+              <span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1">schedule</span>3 Ngày</span>
+              <span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1" style="font-variation-settings: 'FILL' 1;">star</span>4.9</span>
+            </div>
+          </div>
+          <button class="w-full py-3 bg-surface-container-highest text-primary rounded-full font-bold text-sm hover:bg-primary hover:text-white transition-all">Xem chi tiết</button>
+        </div>
+      </div>
+    </div>
+    <!-- Pagination -->
+    <div class="mt-20 flex justify-center items-center space-x-4">
+      <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      <button class="w-10 h-10 rounded-full bg-primary text-white font-bold flex items-center justify-center">1</button>
+      <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all font-bold">2</button>
+      <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all font-bold">3</button>
+      <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+  </section>
+</main>
+<!-- Footer -->
+<footer class="w-full rounded-t-[2rem] mt-20 bg-slate-50">
+  <div class="w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto">
+    <div class="mb-8 md:mb-0 text-center md:text-left">
+      <div class="font-black text-xl text-blue-900 mb-2">Hành Trình Việt</div>
+      <p class="text-slate-500 font-label text-sm leading-relaxed max-w-sm">© 2024 Hành Trình Việt. Những trải nghiệm du lịch được thiết kế tỉ mỉ.</p>
+    </div>
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-4">
+      <a class="text-slate-500 font-medium text-sm hover:text-blue-800 transition-opacity" href="#">Chính sách bảo mật</a>
+      <a class="text-slate-500 font-medium text-sm hover:text-blue-800 transition-opacity" href="#">Điều khoản dịch vụ</a>
+      <a class="text-slate-500 font-medium text-sm hover:text-blue-800 transition-opacity" href="#">Liên hệ</a>
+      <a class="text-slate-500 font-medium text-sm hover:text-blue-800 transition-opacity" href="#">Câu hỏi thường gặp</a>
+      <a class="text-slate-500 font-medium text-sm hover:text-blue-800 transition-opacity" href="#">Cẩm nang du lịch</a>
+    </div>
+  </div>
+</footer>
+</body></html>

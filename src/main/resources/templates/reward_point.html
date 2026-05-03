@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#f9f9ff",
+                        "secondary-fixed-dim": "#ffb59c",
+                        "inverse-surface": "#2e3037",
+                        "surface-variant": "#e1e2ea",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#bbd0ff",
+                        "on-secondary-container": "#6b1f00",
+                        "tertiary": "#722b00",
+                        "inverse-primary": "#acc7ff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#380c00",
+                        "outline": "#727784",
+                        "on-surface-variant": "#424752",
+                        "surface-container": "#ededf6",
+                        "primary-fixed-dim": "#acc7ff",
+                        "tertiary-fixed-dim": "#ffb694",
+                        "surface-container-high": "#e7e8f0",
+                        "surface-dim": "#d9d9e2",
+                        "secondary-fixed": "#ffdbcf",
+                        "on-tertiary-container": "#ffc2a7",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9ff",
+                        "surface-container-low": "#f2f3fc",
+                        "tertiary-fixed": "#ffdbcc",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#004491",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#d7e2ff",
+                        "tertiary-container": "#983c00",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#115cb9",
+                        "on-background": "#191c21",
+                        "surface-container-highest": "#e1e2ea",
+                        "primary": "#003f87",
+                        "outline-variant": "#c2c6d4",
+                        "on-primary-fixed": "#001a40",
+                        "on-secondary-fixed-variant": "#822800",
+                        "primary-container": "#0056b3",
+                        "background": "#f9f9ff",
+                        "secondary": "#a43c12",
+                        "secondary-container": "#fe7e4f",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-tertiary-fixed": "#351000",
+                        "on-surface": "#191c21",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f0f0f9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Be Vietnam Pro"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-headline { font-family: 'Be Vietnam Pro', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-sm font-['Be_Vietnam_Pro'] antialiased">
+    <div class="flex justify-between items-center px-8 h-20 w-full">
+        <div class="text-2xl font-bold tracking-tighter text-blue-900 dark:text-blue-400">Vietnam Expeditions</div>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 transition-all cursor-pointer active:scale-95 duration-200" href="#">Khám phá</a>
+            <a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 transition-all cursor-pointer active:scale-95 duration-200" href="#">Tour của tôi</a>
+            <a class="text-blue-900 dark:text-blue-100 font-semibold transition-all cursor-pointer active:scale-95 duration-200" href="#">Điểm thưởng</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative hidden sm:block">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="search">search</span>
+                <input class="pl-10 pr-4 py-2 bg-surface-container rounded-full border-none focus:ring-2 focus:ring-primary/20 w-64 text-sm" placeholder="Tìm kiếm hành trình..." type="text"/>
+            </div>
+            <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+                <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+            </button>
+            <img alt="User avatar" class="w-10 h-10 rounded-full object-cover border-2 border-primary-container" data-alt="portrait of a professional male traveler with a friendly smile, outdoor natural lighting, soft blurred green background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvWYU-z1eK3FCTwnghUitGCQlA4QKzbIxncbz4oTq79STxOmXrpG4hh96U-cK_Dtv3R9ba5lHz6yKEJ9Sgmi-W51OdzSGOrjg88M86vXOtmZuTxGDEGkEvTP2jyGOFpzfaOEo7KwaA3-i8-avI4Q5Pc9TcXNB4h0_B-cZ9yKwwH1DYPyRPCBAWbcjf3XCzPuvJh6LH71UKcwmJ4N20F8LiN6M7Pb_1CJl8waHwwod_4pRjRenH7KBOdLCyFNVpw3O9rhIHbVUkenp8"/>
+        </div>
+    </div>
+</nav>
+<div class="flex">
+    <!-- SideNavBar -->
+    <aside class="h-screen w-72 flex flex-col fixed left-0 top-0 pt-24 bg-slate-50 dark:bg-slate-900 font-['Plus_Jakarta_Sans'] text-sm font-medium hidden lg:flex">
+        <div class="px-6 mb-8">
+            <div class="bg-primary/5 rounded-2xl p-4 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined" data-icon="military_tech" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500">Xin chào,</p>
+                    <p class="font-bold text-blue-900">Elite Explorer</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 px-4 py-6">
+            <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 rounded-xl transition-transform duration-300 hover:translate-x-1" href="#">
+                <span class="material-symbols-outlined" data-icon="person">person</span>
+                Profile
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 rounded-xl transition-transform duration-300 hover:translate-x-1" href="#">
+                <span class="material-symbols-outlined" data-icon="travel_explore">travel_explore</span>
+                My Bookings
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 rounded-xl transition-transform duration-300 hover:translate-x-1" href="#">
+                <span class="material-symbols-outlined" data-icon="payments">payments</span>
+                Payment History
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-blue-900 dark:text-white rounded-xl shadow-sm font-bold transition-transform duration-300 hover:translate-x-1" href="#">
+                <span class="material-symbols-outlined" data-icon="military_tech" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+                Reward Points
+            </a>
+        </div>
+        <div class="mt-auto px-4 py-8 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2">
+            <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 rounded-xl" href="#">
+                <span class="material-symbols-outlined" data-icon="help">help</span>
+                Help Center
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 text-error hover:bg-error/5 rounded-xl" href="#">
+                <span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Sign Out
+            </a>
+        </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-72 pt-28 pb-12 px-6 lg:px-12 bg-surface">
+        <!-- Header Section -->
+        <header class="mb-12">
+            <span class="text-secondary font-bold tracking-widest text-xs uppercase mb-2 block">Chương trình khách hàng thân thiết</span>
+            <h1 class="font-headline text-4xl lg:text-5xl font-black text-primary tracking-tight">Điểm thưởng của bạn</h1>
+        </header>
+        <!-- Rewards Dashboard Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
+            <!-- Loyalty Card (Main Stats) -->
+            <div class="md:col-span-7 lg:col-span-8 bg-gradient-to-br from-primary to-primary-container rounded-[2rem] p-8 text-white relative overflow-hidden shadow-xl shadow-primary/20">
+                <div class="relative z-10 h-full flex flex-col justify-between">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-blue-100/80 font-medium mb-1">Hạng thành viên hiện tại</p>
+                            <h2 class="text-3xl font-headline font-extrabold uppercase tracking-wide">Lotus Elite</h2>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-md rounded-2xl px-4 py-2 flex items-center gap-2">
+                            <span class="material-symbols-outlined" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                            <span class="font-bold">Hạng Bạch Kim</span>
+                        </div>
+                    </div>
+                    <div class="mt-12">
+                        <p class="text-blue-100/80 mb-2">Tổng điểm tích lũy</p>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-6xl font-headline font-black">24,500</span>
+                            <span class="text-xl font-medium text-blue-200">điểm</span>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-blue-100">Tiến trình thăng hạng Diamond</span>
+                            <span class="font-bold">75%</span>
+                        </div>
+                        <div class="w-full h-3 bg-white/20 rounded-full overflow-hidden">
+                            <div class="h-full bg-secondary w-3/4 rounded-full"></div>
+                        </div>
+                        <p class="text-xs text-blue-100/60 mt-2 italic">Tích lũy thêm 5,500 điểm để thăng hạng Diamond</p>
+                    </div>
+                </div>
+                <!-- Decorative Elements -->
+                <div class="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-[-10%] left-[-5%] w-48 h-48 bg-secondary/20 rounded-full blur-2xl"></div>
+            </div>
+            <!-- Quick Actions/Stats -->
+            <div class="md:col-span-5 lg:col-span-4 grid grid-cols-1 gap-6">
+                <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline-variant/10 flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-secondary-container/20 flex items-center justify-center text-secondary">
+                        <span class="material-symbols-outlined text-3xl" data-icon="card_giftcard" style="font-variation-settings: 'FILL' 1;">card_giftcard</span>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">Điểm sắp hết hạn</p>
+                        <p class="text-xl font-bold text-on-surface">1,200 <span class="text-xs font-normal opacity-60">(31/12/2023)</span></p>
+                    </div>
+                </div>
+                <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline-variant/10 flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-3xl" data-icon="history_edu">history_edu</span>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">Chuyến đi đã thực hiện</p>
+                        <p class="text-xl font-bold text-on-surface">12 hành trình</p>
+                    </div>
+                </div>
+                <button class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-bold shadow-lg shadow-primary/20 transition-transform active:scale-95">
+                    Đổi điểm lấy Voucher
+                </button>
+            </div>
+        </div>
+        <!-- Exclusive Perks Section -->
+        <section class="mb-16">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h3 class="font-headline text-2xl font-bold text-primary">Đặc quyền Lotus Elite</h3>
+                    <p class="text-slate-500">Những ưu đãi dành riêng cho cấp độ của bạn</p>
+                </div>
+                <button class="text-primary font-bold text-sm flex items-center gap-1">
+                    Xem tất cả đặc quyền <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="group bg-surface-container-low rounded-[1.5rem] p-6 transition-all hover:bg-surface-container-high">
+                    <div class="bg-white rounded-2xl w-12 h-12 flex items-center justify-center mb-4 shadow-sm text-primary group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined" data-icon="airport_shuttle">airport_shuttle</span>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Đưa đón sân bay miễn phí</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Áp dụng cho mọi tour cao cấp tại khu vực miền Trung và miền Bắc.</p>
+                </div>
+                <div class="group bg-surface-container-low rounded-[1.5rem] p-6 transition-all hover:bg-surface-container-high">
+                    <div class="bg-white rounded-2xl w-12 h-12 flex items-center justify-center mb-4 shadow-sm text-primary group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined" data-icon="upgrade">upgrade</span>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Nâng hạng phòng tự động</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Ưu tiên nâng hạng phòng khách sạn/du thuyền tùy vào tình trạng trống.</p>
+                </div>
+                <div class="group bg-surface-container-low rounded-[1.5rem] p-6 transition-all hover:bg-surface-container-high">
+                    <div class="bg-white rounded-2xl w-12 h-12 flex items-center justify-center mb-4 shadow-sm text-primary group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Hỗ trợ 24/7 chuyên biệt</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Đường dây nóng riêng biệt và trợ lý hành trình cá nhân cho mỗi chuyến đi.</p>
+                </div>
+            </div>
+        </section>
+        <!-- Transaction History & Points earning -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <!-- Points History -->
+            <div class="lg:col-span-2">
+                <h3 class="font-headline text-2xl font-bold text-primary mb-8">Lịch sử tích lũy &amp; Sử dụng</h3>
+                <div class="space-y-4">
+                    <!-- History Item 1 -->
+                    <div class="bg-white p-5 rounded-2xl flex justify-between items-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                            </div>
+                            <div>
+                                <p class="font-bold">Tour Khám phá Hang Sơn Đoòng</p>
+                                <p class="text-xs text-slate-400">12 Tháng 10, 2023 • ID: #VN8829</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-headline font-bold text-green-600">+4,500</p>
+                            <p class="text-[10px] text-slate-400 uppercase tracking-tighter">Tích lũy</p>
+                        </div>
+                    </div>
+                    <!-- History Item 2 -->
+                    <div class="bg-white p-5 rounded-2xl flex justify-between items-center shadow-sm hover:shadow-md transition-shadow border-l-4 border-secondary">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-orange-50 text-secondary flex items-center justify-center">
+                                <span class="material-symbols-outlined" data-icon="remove_circle">remove_circle</span>
+                            </div>
+                            <div>
+                                <p class="font-bold">Đổi Voucher Nghỉ dưỡng InterContinental</p>
+                                <p class="text-xs text-slate-400">05 Tháng 10, 2023 • ID: #RD1120</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-headline font-bold text-secondary">-8,000</p>
+                            <p class="text-[10px] text-slate-400 uppercase tracking-tighter">Sử dụng</p>
+                        </div>
+                    </div>
+                    <!-- History Item 3 -->
+                    <div class="bg-white p-5 rounded-2xl flex justify-between items-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                            </div>
+                            <div>
+                                <p class="font-bold">Bonus: Kỷ niệm 1 năm thành viên</p>
+                                <p class="text-xs text-slate-400">20 Tháng 9, 2023 • System</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-headline font-bold text-green-600">+1,000</p>
+                            <p class="text-[10px] text-slate-400 uppercase tracking-tighter">Thưởng</p>
+                        </div>
+                    </div>
+                    <!-- History Item 4 -->
+                    <div class="bg-white p-5 rounded-2xl flex justify-between items-center shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                            </div>
+                            <div>
+                                <p class="font-bold">Tour Ẩm thực Sài Gòn về đêm</p>
+                                <p class="text-xs text-slate-400">15 Tháng 9, 2023 • ID: #VN7712</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-headline font-bold text-green-600">+1,200</p>
+                            <p class="text-[10px] text-slate-400 uppercase tracking-tighter">Tích lũy</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 text-center">
+                    <button class="px-8 py-3 bg-surface-container text-primary font-bold rounded-full hover:bg-surface-container-high transition-colors">
+                        Tải báo cáo chi tiết (.PDF)
+                    </button>
+                </div>
+            </div>
+            <!-- How to earn more points -->
+            <div class="space-y-6">
+                <h3 class="font-headline text-2xl font-bold text-primary">Tích thêm điểm</h3>
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-outline-variant/10 overflow-hidden relative">
+                    <div class="relative z-10">
+                        <span class="inline-block px-3 py-1 bg-secondary text-white text-[10px] font-bold rounded-full mb-3 uppercase tracking-wider">Hot Deal</span>
+                        <h4 class="font-bold text-lg mb-2">Giới thiệu bạn bè</h4>
+                        <p class="text-sm text-slate-500 mb-6">Nhận ngay 2,000 điểm khi người thân của bạn hoàn thành tour đầu tiên.</p>
+                        <button class="w-full py-3 border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary hover:text-white transition-all">
+                            Lấy mã giới thiệu
+                        </button>
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 opacity-10">
+                        <span class="material-symbols-outlined text-8xl" data-icon="share">share</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-outline-variant/10 overflow-hidden relative">
+                    <div class="relative z-10">
+                        <h4 class="font-bold text-lg mb-2">Đánh giá hành trình</h4>
+                        <p class="text-sm text-slate-500 mb-6">Tặng 500 điểm cho mỗi bài đánh giá kèm ảnh thực tế sau mỗi chuyến đi.</p>
+                        <button class="w-full py-3 border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary hover:text-white transition-all">
+                            Viết đánh giá ngay
+                        </button>
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 opacity-10">
+                        <span class="material-symbols-outlined text-8xl" data-icon="rate_review">rate_review</span>
+                    </div>
+                </div>
+                <div class="bg-primary/5 rounded-3xl p-6 border border-primary/10">
+                    <h4 class="font-bold text-primary mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm" data-icon="info">info</span>
+                        Bạn có biết?
+                    </h4>
+                    <p class="text-xs text-slate-600 leading-relaxed italic">
+                        Điểm thưởng có thể quy đổi trực tiếp thành chiết khấu khi thanh toán tour (tối đa 20% giá trị đơn hàng). 1,000 điểm tương đương 100,000 VND.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl flex justify-around items-center h-16 z-50 border-t border-slate-100">
+    <button class="flex flex-col items-center gap-1 text-slate-400">
+        <span class="material-symbols-outlined" data-icon="home">home</span>
+        <span class="text-[10px]">Trang chủ</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-slate-400">
+        <span class="material-symbols-outlined" data-icon="explore">explore</span>
+        <span class="text-[10px]">Khám phá</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-primary">
+        <span class="material-symbols-outlined" data-icon="military_tech" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+        <span class="text-[10px] font-bold">Thưởng</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-slate-400">
+        <span class="material-symbols-outlined" data-icon="person">person</span>
+        <span class="text-[10px]">Tôi</span>
+    </button>
+</nav>
+</body></html>
