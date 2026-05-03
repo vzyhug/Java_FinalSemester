@@ -1,10 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Đăng ký | Vietnam Expeditions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                url('https://images.unsplash.com/photo-1504457047772-27faf1c00561?q=80&w=2070');
+            /* Ảnh ruộng bậc thang */
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 40px 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .auth-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .btn-primary-custom {
+            background-color: #2D318C;
+            /* Màu Navy đồng bộ */
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: #1a1d5a;
+            transform: translateY(-1px);
+        }
+
+        .form-control {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .form-control:focus {
+            border-color: #2D318C;
+            box-shadow: 0 0 0 0.25rem rgba(45, 49, 140, 0.1);
+        }
+
+        .error-text {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+    </style>
 </head>
+
 <body>
-$END$
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card auth-card p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h2 style="color: #2D318C; font-weight: 700; letter-spacing: -1px;">Vietnam Expeditions</h2>
+                        <p class="text-muted">Tạo tài khoản để nhận ưu đãi tour sớm nhất</p>
+                    </div>
+
+                    <form th:action="@{/register}" th:object="${customer}" method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Họ và Tên</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i
+                                        class="bi bi-person-badge"></i></span>
+                                <input type="text" th:field="*{fullName}" class="form-control"
+                                    placeholder="Nguyễn Văn A">
+                            </div>
+                            <p th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="error-text">
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Địa chỉ Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+                                <input type="email" th:field="*{email}" class="form-control"
+                                    placeholder="example@mail.com">
+                            </div>
+                            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-text"></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-phone"></i></span>
+                                <input type="text" th:field="*{phone}" class="form-control" placeholder="090 123 4567">
+                            </div>
+                            <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="error-text"></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Mật khẩu</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i
+                                        class="bi bi-shield-lock"></i></span>
+                                <input type="password" th:field="*{passwordHash}" class="form-control"
+                                    placeholder="Ít nhất 8 ký tự">
+                            </div>
+                            <p th:if="${#fields.hasErrors('passwordHash')}" th:errors="*{passwordHash}"
+                                class="error-text"></p>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="terms" required>
+                                <label class="form-check-label small text-muted" for="terms">
+                                    Tôi đồng ý với <a href="#" class="text-decoration-none fw-bold"
+                                        style="color: #2D318C;">Điều khoản & Chính sách</a> của Vietnam Expeditions.
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary-custom w-100 text-white mb-3 shadow-sm">Đăng ký tài
+                            khoản</button>
+
+                        <div class="text-center">
+                            <p class="small mb-0">Bạn đã có tài khoản?
+                                <a th:href="@{/login}" class="fw-bold text-decoration-none" style="color: #2D318C;">Đăng
+                                    nhập tại đây</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
+
 </html>
