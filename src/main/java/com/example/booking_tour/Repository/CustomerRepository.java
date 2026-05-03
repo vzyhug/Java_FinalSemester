@@ -7,5 +7,7 @@ import com.example.booking_tour.Model.Customer;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+    // tìm khách hàng theo email
+    Customer findByEmail(String email);
 
 }
