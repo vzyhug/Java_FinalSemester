@@ -24,7 +24,7 @@ public class Payment {
     @Column(name = "payment_method", length = 50)
     private String paymentMethod; // Tiền mặt, Chuyển khoản, MOMO...
 
-    @Column(name = "payment_date")
+    @Column(name = "payment_date" ,columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime paymentDate = LocalDateTime.now();
 
     @Column(name = "notes")

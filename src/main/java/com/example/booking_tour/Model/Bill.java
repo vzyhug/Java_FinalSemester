@@ -25,7 +25,7 @@ public class Bill {
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
-    @Column(name = "bill_date")
+    @Column(name = "bill_date",columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime billDate = LocalDateTime.now();
 
     @Column(name = "tax_code", length = 20)

@@ -40,6 +40,6 @@ public class TourDeparture {
     @JoinColumn(name = "guide_id")
     private Employee guide;
 
-    @Column(name = "status", length = 20)
+    @Column(name = "status", length = 20, columnDefinition = "VARCHAR(20) DEFAULT 'open'")
     private String status = "open"; // open, full, cancelled
 }
