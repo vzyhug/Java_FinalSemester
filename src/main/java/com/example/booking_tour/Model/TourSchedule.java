@@ -25,12 +25,12 @@ public class TourSchedule {
     @Column(name = "activities")
     private String activities;
 
-    @Column(name = "has_breakfast")
+    @Column(name = "has_breakfast", columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean hasBreakfast = true;
 
-    @Column(name = "has_lunch")
+    @Column(name = "has_lunch", columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean hasLunch = true;
 
-    @Column(name = "has_dinner")
+    @Column(name = "has_dinner", columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean hasDinner = true;
 }

@@ -41,7 +41,7 @@ public class Tour {
     @Column(name = "included_services")
     private String includedServices;
 
-    @Column(name = "is_active")
+    @Column(name = "is_active",columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean isActive = true;
 
     @ManyToOne
