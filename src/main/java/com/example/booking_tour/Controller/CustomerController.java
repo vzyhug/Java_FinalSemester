@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequestMapping("/customer")
 @RequiredArgsConstructor
-public class CustomerController {
+public class    CustomerController {
     private final CutomerServices customerServices;
 
     // Hiển thị trang đăng nhập cho khách hàng
