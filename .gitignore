@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+# Chặn file cấu hình của Firebase
+/src/main/resources/firebase/*
+
