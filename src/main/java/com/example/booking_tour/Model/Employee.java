@@ -32,6 +32,6 @@ public class Employee {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @Column(name = "is_active")
+    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean isActive = true;
 }
