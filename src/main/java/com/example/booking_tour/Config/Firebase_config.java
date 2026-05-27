@@ -17,7 +17,7 @@ public class Firebase_config {
             // Đọc file cấu hình bảo mật
             FileInputStream serviceAccount =
                     new FileInputStream(
-                            "src/main/resources/firebase/bookingtourvietnam-63a59-firebase-adminsdk-fbsvc-e331ca95b3.json"
+                            "src/main/resources/firebase/bookingtourvietnam-63a59-firebase-adminsdk-fbsvc-9766a5565d.json"
                     );
             // Thiết lập cấu hình firebase
             FirebaseOptions options = FirebaseOptions.builder()
