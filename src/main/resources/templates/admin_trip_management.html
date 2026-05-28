@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/admin_layout :: layout(~{:: #departure-manager-content})}">
+<head>
+  <meta charset="utf-8"/>
+  <title>Quản lý Chuyến đi - Vietnam Expeditions</title>
+</head>
+<body>
+<div id="departure-manager-content" class="p-8">
+
+  <div class="mb-8">
+    <h1 class="text-3xl font-black text-blue-900 mb-2">Quản lý Chuyến đi</h1>
+    <p class="text-slate-500">Quản lý các chuyến khởi hành thực tế của tour</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-sm font-bold text-slate-500 uppercase">Đang khởi hành</span>
+        <span class="material-symbols-outlined text-blue-900 text-2xl">flight_takeoff</span>
+      </div>
+      <h3 class="text-3xl font-black text-blue-900" th:text="${onGoingDepartures ?: 0}">0</h3>
+      <p class="text-xs text-slate-500 mt-2">Chuyến đi hiện tại</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-sm font-bold text-slate-500 uppercase">Chờ HDV</span>
+        <span class="material-symbols-outlined text-orange-600 text-2xl">person_check</span>
+      </div>
+      <h3 class="text-3xl font-black text-orange-600" th:text="${pendingGuideDepartures ?: 0}">0</h3>
+      <p class="text-xs text-slate-500 mt-2">Chờ xác nhận hướng dẫn viên</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-sm font-bold text-slate-500 uppercase">Khách hôm nay</span>
+        <span class="material-symbols-outlined text-green-600 text-2xl">group</span>
+      </div>
+      <h3 class="text-3xl font-black text-green-600" th:text="${todayPassengers ?: 0}">0</h3>
+      <p class="text-xs text-slate-500 mt-2">Pax khởi hành hôm nay</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-sm font-bold text-slate-500 uppercase">Lịch khởi hành</span>
+        <span class="material-symbols-outlined text-purple-600 text-2xl">calendar_month</span>
+      </div>
+      <h3 class="text-lg font-black text-purple-600 line-clamp-1" th:text="${upcomingMonth ?: 'Tháng này'}">Tháng 11</h3>
+      <p class="text-xs text-slate-500 mt-2">Tháng sắp tới</p>
+    </div>
+  </div>
+
+  <div class="flex flex-col md:flex-row gap-4 mb-8">
+    <div class="flex gap-2 flex-1">
+      <a th:href="@{/admin/departures}" class="px-4 py-2 rounded-lg transition font-semibold text-sm"
+         th:classappend="${status == null} ? 'bg-blue-900 text-white' : 'bg-blue-50 text-blue-900 hover:bg-blue-100'">
+        Tất cả
+      </a>
+      <a th:href="@{/admin/departures/filter(status='open')}" class="px-4 py-2 rounded-lg transition font-semibold text-sm"
+         th:classappend="${status == 'open'} ? 'bg-blue-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
+        Đang bán
+      </a>
+      <a th:href="@{/admin/departures/filter(status='full')}" class="px-4 py-2 rounded-lg transition font-semibold text-sm"
+         th:classappend="${status == 'full'} ? 'bg-blue-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
+        Đầy
+      </a>
+      <a th:href="@{/admin/departures/filter(status='cancelled')}" class="px-4 py-2 rounded-lg transition font-semibold text-sm"
+         th:classappend="${status == 'cancelled'} ? 'bg-blue-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
+        Đã hủy
+      </a>
+    </div>
+    <button onclick="openAddDepartureModal()" class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-green-700 transition whitespace-nowrap">
+      <span class="material-symbols-outlined text-lg">add</span>
+      Thêm Chuyến
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div th:each="dep : ${departures}" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow">
+      <div class="bg-gradient-to-r from-blue-900 to-blue-700 px-6 py-4 text-white">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-lg font-bold" th:text="${dep.tour != null ? dep.tour.title : 'Tour lẻ'}">Tour Name</h3>
+          <span class="px-3 py-1 rounded-full text-xs font-bold"
+                th:classappend="${dep.status == 'open' ? 'bg-green-400/30 text-green-200' : dep.status == 'full' ? 'bg-orange-400/30 text-orange-200' : 'bg-red-400/30 text-red-200'}"
+                th:text="${dep.status == 'open' ? 'Đang bán' : dep.status == 'full' ? 'Đầy' : 'Đã hủy'}">
+          </span>
+        </div>
+        <p class="text-sm text-blue-100" th:if="${dep.tour != null && dep.tour.province != null}"
+           th:text="${dep.tour.province.provinceName}">Location</p>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <p class="text-xs text-slate-600 font-semibold mb-1">Khởi hành</p>
+            <p class="font-bold text-blue-900" th:text="${#temporals.format(dep.startDate, 'dd/MM/yyyy HH:mm')}">01/02/2024 08:00</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-600 font-semibold mb-1">Trở về</p>
+            <p class="font-bold text-blue-900" th:text="${#temporals.format(dep.returnDate, 'dd/MM/yyyy HH:mm')}">03/02/2024 18:00</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-sm text-slate-600 font-semibold">Chỗ còn trống</p>
+            <p class="text-sm font-bold text-blue-900">
+              <span th:text="${dep.availableSeats ?: 0}">15</span> / <span th:text="${dep.maxSeats ?: 0}">30</span>
+            </p>
+          </div>
+          <div class="w-full bg-slate-200 rounded-full h-2.5">
+            <div class="bg-blue-900 h-2.5 rounded-full transition-all"
+                 th:style="'width: ' + ${dep.maxSeats > 0 ? ((dep.maxSeats - dep.availableSeats) * 100 / dep.maxSeats) : 0} + '%'">
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+          <div>
+            <p class="text-xs text-slate-600 font-semibold mb-1">Giá người lớn</p>
+            <p class="font-bold text-green-600" th:if="${dep.adultPrice != null}">
+              <span th:text="${#numbers.formatDecimal(dep.adultPrice, 0, 'COMMA', 0, 'POINT')}">0</span>
+              <span class="text-sm text-slate-600">đ</span>
+            </p>
+            <p class="text-slate-500 text-sm" th:if="${dep.adultPrice == null}">--</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-600 font-semibold mb-1">Giá trẻ em</p>
+            <p class="font-bold text-green-600" th:if="${dep.childPrice != null}">
+              <span th:text="${#numbers.formatDecimal(dep.childPrice, 0, 'COMMA', 0, 'POINT')}">0</span>
+              <span class="text-sm text-slate-600">đ</span>
+            </p>
+            <p class="text-slate-500 text-sm" th:if="${dep.childPrice == null}">--</p>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-100">
+          <p class="text-xs text-slate-600 font-semibold mb-1">Hướng dẫn viên</p>
+          <p class="text-sm font-bold text-slate-900" th:text="${dep.guide != null ? dep.guide.fullName : 'Chưa gán'}">
+            Guide Name
+          </p>
+        </div>
+
+        <div class="flex gap-2 pt-4 border-t border-slate-100">
+          <a th:href="@{/admin/departures/{id}(id=${dep.departureId})}" class="flex-1 text-blue-600 hover:bg-blue-50 py-2 rounded-lg transition font-bold text-sm text-center">
+            <span class="material-symbols-outlined text-sm inline mr-1">visibility</span>
+            Chi tiết
+          </a>
+          <a th:href="@{/admin/departures/cancel/{id}(id=${dep.departureId})}"
+             onclick="return confirm('Bạn có chắc chắn muốn hủy chuyến này?')"
+             class="flex-1 text-red-600 hover:bg-red-50 py-2 rounded-lg transition font-bold text-sm text-center">
+            <span class="material-symbols-outlined text-sm inline mr-1">block</span>
+            Hủy chuyến
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(departures)}" class="lg:col-span-2 text-center py-16">
+      <span class="material-symbols-outlined text-6xl text-slate-300 block mb-4">flight</span>
+      <h3 class="text-2xl font-bold text-slate-700 mb-2">Chưa có chuyến đi nào</h3>
+      <p class="text-slate-500 mb-6">Hãy thêm chuyến đi mới để bắt đầu</p>
+    </div>
+  </div>
+
+</div>
+
+<div id="departureModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl">
+    <div class="bg-gradient-to-r from-blue-900 to-blue-700 px-6 py-4 flex items-center justify-between">
+      <h3 class="text-xl font-bold text-white">Thêm Chuyến Đi Mới</h3>
+      <button onclick="closeDepartureModal()" class="text-white hover:bg-white/20 p-2 rounded-lg flex">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form method="POST" th:action="@{/admin/departures/save}" class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-2">Chọn Tour *</label>
+        <select name="tourId" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          <option value="">-- Chọn tour --</option>
+          <option th:each="t : ${tours}" th:value="${t.tourId}" th:text="${t.title}">Tour mẫu</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-2">Ngày khởi hành *</label>
+        <input type="datetime-local" name="startDate" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-2">Ngày trở về *</label>
+        <input type="datetime-local" name="returnDate" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-2">Số chỗ tối đa *</label>
+        <input type="number" name="maxSeats" placeholder="30" min="1" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-2">Giá người lớn (VNĐ)</label>
+        <input type="number" name="adultPrice" placeholder="5500000" min="0" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-2">Giá trẻ em (VNĐ)</label>
+        <input type="number" name="childPrice" placeholder="3500000" min="0" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      </div>
+
+      <div class="flex gap-2 pt-4">
+        <button type="button" onclick="closeDepartureModal()" class="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
+          Hủy
+        </button>
+        <button type="submit" class="flex-1 px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition font-bold">
+          Lưu Chuyến
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openAddDepartureModal() {
+    document.getElementById('departureModal').classList.remove('hidden');
+  }
+
+  function closeDepartureModal() {
+    document.getElementById('departureModal').classList.add('hidden');
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin_layout :: layout(~{:: #dashboard-content})}">
+<head>
+    <title>Dashboard Tổng quan - Vietnam Expeditions</title>
+</head>
+<body>
+
+<div id="dashboard-content" class="p-6 lg:p-10 max-w-7xl mx-auto">
+    <div class="mb-10">
+        <h2 class="text-3xl font-extrabold text-blue-900 tracking-tight">Tổng quan hệ thống</h2>
+        <p class="text-slate-500 font-medium mt-1">Chào mừng trở lại! Đây là báo cáo hoạt động mới nhất của Vietnam Expeditions.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-blue-50 text-blue-900 rounded-xl"><span class="material-symbols-outlined">payments</span></div>
+                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">trending_up</span> 12.5%
+                    </span>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-slate-500 mb-1">Tổng doanh thu (VNĐ)</p>
+                <h3 class="text-2xl font-black text-blue-900" th:text="${totalRevenue != null ? #numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}">0 đ</h3>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-indigo-50 text-indigo-900 rounded-xl"><span class="material-symbols-outlined">event_available</span></div>
+                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">trending_up</span> 8.2%
+                    </span>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-slate-500 mb-1">Booking mới</p>
+                <h3 class="text-2xl font-black text-blue-900" th:text="${totalBookings != null ? totalBookings : 0}">0</h3>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-sky-50 text-sky-900 rounded-xl"><span class="material-symbols-outlined">person_add</span></div>
+                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">trending_up</span> 24%
+                    </span>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-slate-500 mb-1">Khách hàng mới</p>
+                <h3 class="text-2xl font-black text-blue-900" th:text="${totalCustomers != null ? totalCustomers : 0}">0</h3>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-red-50 text-red-600 rounded-xl"><span class="material-symbols-outlined">event_busy</span></div>
+                <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-lg flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">trending_down</span> 2.1%
+                    </span>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-slate-500 mb-1">Tỷ lệ hủy tour</p>
+                <h3 class="text-2xl font-black text-blue-900">1.4%</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-8">
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="px-8 py-6 border-b border-slate-50 flex justify-between items-center">
+                <h4 class="text-lg font-bold text-blue-900">Giao dịch gần đây</h4>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                    <tr class="bg-slate-50/50">
+                        <th class="px-8 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Mã đơn hàng</th>
+                        <th class="px-4 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khách hàng</th>
+                        <th class="px-4 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tour</th>
+                        <th class="px-4 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ngày đặt</th>
+                        <th class="px-4 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Số tiền</th>
+                        <th class="px-8 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Trạng thái</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                    <tr th:each="booking : ${recentBookings}" class="hover:bg-slate-50 transition-colors">
+                        <td class="px-8 py-4 text-sm font-bold text-blue-900" th:text="'#' + ${booking.bookingId}">#1</td>
+                        <td class="px-4 py-4 text-sm font-medium text-slate-600" th:text="${booking.customer != null ? booking.customer.fullName : 'Ẩn danh'}">Khách hàng</td>
+                        <td class="px-4 py-4 text-sm font-medium text-slate-600" th:text="${booking.departure != null && booking.departure.tour != null ? booking.departure.tour.title : 'Tour lẻ'}">Tên Tour</td>
+                        <td class="px-4 py-4 text-sm text-slate-500" th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy')}">12/10/2023</td>
+                        <td class="px-4 py-4 text-sm font-bold text-blue-900" th:text="${booking.totalAmount != null ? #numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 0, 'POINT') + 'đ' : '0đ'}">0đ</td>
+                        <td class="px-8 py-4">
+                                <span class="px-3 py-1 text-[11px] font-bold rounded-full"
+                                      th:classappend="${booking.status == 'Confirmed' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}"
+                                      th:text="${booking.status != null ? booking.status : 'Chờ xử lý'}">Trạng thái</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
