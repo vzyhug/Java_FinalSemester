@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class DepartureService {
+public class DepartureServices {
     @Autowired
     private TourDepartureRepository tourDepartureRepository;
 
@@ -291,17 +291,24 @@ public class DepartureService {
     /**
      * Hủy chuyến đi (soft delete)
      */
+    /**
+     * Hủy chuyến đi (chuyển trạng thái sang cancelled)
+     */
     public boolean cancelDeparture(Integer departureId) {
         try {
-            TourDeparture departure = getDepartureById(departureId);
+            // Đã sửa 'departureRepository' thành 'tourDepartureRepository'
+            TourDeparture departure = tourDepartureRepository.findById(departureId).orElse(null);
+
             if (departure != null) {
+                // Đổi trạng thái thành 'cancelled' (đã hủy)
                 departure.setStatus("cancelled");
+                // Lưu lại vào Database
                 tourDepartureRepository.save(departure);
                 return true;
             }
             return false;
         } catch (Exception e) {
-            System.out.println("Lỗi trong cancelDeparture: " + e.getMessage());
+            System.out.println("Lỗi khi hủy chuyến: " + e.getMessage());
             return false;
         }
     }

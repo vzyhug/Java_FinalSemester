@@ -69,10 +69,12 @@
         Đã hủy
       </a>
     </div>
-    <button onclick="openAddDepartureModal()" class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-green-700 transition whitespace-nowrap">
+
+    <a th:href="@{/admin/departures/add}"
+       class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-green-700 transition whitespace-nowrap">
       <span class="material-symbols-outlined text-lg">add</span>
       Thêm Chuyến
-    </button>
+    </a>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -90,14 +92,15 @@
       </div>
 
       <div class="p-6 space-y-4">
+
         <div class="grid grid-cols-2 gap-4">
           <div>
             <p class="text-xs text-slate-600 font-semibold mb-1">Khởi hành</p>
-            <p class="font-bold text-blue-900" th:text="${#temporals.format(dep.startDate, 'dd/MM/yyyy HH:mm')}">01/02/2024 08:00</p>
+            <p class="font-bold text-blue-900" th:text="${dep.departureDate != null ? #temporals.format(dep.departureDate, 'dd/MM/yyyy') : 'Chưa cập nhật'}">01/02/2024</p>
           </div>
           <div>
             <p class="text-xs text-slate-600 font-semibold mb-1">Trở về</p>
-            <p class="font-bold text-blue-900" th:text="${#temporals.format(dep.returnDate, 'dd/MM/yyyy HH:mm')}">03/02/2024 18:00</p>
+            <p class="font-bold text-blue-900" th:text="${dep.returnDate != null ? #temporals.format(dep.returnDate, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}">03/02/2024 18:00</p>
           </div>
         </div>
 
@@ -164,71 +167,5 @@
   </div>
 
 </div>
-
-<div id="departureModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl">
-    <div class="bg-gradient-to-r from-blue-900 to-blue-700 px-6 py-4 flex items-center justify-between">
-      <h3 class="text-xl font-bold text-white">Thêm Chuyến Đi Mới</h3>
-      <button onclick="closeDepartureModal()" class="text-white hover:bg-white/20 p-2 rounded-lg flex">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-    </div>
-
-    <form method="POST" th:action="@{/admin/departures/save}" class="p-6 space-y-4">
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-2">Chọn Tour *</label>
-        <select name="tourId" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-          <option value="">-- Chọn tour --</option>
-          <option th:each="t : ${tours}" th:value="${t.tourId}" th:text="${t.title}">Tour mẫu</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-2">Ngày khởi hành *</label>
-        <input type="datetime-local" name="startDate" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required/>
-      </div>
-
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-2">Ngày trở về *</label>
-        <input type="datetime-local" name="returnDate" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required/>
-      </div>
-
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-2">Số chỗ tối đa *</label>
-        <input type="number" name="maxSeats" placeholder="30" min="1" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required/>
-      </div>
-
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-2">Giá người lớn (VNĐ)</label>
-        <input type="number" name="adultPrice" placeholder="5500000" min="0" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-      </div>
-
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-2">Giá trẻ em (VNĐ)</label>
-        <input type="number" name="childPrice" placeholder="3500000" min="0" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-      </div>
-
-      <div class="flex gap-2 pt-4">
-        <button type="button" onclick="closeDepartureModal()" class="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
-          Hủy
-        </button>
-        <button type="submit" class="flex-1 px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition font-bold">
-          Lưu Chuyến
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<script>
-  function openAddDepartureModal() {
-    document.getElementById('departureModal').classList.remove('hidden');
-  }
-
-  function closeDepartureModal() {
-    document.getElementById('departureModal').classList.add('hidden');
-  }
-</script>
-
 </body>
 </html>

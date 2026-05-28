@@ -2,13 +2,17 @@ package com.example.booking_tour.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+
 @Table(name = "images_tour")
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
-public class Images_Tour
+public class ImagesTour
 {
     @Column(name = "img_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,16 +27,16 @@ public class Images_Tour
     private Tour tour;
 
     @Column(name = "is_thumbnail",columnDefinition = "BOOLEAN DEFAULT false")
-    boolean isThumbnail;
+    private boolean isThumbnail;
 
-    public Images_Tour(String imgURL,Tour tour, boolean isThumbnail)
+    public ImagesTour(String imgURL, Tour tour, boolean isThumbnail)
     {
         this.imgURL = imgURL;
         this.tour = tour;
         this.isThumbnail = isThumbnail;
     }
 
-    public Images_Tour(String imgURL,Tour tour)
+    public ImagesTour(String imgURL, Tour tour)
     {
         this.imgURL = imgURL;
         this.tour = tour;
