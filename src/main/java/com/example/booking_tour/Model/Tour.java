@@ -1,9 +1,16 @@
 package com.example.booking_tour.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+import java.util.List;
+import java.util.Set;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "tours")
 public class Tour {
@@ -44,7 +51,22 @@ public class Tour {
     @Column(name = "is_active",columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean isActive = true;
 
+    @Column(name = "min_price")
+    private double minPrice;
+
     @ManyToOne
     @JoinColumn(name = "created_by")
     private Employee createdBy;
+
+    @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER)
+    private Set<ImagesTour> images;
+
+    public ImagesTour getImagesThumbnails() {
+        for(ImagesTour image : images) {
+            if(image.isThumbnail()) {
+                return image;
+            }
+        }
+        return null;
+    }
 }
