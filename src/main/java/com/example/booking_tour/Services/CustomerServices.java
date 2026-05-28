@@ -274,4 +274,32 @@ public class CustomerServices {
             return false;
         }
     }
+    @Transactional
+    public void toggleCustomerStatus(Integer customerId) {
+        System.out.println("--- BẮT ĐẦU VÀO SERVICE ---");
+
+        // 1. Tìm khách hàng
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+
+        if (customer != null) {
+            System.out.println("- Đã tìm thấy khách hàng: " + customer.getFullName());
+            System.out.println("- Trạng thái cũ trong DB: " + customer.getIsActive());
+
+            // 2. Đổi trạng thái
+            boolean currentStatus = customer.getIsActive() != null ? customer.getIsActive() : true;
+            customer.setIsActive(!currentStatus);
+
+            System.out.println("- Trạng thái MỚI chuẩn bị lưu: " + customer.getIsActive());
+
+            // 3. Lưu xuống DB
+            customerRepository.save(customer);
+            System.out.println("- Đã gọi lệnh SAVE thành công!");
+
+        } else {
+            System.out.println("- LỖI: Không tìm thấy khách hàng với ID: " + customerId);
+            throw new RuntimeException("Không tìm thấy khách hàng trong cơ sở dữ liệu!");
+        }
+
+        System.out.println("--- KẾT THÚC SERVICE ---");
+    }
 }

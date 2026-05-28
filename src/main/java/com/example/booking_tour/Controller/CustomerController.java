@@ -164,4 +164,30 @@ public class CustomerController {
             return "admin_customer_management";
         }
     }
+    @PostMapping("/toggle-status")
+    public String toggleCustomerStatus(
+            @RequestParam("customerId") Integer customerId,
+            HttpSession session,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+
+        System.out.println("===== NHẬN REQUEST KHÓA/MỞ KHÓA TỪ GIAO DIỆN =====");
+        System.out.println("Customer ID nhận được là: " + customerId);
+
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) {
+            return "redirect:/admin/loginForm";
+        }
+
+        try {
+            customerService.toggleCustomerStatus(customerId);
+            redirectAttributes.addFlashAttribute("message", "Cập nhật trạng thái thành công!");
+        } catch (Exception e) {
+            // IN LỖI ĐỎ RA CONSOLE ĐỂ BẮT BỆNH
+            System.err.println("LỖI RỒI: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật: " + e.getMessage());
+        }
+
+        return "redirect:/customer";
+    }
 }
