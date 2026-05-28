@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/admin_layout :: layout(~{:: #detail-departure-content})}">
+<head>
+    <title>Chi tiết Chuyến đi - Vietnam Expeditions</title>
+</head>
+<body>
+<div id="detail-departure-content" class="p-8">
+
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-black text-blue-900 mb-2">Chi tiết Chuyến khởi hành</h1>
+            <p class="text-slate-500 text-lg" th:text="${dep.tour != null ? dep.tour.title : 'Tour chưa cập nhật'}">Tên Tour</p>
+        </div>
+        <a th:href="@{/admin/departures}" class="bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-bold hover:bg-slate-300 transition">
+            <span class="material-symbols-outlined text-sm align-middle mr-1">arrow_back</span> Quay lại
+        </a>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 max-w-4xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <div class="space-y-6">
+                <div>
+                    <p class="text-sm font-bold text-slate-500 mb-1">Mã chuyến đi (ID)</p>
+                    <p class="text-lg font-semibold text-slate-900" th:text="${dep.departureId}">#</p>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-slate-500 mb-1">Ngày khởi hành</p>
+                    <p class="text-lg font-semibold text-blue-900" th:text="${dep.departureDate != null ? #temporals.format(dep.departureDate, 'dd/MM/yyyy') : 'Chưa cập nhật'}">--</p>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-slate-500 mb-1">Ngày trở về</p>
+                    <p class="text-lg font-semibold text-blue-900" th:text="${dep.returnDate != null ? #temporals.format(dep.returnDate, 'dd/MM/yyyy') : 'Chưa cập nhật'}">--</p>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-slate-500 mb-1">Hướng dẫn viên</p>
+                    <p class="text-lg font-semibold text-slate-900" th:text="${dep.guide != null ? dep.guide.fullName : 'Chưa phân công'}">--</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <p class="text-sm font-bold text-slate-500 mb-1">Trạng thái</p>
+                    <span class="px-4 py-2 rounded-lg font-bold text-sm inline-block"
+                          th:classappend="${dep.status == 'open' ? 'bg-green-100 text-green-700' : (dep.status == 'full' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700')}"
+                          th:text="${dep.status == 'open' ? 'Đang mở bán' : (dep.status == 'full' ? 'Đã đầy' : 'Đã hủy')}">
+          </span>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-slate-500 mb-1">Số chỗ (Đã đặt / Tổng số)</p>
+                    <p class="text-lg font-semibold text-slate-900">
+                        <span class="text-blue-600" th:text="${(dep.maxSeats ?: 0) - (dep.availableSeats ?: 0)}">0</span> /
+                        <span th:text="${dep.maxSeats ?: 0}">0</span> chỗ
+                    </p>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-slate-500 mb-1">Giá người lớn</p>
+                    <p class="text-lg font-semibold text-green-600" th:text="${dep.adultPrice != null ? #numbers.formatDecimal(dep.adultPrice, 0, 'COMMA', 0, 'POINT') + ' đ' : 'Chưa cập nhật'}">--</p>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-slate-500 mb-1">Giá trẻ em</p>
+                    <p class="text-lg font-semibold text-green-600" th:text="${dep.childPrice != null ? #numbers.formatDecimal(dep.childPrice, 0, 'COMMA', 0, 'POINT') + ' đ' : 'Chưa cập nhật'}">--</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

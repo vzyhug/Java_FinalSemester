@@ -58,7 +58,7 @@
                 </div>
 
 
-                <form th:action="${isAdmin} ? @{/admin/login} : @{/customer/login}" method="post">
+                <form th:action="@{/auth/login}" method="post">
 
                     <div th:if="${error}" class="alert alert-danger text-center small p-2 mb-3">
                         <span th:text="${error}"></span>
