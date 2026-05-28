@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/admin_layout :: layout(~{:: #tour-manager-content})}">
+<head>
+  <meta charset="utf-8"/>
+  <title>Quản lý Tour - Vietnam Expeditions</title>
+</head>
+<body>
+<div id="tour-manager-content" class="p-8">
+
+  <!-- Header Section -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-black text-blue-900 mb-2">Quản lý Tour</h1>
+    <p class="text-slate-500">Quản lý danh sách tour và thông tin liên quan</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-sm font-bold text-slate-500 uppercase">Tổng Tour</span>
+        <span class="material-symbols-outlined text-blue-900 text-2xl">tour</span>
+      </div>
+      <!-- SỬA CHUẨN: Dùng ?: thay cho ?? -->
+      <h3 class="text-3xl font-black text-blue-900" th:text="${totalTours ?: 0}">0</h3>
+      <p class="text-xs text-slate-500 mt-2">Tour trong hệ thống</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-sm font-bold text-slate-500 uppercase">Tour Hoạt động</span>
+        <span class="material-symbols-outlined text-green-600 text-2xl">check_circle</span>
+      </div>
+      <!-- SỬA CHUẨN: Dùng ?: thay cho ?? -->
+      <h3 class="text-3xl font-black text-green-600" th:text="${activeTours ?: 0}">0</h3>
+      <p class="text-xs text-slate-500 mt-2">Tour đang bán</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-sm font-bold text-slate-500 uppercase">Doanh thu dự kiến</span>
+        <span class="material-symbols-outlined text-orange-600 text-2xl">trending_up</span>
+      </div>
+      <h3 class="text-2xl font-black text-orange-600">
+        <!-- SỬA CHUẨN: Check an toàn cho expectedRevenue -->
+        <span th:text="${expectedRevenue != null ? #numbers.formatDecimal(expectedRevenue, 0, 'COMMA', 0, 'POINT') : '0'}">0</span>
+        <span class="text-sm">đ</span>
+      </h3>
+      <p class="text-xs text-slate-500 mt-2">Từ các chuyến đã book</p>
+    </div>
+  </div>
+
+  <!-- Search & Action Bar -->
+  <div class="flex flex-col md:flex-row gap-4 mb-8">
+    <form th:action="@{/tour/search}" method="get" class="flex-1">
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+        <input
+                type="text"
+                name="keyword"
+                th:value="${keyword ?: ''}"
+                placeholder="Tìm tour theo tên..."
+                class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+    </form>
+    <a th:href="@{/tour/manager}" class="bg-blue-900 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-blue-800 transition whitespace-nowrap">
+      <span class="material-symbols-outlined text-lg">refresh</span>
+      Làm mới
+    </a>
+    <button onclick="openAddTourModal()" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-green-700 transition whitespace-nowrap">
+      <span class="material-symbols-outlined text-lg">add</span>
+      Thêm Tour Mới
+    </button>
+  </div>
+
+  <!-- Tours Table -->
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="px-8 py-6 border-b border-slate-100">
+      <h2 class="text-lg font-bold text-blue-900">Danh sách Tour</h2>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="border-b border-slate-200 bg-slate-50">
+        <tr class="text-left text-xs font-bold text-slate-600 uppercase">
+          <th class="px-8 py-4">Tên Tour</th>
+          <th class="px-4 py-4">Mô tả</th>
+          <th class="px-4 py-4">Giá (VNĐ)</th>
+          <th class="px-4 py-4">Thời gian</th>
+          <th class="px-4 py-4">Trạng thái</th>
+          <th class="px-8 py-4">Hành động</th>
+        </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+        <tr th:each="tour : ${tours}" class="hover:bg-slate-50 transition-colors">
+          <td class="px-8 py-4">
+            <div class="font-bold text-slate-900" th:text="${tour.title ?: 'Tour không tên'}">Tour Name</div>
+            <p class="text-xs text-slate-500 mt-1" th:text="'ID: ' + ${tour.tourId}">ID: 1</p>
+          </td>
+
+          <td class="px-4 py-4 text-sm text-slate-600">
+            <p class="truncate max-w-xs" th:text="${tour.description ?: 'Không có mô tả'}">Tour description</p>
+          </td>
+
+          <td class="px-4 py-4">
+              <span class="font-bold text-blue-900" th:if="${tour.price != null}">
+                <span th:text="${#numbers.formatDecimal(tour.price, 0, 'COMMA', 0, 'POINT')}">0</span>
+                <span class="text-sm text-slate-600">đ</span>
+              </span>
+            <span class="text-slate-500 text-sm" th:if="${tour.price == null}">Chưa có giá</span>
+          </td>
+
+          <td class="px-4 py-4 text-sm text-slate-700" th:text="${tour.duration ?: 'N/A'}">
+            3 ngày 2 đêm
+          </td>
+
+          <td class="px-4 py-4">
+              <span th:if="${tour.isActive == true}" class="px-3 py-1 bg-green-50 text-green-600 text-xs font-bold rounded-full">
+                Hoạt động
+              </span>
+            <span th:if="${tour.isActive == false}" class="px-3 py-1 bg-red-50 text-red-600 text-xs font-bold rounded-full">
+                Đã tắt
+              </span>
+          </td>
+
+          <td class="px-8 py-4">
+            <div class="flex items-center gap-2">
+              <a th:href="@{/tour/{id}(id=${tour.tourId})}" class="p-2 hover:bg-blue-50 rounded-lg transition text-blue-600">
+                <span class="material-symbols-outlined text-lg">visibility</span>
+              </a>
+              <button th:onclick="'editTour(' + ${tour.tourId} + ')'" class="p-2 hover:bg-orange-50 rounded-lg transition text-orange-600">
+                <span class="material-symbols-outlined text-lg">edit</span>
+              </button>
+              <a th:href="@{/tour/delete/{id}(id=${tour.tourId})}"
+                 onclick="return confirm('Bạn có chắc chắn muốn xóa tour này?')"
+                 class="p-2 hover:bg-red-50 rounded-lg transition text-red-600">
+                <span class="material-symbols-outlined text-lg">delete</span>
+              </a>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Empty State -->
+        <tr th:if="${#lists.isEmpty(tours)}">
+          <td colspan="6" class="px-8 py-12 text-center">
+            <span class="material-symbols-outlined text-5xl text-slate-300 block mb-2">luggage</span>
+            <p class="text-slate-500 font-semibold">Không có tour nào</p>
+            <button onclick="openAddTourModal()" class="text-blue-900 font-bold hover:underline mt-2">
+              Tạo tour đầu tiên
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Add/Edit Tour Modal -->
+<div id="tourModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-xl">
+    <div class="bg-gradient-to-r from-blue-900 to-blue-700 px-6 py-4 flex items-center justify-between">
+      <h3 class="text-xl font-bold text-white" id="modalTitle">Thêm Tour Mới</h3>
+      <button onclick="closeTourModal()" class="text-white hover:bg-white/20 p-2 rounded-lg flex">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form method="POST" th:action="@{/tour/save}" class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-2">Tên Tour *</label>
+        <input type="text" name="title" placeholder="Nhập tên tour" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-2">Mô tả</label>
+        <textarea name="description" placeholder="Mô tả chi tiết về tour" rows="3" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-2">Thời gian (Ví dụ: 3 ngày 2 đêm) *</label>
+        <input type="text" name="duration" placeholder="Nhập thời gian tour" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required/>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-2">Giá Tour (VNĐ) *</label>
+        <input type="number" name="price" placeholder="Nhập giá tiền" min="0" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required/>
+      </div>
+
+      <div class="flex gap-2 pt-4">
+        <button type="button" onclick="closeTourModal()" class="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition font-bold">
+          Hủy
+        </button>
+        <button type="submit" class="flex-1 px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition font-bold">
+          Lưu
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openAddTourModal() {
+    document.getElementById('tourModal').classList.remove('hidden');
+    document.getElementById('modalTitle').textContent = 'Thêm Tour Mới';
+  }
+
+  function closeTourModal() {
+    document.getElementById('tourModal').classList.add('hidden');
+  }
+
+  function editTour(tourId) {
+    alert('Chức năng edit tour sắp cập nhật: ' + tourId);
+  }
+</script>
+
+</body>
+</html>

@@ -58,15 +58,22 @@
                 </div>
 
 
-                <form th:action="@{/customer/login}" method="post">
+                <form th:action="${isAdmin} ? @{/admin/login} : @{/customer/login}" method="post">
+
                     <div th:if="${error}" class="alert alert-danger text-center small p-2 mb-3">
                         <span th:text="${error}"></span>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Email hoặc Tên đăng nhập</label>
+                        <label class="form-label small fw-bold" th:text="${isAdmin} ? 'Tên đăng nhập Nhân viên' : 'Email Khách hàng'">Email hoặc Tên đăng nhập</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
-                            <input type="text" name="email" class="form-control" placeholder="Nhập email của bạn" required>
+
+                            <input type="text"
+                                   th:name="${isAdmin} ? 'username' : 'email'"
+                                   class="form-control"
+                                   th:placeholder="${isAdmin} ? 'Nhập tài khoản admin...' : 'Nhập email của bạn'"
+                                   required>
                         </div>
                     </div>
 
@@ -87,7 +94,7 @@
 
                     <button type="submit" class="btn btn-primary-custom w-100 text-white mb-3">Đăng nhập</button>
 
-                    <div class="text-center">
+                    <div class="text-center" th:if="${!isAdmin}">
                         <p class="small mb-0">Bạn chưa có tài khoản?
                             <a th:href="@{/customer/registerForm}" class="fw-bold text-decoration-none" style="color: #2D318C;">Đăng ký ngay</a>
                         </p>
