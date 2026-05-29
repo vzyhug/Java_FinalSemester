@@ -28,7 +28,7 @@ public class AdminSearchController {
         // 1. Giữ lại trạng thái đăng nhập của Admin ngoài Layout
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
+            return "redirect:/auth/loginForm";
         }
         model.addAttribute("admin", loggedInAdmin);
 

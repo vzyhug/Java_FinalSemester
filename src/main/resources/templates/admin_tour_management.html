@@ -11,6 +11,14 @@
     <h1 class="text-3xl font-black text-blue-900 mb-2">Quản lý Tour</h1>
     <p class="text-slate-500">Quản lý danh sách tour và thông tin liên quan</p>
   </div>
+  <div th:if="${message}" class="auto-hide-alert bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg shadow-sm flex items-center transition-all duration-500 opacity-100">
+    <span class="material-symbols-outlined mr-2">check_circle</span>
+    <span th:text="${message}"></span>
+  </div>
+  <div th:if="${error}" class="auto-hide-alert bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm flex items-center transition-all duration-500 opacity-100">
+    <span class="material-symbols-outlined mr-2">error</span>
+    <span th:text="${error}"></span>
+  </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
@@ -115,12 +123,12 @@
 
           <td class="px-8 py-4">
             <div class="flex items-center gap-2">
-              <a th:href="@{/tour/{id}(id=${tour.tourId})}" class="p-2 hover:bg-blue-50 rounded-lg transition text-blue-600">
+              <a th:href="@{/tour/manager/detail/{id}(id=${tour.tourId})}" class="p-2 hover:bg-blue-50 rounded-lg transition text-blue-600">
                 <span class="material-symbols-outlined text-lg">visibility</span>
               </a>
-              <button th:onclick="'editTour(' + ${tour.tourId} + ')'" class="p-2 hover:bg-orange-50 rounded-lg transition text-orange-600">
+              <a th:href="@{/tour/edit/{id}(id=${tour.tourId})}" class="p-2 hover:bg-orange-50 rounded-lg transition text-orange-600">
                 <span class="material-symbols-outlined text-lg">edit</span>
-              </button>
+              </a>
               <a th:href="@{/tour/delete/{id}(id=${tour.tourId})}" onclick="return confirm('Bạn có chắc chắn muốn xóa tour này?')" class="p-2 hover:bg-red-50 rounded-lg transition text-red-600">
                 <span class="material-symbols-outlined text-lg">delete</span>
               </a>
@@ -219,6 +227,21 @@
   function editTour(tourId) {
     alert('Chức năng edit tour sắp cập nhật: ' + tourId);
   }
+  // Hiệu ứng tự động ẩn thông báo sau 3 giây
+  document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(function() {
+      let alerts = document.querySelectorAll('.auto-hide-alert');
+      alerts.forEach(function(alert) {
+        // Làm mờ đi
+        alert.classList.remove('opacity-100');
+        alert.classList.add('opacity-0');
+        // Sau khi mờ xong (0.5s) thì ẩn hoàn toàn khỏi layout
+        setTimeout(function() {
+          alert.style.display = 'none';
+        }, 500);
+      });
+    }, 3000); // 3000ms = 3 giây
+  });
 </script>
 
 </body>

@@ -34,6 +34,12 @@ public class TourController {
     @Autowired
     private TourDepartureServices TDServices;
 
+    @Autowired private ProvinceServices provinceServices;
+
+    @Autowired
+    private FirebaseService firebaseService;
+
+
     @GetMapping("")
     @Transactional(readOnly = true)
     public String list_tour(Model model, @RequestParam(value = "sort", required = false) String sort) {
@@ -92,7 +98,7 @@ public class TourController {
     @GetMapping("/manager")
     public String tourManagement(HttpSession session, Model model) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
 
         try {
             model.addAttribute("totalTours", tourServices.getTotalTours());
@@ -110,7 +116,7 @@ public class TourController {
     @GetMapping("/search")
     public String searchTours(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, HttpSession session, Model model) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
 
         model.addAttribute("tours", tourServices.searchTours(keyword));
         model.addAttribute("keyword", keyword);
@@ -121,42 +127,208 @@ public class TourController {
         return "admin_tour_management";
     }
 
-    // ĐÃ SỬA LỖI TRÙNG URL: Chuyển đường dẫn của Admin thành /manager/detail/{id}
+    //  Chuyển đường dẫn của Admin thành /manager/detail/{id}
     @GetMapping("/manager/detail/{id}")
-    public String getTourDetail(@PathVariable(value = "id") Integer tourId, HttpSession session, Model model) {
+    public String getTourDetailAdmin(@PathVariable(value = "id") Integer tourId, HttpSession session, Model model) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
 
         Tour tour = tourServices.getTourById(tourId);
         if (tour == null) {
-            model.addAttribute("error", "Tour không tồn tại!");
-            return "admin_tour_management";
+            return "redirect:/tour/manager";
         }
+
         model.addAttribute("tour", tour);
+        // Lấy thêm Lịch trình và Hình ảnh để hiển thị trong trang chi tiết
+        model.addAttribute("listSchedule", TSCServices.getTourSchedulesByTour(tour));
+        model.addAttribute("listImages", IServices.getAllImagesToursByTour(tour));
         model.addAttribute("admin", loggedInAdmin);
-        return "tour_detail";
+
+        return "admin_tour_detail"; // Trỏ sang file HTML mới
     }
 
+    // ==========================================
+    // THÊM TOUR MỚI
+    // ==========================================
     @PostMapping("/save")
-    public String saveTour(@RequestParam("title") String title, @RequestParam("description") String description,
-                           @RequestParam("durationDays") Integer durationDays, @RequestParam("durationNights") Integer durationNights,
-                           HttpSession session, Model model) {
-        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
+    public String saveTour(
+            @RequestParam("title") String title,
+            @RequestParam("categoryId") Integer categoryId, // Lấy ID danh mục
+            @RequestParam("provinceId") Integer provinceId, // Lấy ID địa điểm
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam("durationDays") Integer durationDays,
+            @RequestParam("durationNights") Integer durationNights,
+            HttpSession session, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
 
-        Tour tour = new Tour();
-        tour.setTitle(title); tour.setDescription(description);
-        tour.setDurationDays(durationDays); tour.setDurationNights(durationNights); tour.setIsActive(true);
-        if (tourServices.saveTour(tour) != null) return "redirect:/tour/manager?success=Thêm thành công";
-        return "admin_tour_management";
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
+
+        try {
+            Tour tour = new Tour();
+            tour.setTitle(title);
+            tour.setDescription(description);
+            tour.setDurationDays(durationDays);
+            tour.setDurationNights(durationNights);
+            tour.setIsActive(true);
+            tour.setCreatedBy(loggedInAdmin); // Lưu người tạo
+
+            // Tạo đối tượng giả để gán khóa ngoại (Tránh phải query DB)
+            TourCategory category = new TourCategory();
+            category.setCategoryId(categoryId);
+            tour.setCategory(category);
+
+            Province province = new Province();
+            province.setProvinceId(provinceId);
+            tour.setProvince(province);
+
+            tourServices.saveTour(tour);
+            redirectAttributes.addFlashAttribute("message", "Thêm Tour mới thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi thêm Tour: " + e.getMessage());
+        }
+
+        return "redirect:/tour/manager";
+    }
+
+    // ==========================================
+    // MỞ FORM SỬA TOUR
+    // ==========================================
+    @GetMapping("/edit/{id}")
+    public String showEditTourForm(@PathVariable("id") Integer tourId, Model model, HttpSession session) {
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
+
+        Tour tour = tourServices.getTourById(tourId);
+        if (tour == null) return "redirect:/tour/manager";
+
+        model.addAttribute("tour", tour);
+
+        // Bơm dữ liệu cho 2 thẻ <select>
+        model.addAttribute("categories", TCServices.getAllTourCategories());
+        model.addAttribute("provinces", provinceServices.getAllProvinces()); // ĐÃ FIX LỖI NULL
+
+        return "edit_tour";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteTour(@PathVariable(value = "id") Integer tourId, HttpSession session) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
 
         if (tourServices.deactivateTour(tourId)) return "redirect:/tour/manager?success=Đã xóa";
         return "redirect:/tour/manager?error=Lỗi khi xóa tour";
+    }
+    // ==========================================
+    // LƯU CẬP NHẬT TOUR
+    // ==========================================
+    @PostMapping("/update")
+    public String updateTour(
+            @RequestParam("tourId") Integer tourId,
+            @RequestParam("title") String title,
+            @RequestParam("categoryId") Integer categoryId,
+            @RequestParam("provinceId") Integer provinceId,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam("durationDays") Integer durationDays,
+            @RequestParam("durationNights") Integer durationNights,
+            @RequestParam(value = "pickupPoint", required = false) String pickupPoint,
+            HttpSession session,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
+
+        try {
+            Tour existingTour = tourServices.getTourById(tourId);
+            if (existingTour != null) {
+                existingTour.setTitle(title);
+                existingTour.setDescription(description);
+                existingTour.setDurationDays(durationDays);
+                existingTour.setDurationNights(durationNights);
+                existingTour.setPickupPoint(pickupPoint);
+
+                // Cập nhật Danh mục và Địa điểm
+                TourCategory category = new TourCategory();
+                category.setCategoryId(categoryId);
+                existingTour.setCategory(category);
+
+                Province province = new Province();
+                province.setProvinceId(provinceId);
+                existingTour.setProvince(province);
+
+                tourServices.saveTour(existingTour);
+                redirectAttributes.addFlashAttribute("message", "Cập nhật Tour thành công!");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Không tìm thấy Tour cần sửa!");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật Tour: " + e.getMessage());
+        }
+
+        return "redirect:/tour/manager";
+    }
+
+
+    // ==========================================
+    // UPLOAD ẢNH LÊN FIREBASE CHO TOUR
+    // ==========================================
+    @PostMapping("/upload-image")
+    public String uploadTourImage(
+            @RequestParam("tourId") Integer tourId,
+            @RequestParam("imageFile") org.springframework.web.multipart.MultipartFile file,
+            @RequestParam(value = "isThumbnail", required = false) Boolean isThumbnail,
+            HttpSession session,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
+
+        try {
+            if (file.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Vui lòng chọn file ảnh!");
+                return "redirect:/tour/manager/detail/" + tourId;
+            }
+
+            // Gọi hàm đẩy ảnh lên Firebase và nhận về cái Link
+            String imageUrl = firebaseService.uploadImage(file);
+
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                // Lưu đường link URL vào Database
+                Tour tour = tourServices.getTourById(tourId);
+                boolean isThumb = (isThumbnail != null) ? isThumbnail : false;
+
+                ImagesTour newImage = new ImagesTour(imageUrl, tour, isThumb);
+                IServices.saveImageTour(newImage);
+
+                redirectAttributes.addFlashAttribute("message", "Tải ảnh lên Firebase thành công!");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Lỗi: Không lấy được link ảnh từ Firebase!");
+            }
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi upload: " + e.getMessage());
+        }
+
+        return "redirect:/tour/manager/detail/" + tourId;
+    }
+    // ==========================================
+    // XÓA ẢNH CỦA TOUR
+    // ==========================================
+    @GetMapping("/image/delete/{id}")
+    public String deleteImage(@PathVariable("id") Integer imgId, HttpSession session, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
+
+        try {
+            ImagesTour image = IServices.getImageById(imgId);
+            if (image != null) {
+                Integer tourId = image.getTour().getTourId();
+                IServices.deleteImageTour(imgId);
+                redirectAttributes.addFlashAttribute("message", "Đã xóa ảnh thành công!");
+                return "redirect:/tour/manager/detail/" + tourId;
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi xóa ảnh!");
+        }
+        return "redirect:/tour/manager";
     }
 }

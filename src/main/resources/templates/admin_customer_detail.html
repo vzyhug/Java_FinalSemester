@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin_layout :: layout(~{:: #customer-detail-content})}">
+<head>
+    <title>Chi tiết Khách hàng - VietExpedition</title>
+</head>
+<body>
+
+<div id="customer-detail-content" class="p-8 h-full overflow-y-auto bg-slate-50/50">
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <div>
+            <h1 class="text-3xl font-black text-blue-900 tracking-tight">Hồ sơ khách hàng</h1>
+            <p class="text-slate-500 font-medium">Chi tiết thông tin và lịch sử giao dịch</p>
+        </div>
+        <div>
+            <a th:href="@{/customer}" class="bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-full font-bold hover:bg-slate-50 transition flex items-center shadow-sm">
+                <span class="material-symbols-outlined text-sm mr-2">arrow_back</span> Trở về danh sách
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <div class="space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col items-center text-center">
+                <div class="w-24 h-24 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4 border-4 border-white shadow-md">
+                    <span class="material-symbols-outlined text-4xl">person</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-1" th:text="${customer.fullName}">Tên KH</h2>
+
+                <span class="px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1 mb-4"
+                      th:classappend="${customer.getIsActive() != null && customer.getIsActive()} ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+                    <span class="material-symbols-outlined text-[14px]" th:text="${customer.getIsActive() != null && customer.getIsActive()} ? 'check_circle' : 'cancel'"></span>
+                    <span th:text="${customer.getIsActive() != null && customer.getIsActive()} ? 'Đang hoạt động' : 'Bị khóa'"></span>
+                </span>
+
+                <div class="w-full pt-4 border-t border-slate-100 text-left space-y-4">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Số điện thoại</p>
+                        <p class="font-semibold text-slate-700 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-slate-400 text-sm">call</span>
+                            <span th:text="${customer.phone}">09xx</span>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Email liên hệ</p>
+                        <p class="font-semibold text-slate-700 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-slate-400 text-sm">mail</span>
+                            <span th:text="${customer.email}">email@</span>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Địa chỉ</p>
+                        <p class="font-semibold text-slate-700 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-slate-400 text-sm">location_on</span>
+                            <span th:text="${customer.address}">Địa chỉ</span>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Ngày tham gia</p>
+                        <p class="font-semibold text-slate-700 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-slate-400 text-sm">calendar_today</span>
+                            <span th:text="${#strings.substring(customer.createdAt, 0, 10)}">Ngày</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-900 to-indigo-800 rounded-2xl shadow-md p-6 text-white">
+                <h3 class="font-bold text-blue-200 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined">monitoring</span> Tổng quan chi tiêu
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-end border-b border-blue-700/50 pb-4">
+                        <span class="text-blue-100">Số lượng tour</span>
+                        <span class="text-3xl font-black" th:text="${tourCount}">0</span>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <span class="text-blue-100">Tổng chi tiêu</span>
+                        <span class="text-2xl font-black text-green-400" th:text="${totalSpent != null ? #numbers.formatDecimal(totalSpent, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}">0 đ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
+                <div class="px-6 py-5 border-b border-slate-100 bg-slate-50 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-blue-900">history</span>
+                    <h3 class="text-lg font-bold text-slate-800">Lịch sử đặt Tour</h3>
+                </div>
+
+                <div class="overflow-x-auto p-0 flex-1">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-white text-slate-500 text-xs uppercase tracking-wider">
+                        <tr class="border-b border-slate-200">
+                            <th class="py-4 px-6 font-bold">Mã Đơn</th>
+                            <th class="py-4 px-6 font-bold">Chuyến đi</th>
+                            <th class="py-4 px-6 font-bold text-center">Số vé (NL/TE)</th>
+                            <th class="py-4 px-6 font-bold text-right">Tổng tiền</th>
+                            <th class="py-4 px-6 font-bold text-center">Trạng thái</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${bookings != null}" th:each="b : ${bookings}" class="border-b border-slate-50 hover:bg-slate-50 transition">
+                            <td class="py-4 px-6 font-semibold text-blue-900" th:text="${b.bookingCode}">#CODE</td>
+                            <td class="py-4 px-6">
+                                <p class="font-bold text-slate-800 line-clamp-1" th:text="${b.departure.tour.title}">Tên Tour</p>
+                                <p class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[12px]">calendar_month</span>
+                                    Khởi hành: <span th:text="${#temporals.format(b.departure.departureDate, 'dd/MM/yyyy')}">--</span>
+                                </p>
+                            </td>
+                            <td class="py-4 px-6 text-center text-slate-700 font-medium">
+                                <span th:text="${b.totalAdults ?: 0}">0</span> / <span th:text="${b.totalChildren ?: 0}">0</span>
+                            </td>
+                            <td class="py-4 px-6 text-right font-bold text-green-600" th:text="${b.totalAmount != null ? #numbers.formatDecimal(b.totalAmount, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}">0 đ</td>
+                            <td class="py-4 px-6 text-center">
+                                    <span class="px-2 py-1 rounded-md text-xs font-bold"
+                                          th:classappend="${b.status == 'paid' ? 'bg-green-100 text-green-700' : (b.status == 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700')}"
+                                          th:text="${b.status == 'paid' ? 'Đã thanh toán' : (b.status == 'pending' ? 'Chờ TT' : 'Đã hủy')}">
+                                    </span>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${bookings == null or #lists.isEmpty(bookings)}">
+                            <td colspan="5" class="text-center py-16">
+                                <span class="material-symbols-outlined text-5xl text-slate-200 block mb-3">airplane_ticket</span>
+                                <p class="text-slate-500 font-medium">Khách hàng này chưa đặt chuyến đi nào.</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

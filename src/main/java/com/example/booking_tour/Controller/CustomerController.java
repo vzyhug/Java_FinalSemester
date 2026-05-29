@@ -76,7 +76,7 @@ public class CustomerController {
     public String customerManagement(HttpSession session, Model model) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
+            return "redirect:/auth/loginForm";
         }
 
         try {
@@ -109,7 +109,7 @@ public class CustomerController {
 
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
+            return "redirect:/auth/loginForm";
         }
 
         try {
@@ -135,23 +135,28 @@ public class CustomerController {
     public String getCustomerDetail(
             @PathVariable(value = "id") Integer customerId,
             HttpSession session,
-            Model model) {
+            Model model,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
 
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
+            return "redirect:/auth/loginForm";
         }
 
         try {
             Customer customer = customerService.getCustomerById(customerId);
 
+            // Xử lý khi không tìm thấy khách hàng: Trả về danh sách kèm thông báo lỗi
             if (customer == null) {
-                model.addAttribute("error", "Khách hàng không tồn tại!");
-                return "admin_customer_management";
+                redirectAttributes.addFlashAttribute("error", "Khách hàng không tồn tại hoặc đã bị xóa!");
+                return "redirect:/customer";
             }
 
             Long tourCount = customerService.getCustomerTourCount(customerId);
             java.math.BigDecimal totalSpent = customerService.getCustomerTotalSpent(customerId);
+
+            // Lấy lịch sử các tour khách đã đặt
+            model.addAttribute("bookings", customerService.getCustomerBookings(customerId));
 
             model.addAttribute("customer", customer);
             model.addAttribute("tourCount", tourCount);
@@ -160,8 +165,8 @@ public class CustomerController {
 
             return "admin_customer_detail";
         } catch (Exception e) {
-            model.addAttribute("error", "Lỗi: " + e.getMessage());
-            return "admin_customer_management";
+            redirectAttributes.addFlashAttribute("error", "Lỗi: " + e.getMessage());
+            return "redirect:/customer";
         }
     }
     @PostMapping("/toggle-status")
@@ -175,7 +180,7 @@ public class CustomerController {
 
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
+            return "redirect:/auth/loginForm";
         }
 
         try {
@@ -188,6 +193,69 @@ public class CustomerController {
             redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật: " + e.getMessage());
         }
 
+        return "redirect:/customer";
+    }
+
+
+    // ==========================================
+    // 3. THÊM KHÁCH HÀNG MỚI (Từ phía Admin)
+    // ==========================================
+    @GetMapping("/add")
+    public String showAddCustomerForm(Model model, HttpSession session) {
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
+
+        model.addAttribute("customer", new Customer());
+        return "add_customer";
+    }
+
+    @PostMapping("/save")
+    public String saveCustomer(@ModelAttribute("customer") Customer customer, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            // Cấp mật khẩu mặc định cho khách được Admin tạo tay
+            customer.setPasswordHash("123456");
+            customer.setIsActive(true);
+
+            customerService.saveCustomer(customer);
+            redirectAttributes.addFlashAttribute("message", "Thêm khách hàng mới thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Email có thể đã tồn tại trong hệ thống.");
+        }
+        return "redirect:/customer";
+    }
+
+    // ==========================================
+    // SỬA THÔNG TIN KHÁCH HÀNG
+    // ==========================================
+    @GetMapping("/edit/{id}")
+    public String showEditCustomerForm(@PathVariable("id") Integer id, Model model, HttpSession session) {
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
+
+        Customer customer = customerService.getCustomerById(id);
+        if (customer == null) {
+            return "redirect:/customer";
+        }
+        model.addAttribute("customer", customer);
+        return "edit_customer";
+    }
+
+    @PostMapping("/update")
+    public String updateCustomer(@ModelAttribute("customer") Customer customer, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            // Rất quan trọng: Lấy dữ liệu cũ để không làm mất mật khẩu và ngày tạo
+            Customer oldCustomer = customerService.getCustomerById(customer.getCustomerId());
+            if (oldCustomer != null) {
+                customer.setPasswordHash(oldCustomer.getPasswordHash());
+                customer.setCreatedAt(oldCustomer.getCreatedAt());
+                customer.setIsActive(oldCustomer.getIsActive());
+
+                customerService.saveCustomer(customer);
+                redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin khách hàng thành công!");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật: " + e.getMessage());
+        }
         return "redirect:/customer";
     }
 }
