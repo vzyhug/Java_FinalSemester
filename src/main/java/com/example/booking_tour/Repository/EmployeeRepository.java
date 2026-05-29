@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
@@ -22,6 +23,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     long countByRole_RoleId(Integer roleId);
 
     Page<Employee> findAll(Pageable pageable);
+
+    Optional<Employee> findFirstByRole_RoleId(Integer roleId);
+
 
     Page<Employee> findByFullNameContainingIgnoreCase(String keyword, Pageable pageable);
 

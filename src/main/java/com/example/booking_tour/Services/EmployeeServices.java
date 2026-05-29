@@ -32,4 +32,11 @@ public class EmployeeServices {
     public List<Employee> searchEmployee(String keyword) {
         return employeeRepository.findByFullNameContainingIgnoreCase(keyword);
     }
+
+    // lấy admin hiện tại (ví dụ mặc định)
+    public Employee getCurrentAdmin() {
+        // giả sử roleId = 1 là Admin
+        return employeeRepository.findFirstByRole_RoleId(1)
+                .orElse(null);
+    }
 }

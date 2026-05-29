@@ -38,6 +38,9 @@ public class EmployeeController {
 
             Model model) {
 
+        model.addAttribute("admin", employeeService.getCurrentAdmin());
+
+
         Page<Employee> employeePage;
 
         // SEARCH + FILTER
@@ -108,7 +111,7 @@ public class EmployeeController {
         model.addAttribute("showAddButton",
                 true);
 
-        return "human_resource_management";
+        return "admin_human_resource_management";
     }
 
     // ================= FORM ADD =================

@@ -21,5 +21,9 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
     List<Tour> findByCategory_CategoryId(Integer categoryId);
     List<Tour> findByProvince_ProvinceId(Integer provinceId);
     List<Tour> findByIsActive(Boolean isActive);
+
+    List<Tour> findTop10ByOrderByTourIdDesc();
+
+    long countByProvince_ProvinceId(Integer provinceId);
 }
 

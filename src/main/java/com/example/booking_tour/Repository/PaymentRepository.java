@@ -14,4 +14,6 @@ public interface PaymentRepository extends JpaRepository<Payment,Integer> {
      * Lấy payment theo phương thức thanh toán
      */
     List<Payment> findByPaymentMethod(String paymentMethod);
+
+    boolean existsByBooking_BookingId(Integer bookingId);
 }
