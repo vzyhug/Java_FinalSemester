@@ -1,14 +1,15 @@
 package com.example.booking_tour.Controller;
 
-import com.example.booking_tour.Model.Employee;
-import com.example.booking_tour.Model.Tour;
-import com.example.booking_tour.Services.TourService;
+import com.example.booking_tour.Model.*;
+import com.example.booking_tour.Services.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -16,169 +17,146 @@ import java.util.List;
 public class TourController {
 
     @Autowired
-    private TourService tourService;
+    private TourServices tourServices;
+
+    @Autowired
+    private TourCategoryServices TCServices;
+
+    @Autowired
+    private TourScheduleServices TSCServices;
+
+    @Autowired
+    private ImagesTourServices IServices;
+
+    @Autowired
+    private ReviewServices RServices;
+
+    @Autowired
+    private TourDepartureServices TDServices;
+
     @GetMapping("")
-    public String tour(Model model) {
-        model.addAttribute("message", "Welcome to the Tour Page!");
-        return "list_tour"; // Trả về tên của view (list_tour.html)
+    @Transactional(readOnly = true)
+    public String list_tour(Model model, @RequestParam(value = "sort", required = false) String sort) {
+        List<Tour> listTour;
+        List<TourCategory> listTourCategory = TCServices.getAllTourCategories();
+        if ("asc".equals(sort)) {
+            listTour = tourServices.sortTourByPrice(true);
+        } else if ("desc".equals(sort)) {
+            listTour = tourServices.sortTourByPrice(false);
+        } else {
+            listTour = tourServices.getAllTours();
+        }
+        model.addAttribute("listCategory", listTourCategory);
+        model.addAttribute("listTours", listTour);
+        model.addAttribute("currentSort", sort);
+        return "list_tour";
     }
 
+    @GetMapping("region/{region}")
+    @Transactional(readOnly = true)
+    public String list_tour_region(Model model, @PathVariable(value = "region") String regionName) {
+        List<Tour> listTour = tourServices.getAllTours();
+        List<TourCategory> listTourCategory = TCServices.getAllTourCategories();
+        List<Tour> tourRegion = new ArrayList<>();
+        for (Tour tour : listTour) {
+            if (tour.getProvince().getRegion().name().equals(regionName)) {
+                tourRegion.add(tour);
+            }
+        }
+        model.addAttribute("listCategory", listTourCategory);
+        model.addAttribute("listTours", tourRegion);
+        return "list_tour";
+    }
 
-    // ==================== TOUR MANAGEMENT PAGE ====================
+    // ==================== CỦA KHÁCH HÀNG: Xem chi tiết ====================
+    @GetMapping("/{id}")
+    @Transactional(readOnly = true)
+    public String tour_detail(Model model, @PathVariable(value = "id") Integer tourId) {
+        Tour tourDetail = tourServices.getTourById(tourId);
+        List<TourSchedule> listSchedule = TSCServices.getTourSchedulesByTour(tourDetail);
+        List<ImagesTour> listImages = IServices.getAllImagesToursByTour(tourDetail);
+        List<Review> listReview = RServices.getAllReviewByTour(tourDetail);
+
+        double startAverage = RServices.getStarAverage(listReview);
+        model.addAttribute("tourDetail", tourDetail);
+        model.addAttribute("listSchedule", listSchedule);
+        model.addAttribute("listImages", listImages);
+        model.addAttribute("listReview", listReview);
+        model.addAttribute("startAverage", startAverage);
+        model.addAttribute("totalReview", listReview.size());
+
+        return "tour_detail";
+    }
+
+    // ==================== TOUR MANAGEMENT PAGE (ADMIN) ====================
     @GetMapping("/manager")
     public String tourManagement(HttpSession session, Model model) {
-        // Kiểm tra admin đã đăng nhập hay chưa
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
-        }
+        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
 
         try {
-            // Lấy stats từ TourService
-            Long totalTours = tourService.getTotalTours();           // Tổng tour
-            Long activeTours = tourService.getActiveTours();         // Tour hoạt động
-            java.math.BigDecimal expectedRevenue = tourService.getExpectedRevenue(); // Doanh thu
-
-            // Lấy danh sách tour
-            List<Tour> tours = tourService.getAllTours();
-
-            // Truyền dữ liệu vào Model để HTML có thể truy cập
-            // Trong HTML: th:text="${totalTours}" để hiển thị
-            model.addAttribute("totalTours", totalTours);
-            model.addAttribute("activeTours", activeTours);
-            model.addAttribute("expectedRevenue", expectedRevenue);
-            model.addAttribute("tours", tours);
+            model.addAttribute("totalTours", tourServices.getTotalTours());
+            model.addAttribute("activeTours", tourServices.getActiveTours());
+            model.addAttribute("expectedRevenue", tourServices.getExpectedRevenue());
+            model.addAttribute("tours", tourServices.getAllTours());
             model.addAttribute("admin", loggedInAdmin);
-
-            return "admin_tour_management"; // Đảm bảo file nằm ở: src/main/resources/templates/admin/tour_management.html
+            return "admin_tour_management";
         } catch (Exception e) {
             model.addAttribute("error", "Lỗi khi tải dữ liệu: " + e.getMessage());
             return "admin_tour_management";
         }
     }
 
-    // ==================== SEARCH & FILTER ====================
-
     @GetMapping("/search")
-    public String searchTours(
-            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-            HttpSession session,
-            Model model) {
-
+    public String searchTours(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, HttpSession session, Model model) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
-        }
+        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
 
-        try {
-            List<Tour> searchResults = tourService.searchTours(keyword);
-
-            model.addAttribute("tours", searchResults);
-            model.addAttribute("keyword", keyword);
-            model.addAttribute("totalTours", tourService.getTotalTours());
-            model.addAttribute("activeTours", tourService.getActiveTours());
-            model.addAttribute("expectedRevenue", tourService.getExpectedRevenue());
-            model.addAttribute("admin", loggedInAdmin);
-
-            return "admin_tour_management";
-        } catch (Exception e) {
-            model.addAttribute("error", "Lỗi tìm kiếm: " + e.getMessage());
-            return "admin_tour_management";
-        }
+        model.addAttribute("tours", tourServices.searchTours(keyword));
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("totalTours", tourServices.getTotalTours());
+        model.addAttribute("activeTours", tourServices.getActiveTours());
+        model.addAttribute("expectedRevenue", tourServices.getExpectedRevenue());
+        model.addAttribute("admin", loggedInAdmin);
+        return "admin_tour_management";
     }
 
-    // ==================== TOUR DETAIL ====================
-
-    @GetMapping("/{id}")
-    public String getTourDetail(
-            @PathVariable(value = "id") Integer tourId,
-            HttpSession session,
-            Model model) {
-
+    // ĐÃ SỬA LỖI TRÙNG URL: Chuyển đường dẫn của Admin thành /manager/detail/{id}
+    @GetMapping("/manager/detail/{id}")
+    public String getTourDetail(@PathVariable(value = "id") Integer tourId, HttpSession session, Model model) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
-        }
+        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
 
-        try {
-            Tour tour = tourService.getTourById(tourId);
-
-            if (tour == null) {
-                model.addAttribute("error", "Tour không tồn tại!");
-                return "admin_tour_management";
-            }
-
-            model.addAttribute("tour", tour);
-            model.addAttribute("admin", loggedInAdmin);
-
-            return "tour_detail";
-        } catch (Exception e) {
-            model.addAttribute("error", "Lỗi: " + e.getMessage());
+        Tour tour = tourServices.getTourById(tourId);
+        if (tour == null) {
+            model.addAttribute("error", "Tour không tồn tại!");
             return "admin_tour_management";
         }
+        model.addAttribute("tour", tour);
+        model.addAttribute("admin", loggedInAdmin);
+        return "tour_detail";
     }
-
-    // ==================== CREATE/UPDATE TOUR ====================
 
     @PostMapping("/save")
-    public String saveTour(
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("durationDays") Integer durationDays,
-            @RequestParam("durationNights") Integer durationNights,
-            HttpSession session,
-            Model model) {
-
+    public String saveTour(@RequestParam("title") String title, @RequestParam("description") String description,
+                           @RequestParam("durationDays") Integer durationDays, @RequestParam("durationNights") Integer durationNights,
+                           HttpSession session, Model model) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
-        }
+        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
 
-        try {
-            Tour tour = new Tour();
-            tour.setTitle(title);
-            tour.setDescription(description);
-            tour.setDurationDays(durationDays);
-            tour.setDurationNights(durationNights);
-            tour.setIsActive(true);
-
-            Tour savedTour = tourService.saveTour(tour);
-
-            if (savedTour != null) {
-                // Lưu thành công, trả về trang quản lý
-                return "redirect:/tour/manager?success=Tour đã được thêm thành công";
-            } else {
-                model.addAttribute("error", "Lỗi khi lưu tour");
-                return "admin_tour_management";
-            }
-        } catch (Exception e) {
-            model.addAttribute("error", "Lỗi: " + e.getMessage());
-            return "admin_tour_management";
-        }
+        Tour tour = new Tour();
+        tour.setTitle(title); tour.setDescription(description);
+        tour.setDurationDays(durationDays); tour.setDurationNights(durationNights); tour.setIsActive(true);
+        if (tourServices.saveTour(tour) != null) return "redirect:/tour/manager?success=Thêm thành công";
+        return "admin_tour_management";
     }
 
-    // ==================== DELETE TOUR ====================
-
     @GetMapping("/delete/{id}")
-    public String deleteTour(
-            @PathVariable(value = "id") Integer tourId,
-            HttpSession session) {
-
+    public String deleteTour(@PathVariable(value = "id") Integer tourId, HttpSession session) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
-        }
+        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
 
-        try {
-            boolean success = tourService.deactivateTour(tourId);
-
-            if (success) {
-                return "redirect:/tour/manager?success=Tour đã được xóa";
-            } else {
-                return "redirect:/tour/manager?error=Lỗi khi xóa tour";
-            }
-        } catch (Exception e) {
-            return "redirect:/tour/manager?error=" + e.getMessage();
-        }
+        if (tourServices.deactivateTour(tourId)) return "redirect:/tour/manager?success=Đã xóa";
+        return "redirect:/tour/manager?error=Lỗi khi xóa tour";
     }
 }

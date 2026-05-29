@@ -26,7 +26,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     Optional<Employee> findFirstByRole_RoleId(Integer roleId);
 
-
     Page<Employee> findByFullNameContainingIgnoreCase(String keyword, Pageable pageable);
 
     Page<Employee> findByRole_RoleId(Integer roleId, Pageable pageable);

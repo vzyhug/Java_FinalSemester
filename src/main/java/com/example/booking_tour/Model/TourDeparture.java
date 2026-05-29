@@ -2,6 +2,8 @@ package com.example.booking_tour.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.BatchSize;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -14,7 +16,7 @@ public class TourDeparture {
     @Column(name = "departure_id")
     private Integer departureId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
 
