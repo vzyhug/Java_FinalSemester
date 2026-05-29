@@ -19,8 +19,6 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
 
     Page<Tour> findByTitleContainingIgnoreCase(String keyword, Pageable pageable);
 
-    //List<Tour> findByTitleContaining(String keyword);
-
     List<Tour> findByCategory_CategoryId(Integer categoryId);
 
     List<Tour> findByProvince_ProvinceId(Integer provinceId);
@@ -31,35 +29,22 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
 
     long countByProvince_ProvinceId(Integer provinceId);
 
-    //================= lay ra danh sach tour ==================
     @Override
     @EntityGraph(attributePaths = {"images"})
-    public List<Tour> findAll();
-
+    List<Tour> findAll();
 
     @EntityGraph(attributePaths = {"images"})
-    public List<Tour> findTop4By();
+    List<Tour> findTop4By();
 
-    //================= tim kiem ==================
-    //Tim ten tour
-    public List<Tour> findByTitleContaining(String title);
+    List<Tour> findByTitleContaining(String title);
 
-    //Tim tour theo loai tour
-    public List<Tour> findByCategory(int categoryId);
+    List<Tour> findByProvince(Province province);
 
-    //Tim tour theo tinh thanh
-    public List<Tour> findByProvince(Province province);
+    List<Tour> findByDurationDays(int day);
 
-    //Tim tour theo so ngay di
-    public List<Tour> findByDurationDays(int day);
+    List<Tour> findByPickupPoint(String pickupPoint);
 
-    //Tim tour theo pickup point
-    public List<Tour> findByPickupPoint(String pickupPoint);
+    List<Tour> findAllByOrderByMinPriceAsc();
 
-    //===================== sort danh sach ===================
-    //---- sort asc
-    public List<Tour> findAllByOrderByMinPriceAsc();
-
-    //---- sort desc
-    public List<Tour> findAllByOrderByMinPriceDesc();
+    List<Tour> findAllByOrderByMinPriceDesc();
 }

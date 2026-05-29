@@ -1,4 +1,5 @@
 package com.example.booking_tour.Repository;
+
 import com.example.booking_tour.Model.Customer;
 import com.example.booking_tour.Model.Employee;
 import org.springframework.data.domain.Page;
@@ -32,5 +33,3 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     Page<Employee> findByFullNameContainingIgnoreCaseAndRole_RoleId(String keyword, Integer roleId, Pageable pageable);
 }
-
-

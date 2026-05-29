@@ -15,6 +15,7 @@ public interface BookingRepository extends JpaRepository<Booking,Integer> {
 
     /**
      * Lấy booking theo trạng thái
+     *
      * @param status pending, confirmed, cancelled, completed
      */
     List<Booking> findByStatus(String status);

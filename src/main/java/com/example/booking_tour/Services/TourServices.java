@@ -19,6 +19,9 @@ public class TourServices { // Đã giữ nguyên tên có chữ 's'
     @Autowired
     private TourDepartureRepository tourDepartureRepository;
 
+    @Autowired
+    TourRepository repo;
+
     // ==================== CÁC HÀM CỦA THÙY (PUBLIC) ====================
     public List<Tour> sortTourByPrice(boolean isAcs) {
         if(isAcs) return tourRepository.findAllByOrderByMinPriceAsc();
@@ -62,6 +65,7 @@ public class TourServices { // Đã giữ nguyên tên có chữ 's'
     }
 
     public List<Tour> getAllTours() {
+
         return tourRepository.findAll();
     }
 
@@ -107,4 +111,12 @@ public class TourServices { // Đã giữ nguyên tên có chữ 's'
             return false;
         } catch (Exception e) { return false; }
     }
+
+
+    //Lấy tour dựa trên id
+    public Tour getToursByTourId(Integer id)
+    {
+        return repo.findById(id).orElse(null);
+    }
 }
+
