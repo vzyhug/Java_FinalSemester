@@ -1,7 +1,12 @@
 package com.example.booking_tour.Repository;
 
 import com.example.booking_tour.Model.Booking;
+import com.example.booking_tour.Model.BookingPassenger;
+import io.netty.bootstrap.Bootstrap;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookingPassengerRepository extends JpaRepository<Booking, Integer> {
+import java.util.List;
+
+public interface BookingPassengerRepository extends JpaRepository<BookingPassenger, Integer> {
+    public List<BookingPassenger> findByBooking(Booking booking);
 }

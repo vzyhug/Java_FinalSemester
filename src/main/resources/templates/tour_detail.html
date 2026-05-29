@@ -49,13 +49,7 @@
                     </div>
                 </div>
             </header>
-            <!-- Tabs Navigation -->
-<!--            <div class="flex gap-8 border-b border-surface-container-high mb-8">-->
-<!--                <button class="pb-4 text-primary font-bold border-b-2 border-primary">Tổng quan</button>-->
-<!--                <button class="pb-4 text-slate-500 font-medium hover:text-primary transition-colors">Lịch trình</button>-->
-<!--                <button class="pb-4 text-slate-500 font-medium hover:text-primary transition-colors">Bao gồm</button>-->
-<!--                <button class="pb-4 text-slate-500 font-medium hover:text-primary transition-colors">Đánh giá</button>-->
-<!--            </div>-->
+
             <!-- Description Content -->
             <div class="space-y-12">
                 <section>
@@ -143,57 +137,25 @@
         <div class="lg:col-span-1">
             <div class="sticky top-28 space-y-6">
                 <div class="bg-surface-container-lowest p-8 rounded-xl editorial-shadow border border-surface-container">
-                    <div class="mb-8">
-                        <span class="text-slate-500 text-sm font-medium">Giá từ</span>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-4xl font-black text-primary font-headline">7.200.000₫</span>
-                            <span class="text-slate-400 font-medium">/ người</span>
-                        </div>
+                    <div th:if="${message != null}" class="mb-4 p-3 bg-red-50 text-red-700 text-xs font-semibold rounded-lg border border-red-100">
+                        <span th:text="${message}">
+                        </span>
                     </div>
-                    <div class="space-y-6 mb-8">
+                    <form th:action="@{/tour/check_date}" method="GET" class="space-y-6">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Ngày khởi hành</label>
+                            <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Chọn ngày khởi hành</label>
                             <div class="relative">
-                                <input class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 font-medium text-on-surface focus:ring-2 focus:ring-primary/20" type="text" value="24/10/2024"/>
-                                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">calendar_month</span>
+                                <input class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 font-medium text-on-surface focus:ring-2 focus:ring-primary/20"
+                                       type="date"
+                                       name="startDate"
+                                       required="required" />
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Người lớn</label>
-                                <div class="flex items-center justify-between bg-surface-container-low rounded-lg px-4 py-2">
-                                    <button class="text-primary font-bold">-</button>
-                                    <span class="font-bold">2</span>
-                                    <button class="text-primary font-bold">+</button>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Trẻ em</label>
-                                <div class="flex items-center justify-between bg-surface-container-low rounded-lg px-4 py-2">
-                                    <button class="text-primary font-bold">-</button>
-                                    <span class="font-bold">0</span>
-                                    <button class="text-primary font-bold">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center mb-8 pb-4 border-b border-surface-container">
-                        <span class="font-bold text-primary">Tổng cộng</span>
-                        <span class="text-2xl font-black text-primary">14.400.000₫</span>
-                    </div>
-                    <button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-4 rounded-full font-black text-lg shadow-xl hover:shadow-primary/20 transition-all hover:-translate-y-1">Xác nhận đặt tour</button>
-                    <p class="text-center text-xs text-slate-400 mt-4">Hủy miễn phí trước 48 giờ khởi hành</p>
-                </div>
-                <div class="bg-primary/5 p-6 rounded-xl border border-primary/10">
-                    <div class="flex gap-4 items-start">
-                        <div class="bg-primary/10 p-2 rounded-lg">
-                            <span class="material-symbols-outlined text-primary">verified_user</span>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-primary text-sm">Cam kết giá tốt nhất</h4>
-                            <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Tìm thấy giá thấp hơn cho cùng một tour? Chúng tôi sẽ hoàn tiền chênh lệch cộng thêm 10%.</p>
-                        </div>
-                    </div>
+
+                        <button type="submit" class="w-full text-center bg-gradient-to-br from-primary to-primary-container text-white py-4 rounded-full font-black text-lg shadow-xl hover:shadow-primary/20 transition-all hover:-translate-y-1 block">
+                            Xác nhận ngày đi
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

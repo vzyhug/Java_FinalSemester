@@ -44,14 +44,14 @@ public class TourDepartureServices
     }
 
     //Lấy ra danh sách tour departure theo thông tin tour
-    public List<TourDeparture> getTourDepartureByTourId(Integer tourId)
+    public List<TourDeparture> getTourDepartureByTour(Tour tour)
     {
-        Tour t=repoT.findById(tourId).orElse(null);
-        if(t!=null)
-        {
-            return repoTD.findByTour(t);
-        }
-        return null;
+        return repoTD.findByTour(tour);
+    }
+
+    public TourDeparture getTourDepartureById(Integer id)
+    {
+        return repoTD.findById(id).orElse(null);
     }
 
 

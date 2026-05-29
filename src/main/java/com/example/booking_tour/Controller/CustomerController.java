@@ -41,7 +41,7 @@ public class CustomerController {
         Customer loggedInCustomer = customerServices.login(email, password);
         if (loggedInCustomer != null) {
             session.setAttribute("loggedInCustomer", loggedInCustomer);
-            return "redirect:/home";
+            return "redirect:/";
         } else {
             model.addAttribute("error", "Email hoặc mật khẩu không chính xác!");
             return "login_form";

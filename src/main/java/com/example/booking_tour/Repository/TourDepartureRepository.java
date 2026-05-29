@@ -13,7 +13,7 @@ public interface TourDepartureRepository extends JpaRepository<TourDeparture,Int
     //================= tim kiem ==================
 
     //Tim kiem Tour departure thong qua id tour
-    public List<TourDeparture> findByTour(Tour tourId);
+    public List<TourDeparture> findByTour(Tour tour);
     //Tim kiem tour departure bang ngay di
     public List<TourDeparture> findByDepartureDate(LocalDate departureDate);
     //Tim kiem tour departure bang ngay ve
