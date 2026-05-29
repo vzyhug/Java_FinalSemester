@@ -1,13 +1,13 @@
 package com.example.booking_tour.Controller;
 
+import com.example.booking_tour.Model.Booking;
+import com.example.booking_tour.Model.BookingPassenger;
+import com.example.booking_tour.Services.BookingServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
 
@@ -17,13 +17,18 @@ import com.example.booking_tour.Services.CutomerServices;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Controller
 @RequestMapping("/customer")
 @RequiredArgsConstructor
 public class CustomerController {
+    @Autowired
     private final CutomerServices customerServices;
 
+    @Autowired
+    private final BookingServices bookingServices;
     // Hiển thị trang đăng nhập cho khách hàng
     @GetMapping("loginForm")
     public String loginForm(Model model) {
@@ -72,5 +77,24 @@ public class CustomerController {
         // Lưu thông tin vào database
         customerServices.register(customer);
         return "redirect:/customer/loginForm";
+    }
+
+    @GetMapping("booking")
+    public String customerBookingHistory(Model model, HttpSession session)
+    {
+        Customer customer = (Customer) session.getAttribute("loggedInCustomer");
+        List<Booking> listBookingOfCustomer=bookingServices.getBookingByPassenger(customer);
+        model.addAttribute("listBooking", listBookingOfCustomer);
+        return "my_tour";
+    }
+
+    @GetMapping("/booking/{idBooking}")
+    public String customerBookingHistory(Model model, @PathVariable("idBooking") int idBooking, HttpSession session)
+    {
+        Booking booking=bookingServices.getBookingById(idBooking);
+        List<BookingPassenger> listPassenger=bookingServices.getPassengerByBookingId(idBooking);
+        model.addAttribute("listPassenger", listPassenger);
+        model.addAttribute("booking", booking);
+        return "my_tour_detail";
     }
 }

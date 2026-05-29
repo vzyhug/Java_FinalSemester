@@ -2,6 +2,7 @@ package com.example.booking_tour.Services;
 
 import com.example.booking_tour.Model.Booking;
 import com.example.booking_tour.Model.BookingPassenger;
+import com.example.booking_tour.Model.Customer;
 import com.example.booking_tour.Repository.BookingPassengerRepository;
 import com.example.booking_tour.Repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,12 @@ public class BookingServices {
             return null;
         }
         return repoPassenger.findByBooking(b);
+    }
+
+    //tim danh sach booking thong qua kh
+    public List<Booking> getBookingByPassenger(Customer customer)
+    {
+        return repo.findByCustomer(customer);
     }
 
     //Huy booking (cho phep huy hoan toan voi state=pending)
