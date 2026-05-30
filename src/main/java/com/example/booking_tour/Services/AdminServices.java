@@ -158,6 +158,16 @@ public class AdminServices {
         }
     }
 
+    // HÀM MỚI ĐƯỢC THÊM VÀO ĐỂ LẤY DANH SÁCH GIAO DỊCH THEO BỘ LỌC THỜI GIAN
+    public List<Booking> getBookingsListByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        try {
+            return bookingRepository.findBookingsByDateRange(startDate, endDate);
+        } catch (Exception e) {
+            System.out.println("Lỗi trong getBookingsListByDateRange: " + e.getMessage());
+            return null;
+        }
+    }
+
     public List<Booking> getPendingBookings() {
         try {
             return bookingRepository.findByStatus("pending");
@@ -184,6 +194,17 @@ public class AdminServices {
         } catch (Exception e) {
             System.out.println("Lỗi trong getAdminById: " + e.getMessage());
             return null;
+        }
+    }
+    public double getCancellationRate() {
+        try {
+            long total = bookingRepository.count();
+            if (total == 0) return 0.0;
+            long cancelled = bookingRepository.countByStatus("cancelled");
+            return ((double) cancelled / total) * 100;
+        } catch (Exception e) {
+            System.out.println("Lỗi trong getCancellationRate: " + e.getMessage());
+            return 0.0;
         }
     }
 }

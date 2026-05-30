@@ -54,6 +54,4 @@ public class TourDepartureServices
         return null;
     }
 
-
-
 }

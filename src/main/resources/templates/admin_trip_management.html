@@ -22,14 +22,15 @@
       <p class="text-xs text-slate-500 mt-2">Chuyến đi hiện tại</p>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+    <a th:href="@{/admin/departures/filter(status='no_guide')}"
+       class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 block hover:bg-orange-50 transition cursor-pointer group">
       <div class="flex items-center justify-between mb-4">
-        <span class="text-sm font-bold text-slate-500 uppercase">Chờ HDV</span>
-        <span class="material-symbols-outlined text-orange-600 text-2xl">person_check</span>
+        <span class="text-sm font-bold text-slate-500 uppercase group-hover:text-orange-700 transition">Chưa phân công HDV</span>
+        <span class="material-symbols-outlined text-orange-600 text-2xl">person_add</span>
       </div>
       <h3 class="text-3xl font-black text-orange-600" th:text="${pendingGuideDepartures ?: 0}">0</h3>
-      <p class="text-xs text-slate-500 mt-2">Chờ xác nhận hướng dẫn viên</p>
-    </div>
+      <p class="text-xs text-slate-500 mt-2 group-hover:text-orange-600 font-medium transition">Bấm để xem chuyến chưa có HDV</p>
+    </a>
 
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
       <div class="flex items-center justify-between mb-4">
@@ -40,16 +41,45 @@
       <p class="text-xs text-slate-500 mt-2">Pax khởi hành hôm nay</p>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+    <a th:href="@{/admin/departures(filterMonth=${nextMonthVal}, filterYear=${nextYearVal})}"
+       class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 block hover:bg-purple-50 transition cursor-pointer group">
       <div class="flex items-center justify-between mb-4">
-        <span class="text-sm font-bold text-slate-500 uppercase">Lịch khởi hành</span>
+        <span class="text-sm font-bold text-slate-500 uppercase group-hover:text-purple-700 transition">Lịch khởi hành</span>
         <span class="material-symbols-outlined text-purple-600 text-2xl">calendar_month</span>
       </div>
       <h3 class="text-lg font-black text-purple-600 line-clamp-1" th:text="${upcomingMonth ?: 'Tháng này'}">Tháng 11</h3>
-      <p class="text-xs text-slate-500 mt-2">Tháng sắp tới</p>
-    </div>
+      <p class="text-xs text-slate-500 mt-2 group-hover:text-purple-600 font-medium transition">Bấm để lọc chuyến đi tháng tới</p>
+    </a>
   </div>
+  <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-6">
+    <form th:action="@{/admin/departures}" method="get" class="flex flex-col md:flex-row gap-4 items-end">
 
+      <div class="flex-1 w-full">
+        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Tên Tour</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+          <input type="text" name="keyword" th:value="${keyword}" placeholder="Nhập tên tour để tìm..."
+                 class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"/>
+        </div>
+      </div>
+
+      <div class="w-full md:w-48">
+        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Ngày khởi hành</label>
+        <input type="date" name="date" th:value="${searchDate}"
+               class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"/>
+      </div>
+
+      <div class="flex gap-2 w-full md:w-auto">
+        <button type="submit" class="flex-1 md:flex-none bg-blue-900 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-800 transition">
+          Lọc kết quả
+        </button>
+        <a th:href="@{/admin/departures}" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg font-bold hover:bg-slate-100 transition flex items-center justify-center" title="Xóa bộ lọc">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </a>
+      </div>
+
+    </form>
+  </div>
   <div class="flex flex-col md:flex-row gap-4 mb-8">
     <div class="flex gap-2 flex-1">
       <a th:href="@{/admin/departures}" class="px-4 py-2 rounded-lg transition font-semibold text-sm"

@@ -48,4 +48,11 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.bookingDate >= :startDate AND b.bookingDate <= :endDate")
     long countBookingsByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    // Thay đổi tham số từ LocalDate thành LocalDateTime
+    @Query("SELECT b FROM Booking b WHERE " +
+            "(:startDate IS NULL OR b.bookingDate >= :startDate) AND " +
+            "(:endDate IS NULL OR b.bookingDate <= :endDate) " +
+            "ORDER BY b.bookingDate DESC")
+    List<Booking> findBookingsByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    long countByStatus(String status);
 }

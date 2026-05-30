@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,8 @@ public class TourController {
     @Autowired
     private FirebaseService firebaseService;
 
+    @Autowired
+    private DepartureServices departureServices;
 
     @GetMapping("")
     @Transactional(readOnly = true)
@@ -103,9 +106,11 @@ public class TourController {
         try {
             model.addAttribute("totalTours", tourServices.getTotalTours());
             model.addAttribute("activeTours", tourServices.getActiveTours());
-            model.addAttribute("expectedRevenue", tourServices.getExpectedRevenue());
+            model.addAttribute("expectedRevenue", tourServices.getExpectedRevenue()); // Trả lại hàm gốc
             model.addAttribute("tours", tourServices.getAllTours());
             model.addAttribute("admin", loggedInAdmin);
+            model.addAttribute("categories", TCServices.getAllTourCategories());
+            model.addAttribute("provinces", provinceServices.getAllProvinces());
             return "admin_tour_management";
         } catch (Exception e) {
             model.addAttribute("error", "Lỗi khi tải dữ liệu: " + e.getMessage());
@@ -123,6 +128,8 @@ public class TourController {
         model.addAttribute("totalTours", tourServices.getTotalTours());
         model.addAttribute("activeTours", tourServices.getActiveTours());
         model.addAttribute("expectedRevenue", tourServices.getExpectedRevenue());
+        model.addAttribute("categories", TCServices.getAllTourCategories());
+        model.addAttribute("provinces", provinceServices.getAllProvinces());
         model.addAttribute("admin", loggedInAdmin);
         return "admin_tour_management";
     }
@@ -150,48 +157,63 @@ public class TourController {
     // ==========================================
     // THÊM TOUR MỚI
     // ==========================================
+    // ==========================================
+    // THÊM TOUR MỚI (CHUẨN LOGIC)
+    // ==========================================
     @PostMapping("/save")
     public String saveTour(
             @RequestParam("title") String title,
-            @RequestParam("categoryId") Integer categoryId, // Lấy ID danh mục
-            @RequestParam("provinceId") Integer provinceId, // Lấy ID địa điểm
+            @RequestParam("categoryId") Integer categoryId,
+            @RequestParam("provinceId") Integer provinceId,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam("durationDays") Integer durationDays,
             @RequestParam("durationNights") Integer durationNights,
-            HttpSession session, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) return "redirect:/auth/loginForm";
 
+        // 1. KIỂM TRA LOGIC NGÀY/ĐÊM
+        if (durationNights > durationDays) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Số đêm không được lớn hơn số ngày!");
+            return "redirect:/tour/add";
+        }
+        if (durationDays - durationNights > 1) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Số ngày và số đêm không hợp lý (VD chuẩn: 3 ngày 2 đêm)!");
+            return "redirect:/tour/add";
+        }
+
+        // 2. LƯU TOUR VÀO DATABASE
         try {
             Tour tour = new Tour();
             tour.setTitle(title);
             tour.setDescription(description);
             tour.setDurationDays(durationDays);
             tour.setDurationNights(durationNights);
-            tour.setIsActive(true);
-            tour.setCreatedBy(loggedInAdmin); // Lưu người tạo
 
-            // Tạo đối tượng giả để gán khóa ngoại (Tránh phải query DB)
+            // Gán Danh mục
             TourCategory category = new TourCategory();
             category.setCategoryId(categoryId);
             tour.setCategory(category);
 
+            // Gán Địa điểm
             Province province = new Province();
             province.setProvinceId(provinceId);
             tour.setProvince(province);
 
             tourServices.saveTour(tour);
+
             redirectAttributes.addFlashAttribute("message", "Thêm Tour mới thành công!");
+            return "redirect:/tour/manager"; // Về lại danh sách quản lý
+
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Lỗi thêm Tour: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Lỗi hệ thống khi lưu: " + e.getMessage());
+            return "redirect:/tour/add";
         }
-
-        return "redirect:/tour/manager";
     }
-
     // ==========================================
-    // MỞ FORM SỬA TOUR
+    // FORM SỬA TOUR
     // ==========================================
     @GetMapping("/edit/{id}")
     public String showEditTourForm(@PathVariable("id") Integer tourId, Model model, HttpSession session) {
@@ -209,14 +231,37 @@ public class TourController {
 
         return "edit_tour";
     }
-
-    @GetMapping("/delete/{id}")
-    public String deleteTour(@PathVariable(value = "id") Integer tourId, HttpSession session) {
+    // ==========================================
+    // THÊM TOUR MỚI (TRANG RIÊNG) Admin
+    // ==========================================
+    @GetMapping("/add")
+    public String showAddTourForm(HttpSession session, Model model) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) return "redirect:/auth/loginForm";
 
-        if (tourServices.deactivateTour(tourId)) return "redirect:/tour/manager?success=Đã xóa";
-        return "redirect:/tour/manager?error=Lỗi khi xóa tour";
+        // Bơm dữ liệu cho các thẻ <select>
+        model.addAttribute("categories", TCServices.getAllTourCategories());
+        model.addAttribute("provinces", provinceServices.getAllProvinces());
+
+        return "add_tour";
+    }
+    // Sửa thành chỉ còn /delete/{id}
+    @GetMapping("/delete/{id}")
+    public String deleteTour(@PathVariable(value = "id") Integer tourId,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
+
+        if (tourServices.deactivateTour(tourId)) {
+            redirectAttributes.addFlashAttribute("message", "Đã xóa tour thành công!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Không thể xóa tour này!");
+        }
+
+        // Quay lại đúng địa chỉ trang quản lý
+        return "redirect:/tour/manager";
     }
     // ==========================================
     // LƯU CẬP NHẬT TOUR
@@ -237,6 +282,21 @@ public class TourController {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) return "redirect:/auth/loginForm";
 
+        // ==========================================
+        // 1. KIỂM TRA LOGIC NGÀY/ĐÊM
+        // ==========================================
+        if (durationNights > durationDays) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Số đêm không được lớn hơn số ngày!");
+            return "redirect:/tour/edit/" + tourId; // Đá ngược lại trang Sửa của đúng Tour này
+        }
+        if (durationDays - durationNights > 1) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Số ngày và số đêm không hợp lý (VD chuẩn: 3 ngày 2 đêm)!");
+            return "redirect:/tour/edit/" + tourId;
+        }
+
+        // ==========================================
+        // 2. LƯU CẬP NHẬT
+        // ==========================================
         try {
             Tour existingTour = tourServices.getTourById(tourId);
             if (existingTour != null) {
@@ -263,7 +323,7 @@ public class TourController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật Tour: " + e.getMessage());
         }
-
+        // Sửa xong thì cho về lại trang danh sách Tour
         return "redirect:/tour/manager";
     }
 

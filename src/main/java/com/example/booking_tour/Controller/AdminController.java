@@ -55,17 +55,33 @@ public class AdminController {
         java.time.LocalDateTime start = (startDate != null) ? startDate.atStartOfDay() : java.time.LocalDateTime.of(2000, 1, 1, 0, 0);
         java.time.LocalDateTime end = (endDate != null) ? endDate.atTime(java.time.LocalTime.MAX) : java.time.LocalDateTime.now();
 
-        // Gửi dữ liệu ra giao diện
+        // Gửi dữ liệu ra giao diện (Các thẻ thống kê)
         model.addAttribute("totalRevenue", adminService.getTotalRevenueByDateRange(start, end));
         model.addAttribute("totalBookings", adminService.getTotalBookingsByDateRange(start, end));
         model.addAttribute("totalCustomers", adminService.getTotalCustomersByDateRange(start, end));
         model.addAttribute("totalTours", adminService.getTotalTours());
-        model.addAttribute("recentBookings", adminService.getRecentBookings(5));
+        model.addAttribute("cancellationRate", adminService.getCancellationRate());
+        // ==========================================
+        // LOGIC MỚI CHO BẢNG DANH SÁCH GIAO DỊCH
+        // ==========================================
+        boolean isFiltered = (startDate != null || endDate != null);
+
+        if (isFiltered) {
+            // Đã lọc -> Lấy TẤT CẢ các giao dịch nằm trong khoảng thời gian này
+            model.addAttribute("recentBookings", adminService.getBookingsListByDateRange(start, end));
+            model.addAttribute("isFiltered", true);
+        } else {
+            // Không lọc -> Chỉ lấy 5 giao dịch mới nhất
+            model.addAttribute("recentBookings", adminService.getRecentBookings(5));
+            model.addAttribute("isFiltered", false);
+        }
+
         model.addAttribute("pendingBookings", adminService.getPendingBookings());
         model.addAttribute("admin", loggedInAdmin);
 
         return "admin_dashboard_management";
     }
+
     @GetMapping("/tours")
     public String redirectToTours() { return "redirect:/tour/manager"; }
 

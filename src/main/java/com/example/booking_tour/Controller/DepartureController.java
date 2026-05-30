@@ -27,26 +27,57 @@ public class DepartureController {
     @Autowired
     private AdminServices adminService;
 
-    // ==========================================
-    // TRANG QUẢN LÝ CHUYẾN ĐI
+// ==========================================
+    // TRANG QUẢN LÝ CHUYẾN ĐI (TÌM KIẾM + LỌC THÁNG)
     // ==========================================
     @GetMapping
-    public String departureManagement(HttpSession session, Model model) {
+    public String departureManagement(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "date", required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate date,
+            @RequestParam(value = "filterMonth", required = false) Integer filterMonth,
+            @RequestParam(value = "filterYear", required = false) Integer filterYear,
+            HttpSession session, Model model) {
+
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) return "redirect:/auth/loginForm";
 
         try {
-            List<TourDeparture> departures = departureService.getAllDepartures();
+            List<TourDeparture> departures;
+
+            // 1. Logic lọc dữ liệu (Ưu tiên lọc theo tháng/năm nếu người dùng click vào khối Thống kê)
+            if (filterMonth != null && filterYear != null) {
+                departures = departureService.getDeparturesByMonthAndYear(filterMonth, filterYear);
+            }
+            // 2. Lọc theo form tìm kiếm Tên / Ngày cụ thể
+            else if ((keyword != null && !keyword.trim().isEmpty()) || date != null) {
+                departures = departureService.searchDepartures(keyword, date);
+            }
+            // 3. Mặc định lấy tất cả
+            else {
+                departures = departureService.getAllDepartures();
+            }
+
+            // Tính toán ra cái tháng tới (Ví dụ: hiện tại đang tháng 5, tháng tới là tháng 6) để gắn vào link
+            java.time.LocalDate nextMonthDate = java.time.LocalDate.now().plusMonths(1);
+            model.addAttribute("nextMonthVal", nextMonthDate.getMonthValue());
+            model.addAttribute("nextYearVal", nextMonthDate.getYear());
+
             List<Tour> tours = tourService.getAllTours();
 
+            // Nạp thống kê
             model.addAttribute("onGoingDepartures", departureService.getOnGoingDepartures());
             model.addAttribute("pendingGuideDepartures", departureService.getPendingGuideDepartures());
             model.addAttribute("todayPassengers", departureService.getTodayPassengers());
             model.addAttribute("upcomingMonth", departureService.getUpcomingDepartureMonth());
 
+            // Nạp dữ liệu
             model.addAttribute("departures", departures != null ? departures : new java.util.ArrayList<>());
             model.addAttribute("tours", tours != null ? tours : new java.util.ArrayList<>());
             model.addAttribute("admin", loggedInAdmin);
+
+            // Giữ giá trị cho form tìm kiếm
+            model.addAttribute("keyword", keyword);
+            model.addAttribute("searchDate", date);
 
             return "admin_trip_management";
         } catch (Exception e) {
@@ -69,8 +100,18 @@ public class DepartureController {
     // XỬ LÝ LƯU CHUYẾN ĐI MỚI (PHẦN BẠN BỊ THIẾU)
     // ==========================================
     @PostMapping("/save")
-    public String saveDeparture(@ModelAttribute("departure") TourDeparture departure, RedirectAttributes redirectAttributes) {
-        // Kiểm tra logic ngày tháng
+    public String saveDeparture(
+            @ModelAttribute("departure") TourDeparture departure,
+            @RequestParam("tourId") Integer tourId,
+            RedirectAttributes redirectAttributes) {
+
+        // 1. NGÀY TRONG QUÁ KHỨ
+        if (departure.getDepartureDate() != null && departure.getDepartureDate().isBefore(java.time.LocalDate.now())) {
+            redirectAttributes.addAttribute("error", "Lỗi: Không thể tạo chuyến đi khởi hành trong quá khứ!");
+            return "redirect:/admin/departures/add";
+        }
+
+        // 2. NGÀY ĐI - NGÀY VỀ
         if (departure.getReturnDate() != null && departure.getDepartureDate() != null) {
             if (departure.getReturnDate().isBefore(departure.getDepartureDate())) {
                 redirectAttributes.addAttribute("error", "Ngày trở về không thể diễn ra trước ngày khởi hành!");
@@ -78,10 +119,43 @@ public class DepartureController {
             }
         }
 
-        try {
-            // Khi mới tạo chuyến, Số chỗ trống = Tổng số chỗ
-            departure.setAvailableSeats(departure.getMaxSeats());
+        // 3. GIÁ TIỀN
+        if (departure.getAdultPrice() != null && departure.getChildPrice() != null) {
+            if (departure.getChildPrice().compareTo(departure.getAdultPrice()) > 0) {
+                redirectAttributes.addAttribute("error", "Lỗi: Giá trẻ em không được phép cao hơn giá người lớn!");
+                return "redirect:/admin/departures/add";
+            }
+        }
 
+        // 4. KIỂM TRA ĐỒNG BỘ SỐ NGÀY (Tuyệt đối không dùng departure.getTour() ở đây nữa)
+        try {
+            Tour originalTour = tourService.getTourById(tourId); // Chỉ dùng tourId lấy từ form
+
+            if (originalTour != null) {
+                departure.setTour(originalTour); // Gán tour vào để lưu DB không bị lỗi
+
+                if (departure.getDepartureDate() != null && departure.getReturnDate() != null) {
+                    long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(departure.getDepartureDate(), departure.getReturnDate());
+                    long actualDays = daysBetween + 1;
+
+                    if (actualDays != originalTour.getDurationDays()) {
+                        redirectAttributes.addAttribute("error", "Lỗi: Tour gốc quy định là "
+                                + originalTour.getDurationDays() + " ngày, nhưng bạn lại chọn lịch đi " + actualDays + " ngày!");
+                        return "redirect:/admin/departures/add";
+                    }
+                }
+            } else {
+                redirectAttributes.addAttribute("error", "Lỗi: Vui lòng chọn một Tour hợp lệ!");
+                return "redirect:/admin/departures/add";
+            }
+        } catch (Exception e) {
+            redirectAttributes.addAttribute("error", "Lỗi hệ thống: " + e.getMessage());
+            return "redirect:/admin/departures/add";
+        }
+
+        // 5. LƯU DỮ LIỆU
+        try {
+            departure.setAvailableSeats(departure.getMaxSeats());
             departureService.saveDeparture(departure);
             redirectAttributes.addAttribute("success", "Thêm chuyến đi mới thành công!");
             return "redirect:/admin/departures";
@@ -89,9 +163,7 @@ public class DepartureController {
             redirectAttributes.addAttribute("error", "Lỗi lưu dữ liệu: " + e.getMessage());
             return "redirect:/admin/departures/add";
         }
-    }
-
-    // ==========================================
+    }    // ==========================================
     // CHI TIẾT CHUYẾN ĐI (Đã thêm list Bookings)
     // ==========================================
     @GetMapping("/{id}")
@@ -141,8 +213,11 @@ public class DepartureController {
 
         try {
             List<TourDeparture> departures = null;
-
-            if (status != null && !status.isEmpty()) {
+            // BỔ SUNG THÊM IF NÀY ĐỂ XỬ LÝ LỌC HDV
+            if ("no_guide".equals(status)) {
+                departures = departureService.getPendingGuideDeparturesList();
+            }
+            else if (status != null && !status.isEmpty()) {
                 departures = departureService.getDeparturesByStatus(status);
             } else {
                 departures = departureService.getAllDepartures();

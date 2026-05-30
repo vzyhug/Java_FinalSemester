@@ -63,10 +63,10 @@
       <span class="material-symbols-outlined text-lg">refresh</span>
       Làm mới
     </a>
-    <button onclick="openAddTourModal()" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-green-700 transition whitespace-nowrap">
+    <a th:href="@{/tour/add}" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-green-700 transition whitespace-nowrap shadow-sm">
       <span class="material-symbols-outlined text-lg">add</span>
       Thêm Tour Mới
-    </button>
+    </a>
   </div>
 
   <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
@@ -129,8 +129,11 @@
               <a th:href="@{/tour/edit/{id}(id=${tour.tourId})}" class="p-2 hover:bg-orange-50 rounded-lg transition text-orange-600">
                 <span class="material-symbols-outlined text-lg">edit</span>
               </a>
-              <a th:href="@{/tour/delete/{id}(id=${tour.tourId})}" onclick="return confirm('Bạn có chắc chắn muốn xóa tour này?')" class="p-2 hover:bg-red-50 rounded-lg transition text-red-600">
+              <a th:href="@{/tour/delete/{id}(id=${tour.tourId})}"
+                 onclick="return confirm('Bạn có chắc chắn muốn xóa tour này?')"
+                 class="p-2 hover:bg-red-50 rounded-lg transition text-red-600">
                 <span class="material-symbols-outlined text-lg">delete</span>
+              </a>
               </a>
             </div>
           </td>
