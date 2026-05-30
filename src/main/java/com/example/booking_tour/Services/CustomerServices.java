@@ -41,6 +41,10 @@ public class CustomerServices {
     }
 
 
+    public Customer findByEmail(String email) {
+        return customerRepository.findByEmail(email);
+    }
+
     // ==================== STATISTICS ====================
 
     /**

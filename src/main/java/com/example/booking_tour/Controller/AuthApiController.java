@@ -42,4 +42,24 @@ public class AuthApiController {
             return ResponseEntity.status(401).body(Map.of("message", "Sai tài khoản hoặc mật khẩu"));
         }
     }
+
+    // Tự động khôi phục Session (Phục vụ trường hợp tắt Server mở lại)
+    @PostMapping("/restore-session")
+    public ResponseEntity<?> restoreSession(@RequestHeader(value = "Authorization", required = false) String authHeader, HttpSession session) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Missing token");
+        }
+        
+        String token = authHeader.substring(7);
+        if (jwtUtils.validateToken(token)) {
+            String email = jwtUtils.getEmailFromToken(token);
+            Customer customer = customerService.findByEmail(email); 
+            
+            if(customer != null) {
+               session.setAttribute("loggedInCustomer", customer);
+               return ResponseEntity.ok(Map.of("message", "Khôi phục thành công"));
+            }
+        }
+        return ResponseEntity.status(401).body("Invalid token");
+    }
 }
