@@ -106,7 +106,13 @@
             </div>
         </div>
         <div class="flex items-center gap-4">
-            <button class="hidden lg:block text-slate-600 font-semibold px-4 py-2 hover:bg-slate-100/50 rounded-full transition-all">Đăng nhập</button>
+            <th:block th:if="${session.loggedInCustomer != null}">
+                <span class="text-blue-900 font-bold hidden lg:block">Xin chào, <span th:text="${session.loggedInCustomer.fullName}"></span></span>
+                <a th:href="@{/customer/logout}" class="hidden lg:block px-4 py-2 rounded-full text-sm font-bold text-red-600 hover:bg-red-50 transition-all inline-block">Đăng xuất</a>
+            </th:block>
+            <th:block th:if="${session.loggedInCustomer == null}">
+                <a th:href="@{/customer/loginForm}" class="hidden lg:block text-slate-600 font-semibold px-4 py-2 hover:bg-slate-100/50 rounded-full transition-all inline-block">Đăng nhập</a>
+            </th:block>
             <button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-8 py-3 rounded-full font-bold scale-100 hover:scale-95 active:scale-90 transition-transform shadow-lg">Đặt ngay</button>
         </div>
     </div>

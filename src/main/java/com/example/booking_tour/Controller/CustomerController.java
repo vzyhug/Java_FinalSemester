@@ -25,6 +25,7 @@ public class CustomerController {
     public String loginForm(Model model) {
         // hiển thị form đăng nhập
         model.addAttribute("customer", new Customer());
+        model.addAttribute("isAdmin", false);
         return "login_form"; // Trả về tên của view (customer_login.html)
     }
 
@@ -37,9 +38,10 @@ public class CustomerController {
         Customer loggedInCustomer = customerService.login(email, password);
         if (loggedInCustomer != null) {
             session.setAttribute("loggedInCustomer", loggedInCustomer);
-            return "redirect:/";
+            return "redirect:/home";
         } else {
             model.addAttribute("error", "Email hoặc mật khẩu không chính xác!");
+            model.addAttribute("isAdmin", false);
             return "login_form";
         }
     }
@@ -48,7 +50,7 @@ public class CustomerController {
     @GetMapping("logout")
     public String logout(HttpSession session) {
         session.removeAttribute("loggedInCustomer");
-        return "redirect:/";
+        return "redirect:/home";
     }
 
     // Hiển thị trang đăng ký cho khách hàng

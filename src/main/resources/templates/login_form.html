@@ -104,6 +104,77 @@
         </div>
     </div>
 </div>
-
 </body>
+<!-- ==============================================
+     JAVASCRIPT: JWT + 20 PHÚT LOCALSTORAGE
+     ============================================== -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Kiểm tra xem đã đăng nhập chưa, nếu có thì ẩn form
+        checkSession();
+
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                // Nếu là Khách hàng thì dùng API mới, nếu là Admin thì giữ nguyên
+                const actionUrl = form.getAttribute('action');
+                if (actionUrl.includes('/customer/login')) {
+                    e.preventDefault(); // Ngừng load trang để dùng Ajax
+                    const usernameVal = document.querySelector('input[type="text"]').value;
+                    const passVal = document.querySelector('input[name="password"]').value;
+
+                    try {
+                        const response = await fetch('/api/auth/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ username: usernameVal, password: passVal })
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json(); 
+                            
+                            // 1. Lưu JWT
+                            localStorage.setItem('jwtToken', data.token);
+                            
+                            // 2. Tính thời hạn: Hiện tại + 20 phút (20 * 60 * 1000 = 1200000 ms)
+                            const expiresIn20Mins = new Date().getTime() + 1200000;
+                            localStorage.setItem('tokenExpiration', expiresIn20Mins);
+                            
+                            alert('Đăng nhập thành công!');
+                            window.location.href = '/home'; // Chuyển về trang chủ
+                        } else {
+                            alert('Sai tài khoản hoặc mật khẩu!');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        form.submit(); // Lỗi API thì submit truyền thống
+                    }
+                }
+            });
+        }
+    });
+
+    // Hàm tự động check hạn 20 phút mỗi khi vào trang web (có thể bỏ vào thẻ <head> của file layout chung)
+    function checkSession() {
+        const token = localStorage.getItem('jwtToken');
+        const expirationTime = localStorage.getItem('tokenExpiration');
+
+        if (token && expirationTime) {
+            const currentTime = new Date().getTime();
+            if (currentTime > parseInt(expirationTime)) {
+                console.log("Phiên đã hết hạn (quá 20 phút). Đang xóa...");
+                handleLogoutClient();
+            } else {
+                console.log("Còn lại: " + Math.round((parseInt(expirationTime) - currentTime) / 60000) + " phút");
+            }
+        }
+    }
+
+    function handleLogoutClient() {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('tokenExpiration');
+        // Gọi API hoặc redirect để xóa session phía server
+        window.location.href = '/customer/logout';
+    }
+</script>
 </html>

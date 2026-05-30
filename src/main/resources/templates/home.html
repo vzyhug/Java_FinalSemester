@@ -349,4 +349,29 @@
         </div>
     </div>
 </footer>
-</body></html>
+<!-- JS Kiểm tra hết hạn 20 phút JWT -->
+<script>
+    document.addEventListener('DOMContentLoaded', checkSession);
+
+    function checkSession() {
+        const token = localStorage.getItem('jwtToken');
+        const expirationTime = localStorage.getItem('tokenExpiration');
+
+        if (token && expirationTime) {
+            const currentTime = new Date().getTime();
+            if (currentTime > parseInt(expirationTime)) {
+                console.log("Phiên đã hết hạn (quá 20 phút). Đang xóa...");
+                handleLogoutClient();
+            }
+        }
+    }
+
+    function handleLogoutClient() {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('tokenExpiration');
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!');
+        window.location.href = '/customer/logout';
+    }
+</script>
+</body>
+</html>
