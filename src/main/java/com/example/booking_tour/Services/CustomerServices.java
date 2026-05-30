@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class CustomerServices {
     @Autowired
     private BookingRepository bookingRepository;
 
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+
     // Lưu thông tin khách hàng mới sau khi đăng ký
     @Transactional
     public void register(Customer customer) {
@@ -34,11 +38,20 @@ public class CustomerServices {
         // Tìm khách hàng trong database
         Customer existingCustomer = customerRepository.findByEmail(email);
         // Nếu tìm thấy khách hàng và mật khẩu khớp thì trả về đối tượng Customer
-        if (existingCustomer != null && existingCustomer.getPasswordHash().equals(password)) {
+        if (existingCustomer != null && passwordEncoder.matches(password, existingCustomer.getPasswordHash())) {
             return existingCustomer;
         }
         return null; // Đăng nhập thất bại
     }
+//    public Customer login(String email, String password) {
+//        Customer existingCustomer = customerRepository.findByEmail(email);
+//        if (existingCustomer != null &&
+//                passwordEncoder.matches(password, existingCustomer.getPasswordHash())) {
+//            return existingCustomer;
+//        }
+//        return null;
+//    }
+
 
 
     // ==================== STATISTICS ====================
@@ -301,5 +314,24 @@ public class CustomerServices {
         }
 
         System.out.println("--- KẾT THÚC SERVICE ---");
+    }
+
+
+    //change password profile
+    public void changePassword(Integer customerId, String newPassword) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
+
+        // Mã hóa mật khẩu mới
+        String encoded = passwordEncoder.encode(newPassword);
+        customer.setPasswordHash(encoded);
+
+        customerRepository.save(customer);
+    }
+
+    @Transactional
+    public void updateCustomer(Customer customer) {
+
+        customerRepository.save(customer);
     }
 }

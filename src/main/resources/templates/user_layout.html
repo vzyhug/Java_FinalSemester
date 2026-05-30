@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 
-<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"><head>
+<html class="light" lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -116,7 +119,8 @@
         <h2 class="text-xl font-black text-blue-900 dark:text-blue-400 font-headline">Chào mừng trở lại</h2>
       </div>
       <nav class="flex flex-col gap-2">
-        <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 transition-transform duration-300 hover:translate-x-1 rounded-xl font-medium text-sm" href="#">
+        <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 transition-transform duration-300 hover:translate-x-1 rounded-xl font-medium text-sm"
+           th:href="@{/customer/profile}">
           <span class="material-symbols-outlined" data-icon="person">person</span>
           <span>Profile</span>
         </a>
@@ -124,8 +128,13 @@
           <span class="material-symbols-outlined" data-icon="travel_explore">travel_explore</span>
           <span>My Bookings</span>
         </a>
-        <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 transition-transform duration-300 hover:translate-x-1 rounded-xl font-medium text-sm" href="#">
-          <span class="material-symbols-outlined" data-icon="payments">payments</span>
+        <a th:href="@{/customer/payment-history}"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl
+            transition-transform duration-300 hover:translate-x-1 text-sm"
+           th:classappend="${#execInfo.templateName == 'payment_history'}
+           ? ' bg-white dark:bg-slate-800 text-blue-900 dark:text-white rounded-xl shadow-sm font-bold'
+            : ' text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/30 font-medium'">
+          <span class="material-symbols-outlined">payments</span>
           <span>Payment History</span>
         </a>
       </nav>
@@ -141,7 +150,9 @@
       </div>
     </aside>
     <!-- Main Content Area -->
-    <div layout:fragment="content"> </div>
+    <main class="flex-1 md:ml-72">
+      <div layout:fragment="content"></div>
+    </main>
   </div>
   <!-- Mobile Bottom Navigation (Platform Pivot Rule) -->
   <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 flex justify-around items-center h-20 px-4 z-50">

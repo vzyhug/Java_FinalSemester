@@ -20,5 +20,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
     List<Payment> findByPaymentMethod(String paymentMethod);
 
     boolean existsByBooking_BookingId(Integer bookingId);
+
+    List<Payment> findByBookingCustomerCustomerIdOrderByPaymentDateDesc(Integer customerId);
+    Payment findByBookingBookingId(Integer bookingId);
 }
 

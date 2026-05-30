@@ -1,9 +1,11 @@
 package com.example.booking_tour.Controller;
 
 import com.example.booking_tour.Model.*;
+import com.example.booking_tour.Repository.TourRepository;
 import com.example.booking_tour.Services.*;
 import jakarta.servlet.http.HttpSession;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/tour")
+@RequiredArgsConstructor
 public class TourController {
 
     @Autowired
@@ -42,6 +45,9 @@ public class TourController {
 
     @Autowired
     private TourDepartureServices TDServices;
+
+    @Autowired
+    private final TourRepository tourRepository;
 
     @GetMapping("")
     @Transactional(readOnly = true)
@@ -217,6 +223,15 @@ public class TourController {
         if (tourServices.deactivateTour(tourId)) return "redirect:/tour/manager?success=Đã xóa";
         return "redirect:/tour/manager?error=Lỗi khi xóa tour";
     }
+
+    //xem tour
+    @GetMapping("/tours/by-province/{provinceId}")
+    public String getToursByProvince(@PathVariable Integer provinceId, Model model) {
+        List<Tour> tours = tourRepository.findByProvince_ProvinceId(provinceId);
+        model.addAttribute("tours", tours);
+        return "tours_by_province"; // view hiển thị danh sách tour
+    }
+
 
 }
 

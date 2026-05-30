@@ -240,18 +240,19 @@
 
                   </p>
 
-                  <span class="inline-block text-xs
-                               bg-primary/10 text-primary
-                               px-3 py-1 rounded-full font-bold">
+<!--                  <span class="inline-block text-xs-->
+<!--                               bg-primary/10 text-primary-->
+<!--                               px-3 py-1 rounded-full font-bold">-->
 
-                    Du lịch
+<!--                    Du lịch-->
 
-                  </span>
-
+<!--                  </span>-->
+                  <a th:href="@{/tour/tours/by-province/{id}(id=${province.provinceId})}"
+                     class="inline-block text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-bold">
+                    Xem Tour
+                  </a>
                 </div>
-
               </div>
-
             </div>
 
           </div>
@@ -291,8 +292,6 @@
                 <th class="pb-4">Phân loại</th>
                 <th class="pb-4">Trạng thái</th>
                 <th class="pb-4">Lượt xem</th>
-                <th class="pb-4 text-right">Hành động</th>
-
               </tr>
 
               </thead>
@@ -364,16 +363,16 @@
                 </td>
 
                 <!-- ACTION -->
-                <td class="py-5 text-right">
+<!--                <td class="py-5 text-right">-->
 
-                  <a th:href="@{/admin/tour/edit/{id}(id=${tour.tourId})}"
-                     class="p-2 rounded-lg hover:bg-surface-container inline-flex">
+<!--                  <a th:href="@{/admin/tour/edit/{id}(id=${tour.tourId})}"-->
+<!--                     class="p-2 rounded-lg hover:bg-surface-container inline-flex">-->
 
-                    <span class="material-symbols-outlined text-primary">
-                      edit
-                    </span>
-                  </a>
-                </td>
+<!--                    <span class="material-symbols-outlined text-primary">-->
+<!--                      edit-->
+<!--                    </span>-->
+<!--                  </a>-->
+<!--                </td>-->
               </tr>
               </tbody>
             </table>

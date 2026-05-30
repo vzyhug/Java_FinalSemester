@@ -47,4 +47,5 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
     List<Tour> findAllByOrderByMinPriceAsc();
 
     List<Tour> findAllByOrderByMinPriceDesc();
+
 }
