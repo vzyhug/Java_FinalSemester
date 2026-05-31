@@ -89,7 +89,7 @@
 <body class="bg-surface font-body text-on-surface">
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm">
     <div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto font-['Be_Vietnam_Pro'] tracking-tight">
-        <div class="text-2xl font-black text-blue-900 dark:text-blue-50">VietExpedition</div>
+        <a href="/" class="text-2xl font-black text-blue-900 dark:text-blue-50 hover:opacity-80 transition-opacity decoration-transparent">VietExpedition</a>
         <div class="hidden md:flex gap-8 items-center">
             <a class="text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors" href="#">Điểm đến</a>
             <a class="text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors" href="#">Tour</a>
@@ -106,6 +106,7 @@
         <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-primary tracking-tight mb-2">Thanh toán &amp; Xác nhận</h1>
         <p class="text-on-surface-variant max-w-2xl">Hoàn tất thủ tục thanh toán để bắt đầu hành trình khám phá di sản Việt Nam cùng chúng tôi.</p>
     </div>
+    <form th:action="@{/payment/process}" method="post">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div class="lg:col-span-8 space-y-8">
             <section class="bg-surface-container-low rounded-2xl p-6 md:p-8">
@@ -115,7 +116,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="relative group cursor-pointer">
-                        <input checked="" class="peer hidden" id="card" name="payment_method" type="radio"/>
+                        <input checked="" class="peer hidden" id="card" name="paymentMethod" value="Thẻ quốc tế" type="radio"/>
                         <label class="block p-6 rounded-2xl bg-surface-container-lowest border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary-fixed/20 transition-all" for="card">
                             <span class="material-symbols-outlined text-3xl mb-4 text-primary">credit_card</span>
                             <p class="font-bold text-primary">Thẻ quốc tế</p>
@@ -123,7 +124,7 @@
                         </label>
                     </div>
                     <div class="relative group cursor-pointer">
-                        <input class="peer hidden" id="bank" name="payment_method" type="radio"/>
+                        <input class="peer hidden" id="bank" name="paymentMethod" value="Chuyển khoản" type="radio"/>
                         <label class="block p-6 rounded-2xl bg-surface-container-lowest border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary-fixed/20 transition-all" for="bank">
                             <span class="material-symbols-outlined text-3xl mb-4 text-primary">account_balance</span>
                             <p class="font-bold text-primary">Chuyển khoản</p>
@@ -131,7 +132,7 @@
                         </label>
                     </div>
                     <div class="relative group cursor-pointer">
-                        <input class="peer hidden" id="e-wallet" name="payment_method" type="radio"/>
+                        <input class="peer hidden" id="e-wallet" name="paymentMethod" value="Ví điện tử" type="radio"/>
                         <label class="block p-6 rounded-2xl bg-surface-container-lowest border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary-fixed/20 transition-all" for="e-wallet">
                             <span class="material-symbols-outlined text-3xl mb-4 text-primary">account_balance_wallet</span>
                             <p class="font-bold text-primary">Ví điện tử</p>
@@ -257,7 +258,7 @@
                                 <span class="text-primary">13.250.000 đ</span>
                             </div>
                         </div>
-                        <button class="w-full py-4 rounded-full font-bold editorial-gradient text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 mt-4">
+                        <button type="submit" class="w-full py-4 rounded-full font-bold editorial-gradient text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 mt-4">
                             <span class="material-symbols-outlined">lock</span>
                             Xác nhận thanh toán
                         </button>
@@ -284,6 +285,7 @@
             </aside>
         </div>
     </div>
+    </form>
 </main>
 <footer class="bg-slate-50 dark:bg-slate-950 w-full py-12 border-t border-slate-100 dark:border-slate-900 mt-20">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">

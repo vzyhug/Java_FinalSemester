@@ -37,12 +37,11 @@ public class CustomerServices {
     }
 
     public static boolean isAlreadyHashed(String password) {
-        try {
-            BCrypt.checkpw("", password);
-            return true;
-        } catch (IllegalArgumentException e) {
+        if (password == null || password.isEmpty()) {
             return false;
         }
+        // BCrypt hashes typically start with $2a$, $2b$, or $2y$ and are 60 chars long
+        return password.startsWith("$2a$") || password.startsWith("$2b$") || password.startsWith("$2y$");
     }
 
     //Hash password có sẵn trong db
@@ -50,7 +49,7 @@ public class CustomerServices {
         List<Customer> customers = customerRepository.findAll();
         for (Customer customer : customers) {
             String rawPassword = customer.getPasswordHash();
-            if(!isAlreadyHashed(rawPassword)) {
+            if(rawPassword != null && !rawPassword.trim().isEmpty() && !isAlreadyHashed(rawPassword)) {
                 String encoded = passwordEncoder.encode(rawPassword);
                 customer.setPasswordHash(encoded);
                 customerRepository.save(customer);

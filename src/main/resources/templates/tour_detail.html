@@ -141,14 +141,16 @@
                         <span th:text="${message}">
                         </span>
                     </div>
-                    <form th:action="@{/tour/check_date}" method="GET" class="space-y-6">
+                    <form th:action="@{/booking}" method="GET" class="space-y-6">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Chọn ngày khởi hành</label>
                             <div class="relative">
-                                <input class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 font-medium text-on-surface focus:ring-2 focus:ring-primary/20"
-                                       type="date"
-                                       name="startDate"
-                                       required="required" />
+                                <select name="departureId" class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 font-medium text-on-surface focus:ring-2 focus:ring-primary/20" required="required">
+                                    <option value="" disabled selected>-- Chọn ngày khởi hành --</option>
+                                    <option th:each="departure : ${listDeparture}" 
+                                            th:value="${departure.departureId}" 
+                                            th:text="${#temporals.format(departure.departureDate, 'dd/MM/yyyy')} + ' (Còn ' + ${departure.availableSeats} + ' chỗ)'"></option>
+                                </select>
                             </div>
                         </div>
 
