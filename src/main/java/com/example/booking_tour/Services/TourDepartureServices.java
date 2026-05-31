@@ -49,9 +49,17 @@ public class TourDepartureServices
         return repoTD.findByTour(tour);
     }
 
-    public TourDeparture getTourDepartureById(Integer id)
-    {
+    public TourDeparture getTourDepartureById(Integer id) {
         return repoTD.findById(id).orElse(null);
+    }
+    public List<TourDeparture> getTourDepartureByTourId(Integer tourId)
+    {
+        Tour t=repoT.findById(tourId).orElse(null);
+        if(t!=null)
+        {
+            return repoTD.findByTour(t);
+        }
+        return null;
     }
 
 }

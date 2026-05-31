@@ -2,6 +2,7 @@ package com.example.booking_tour.Model;
 
 import jakarta.persistence.*;
 
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +29,7 @@ public class Customer {
     private String email;
 
     @NotBlank(message = "Mật khẩu không được để trống")
-    @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 ký tự")
+    @Size(min = 3, message = "Mật khẩu phải có ít nhất 8 ký tự")
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 

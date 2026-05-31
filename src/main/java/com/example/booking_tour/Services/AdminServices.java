@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -62,11 +63,7 @@ public class AdminServices {
         }
     }
 
-    // ==================== STATISTICS ====================
-
-    /**
-     * Lấy tổng doanh thu từ tất cả thanh toán
-     */
+    // ==================== THỐNG KÊ TỔNG (ALL-TIME) ====================
     public BigDecimal getTotalRevenue() {
         try {
             List<Payment> payments = paymentRepository.findAll();
@@ -87,9 +84,6 @@ public class AdminServices {
         }
     }
 
-    /**
-     * Lấy tổng số booking
-     */
     public Long getTotalBookings() {
         try {
             return bookingRepository.count();
@@ -99,9 +93,6 @@ public class AdminServices {
         }
     }
 
-    /**
-     * Lấy tổng số khách hàng
-     */
     public Long getTotalCustomers() {
         try {
             return customerRepository.count();
@@ -110,10 +101,6 @@ public class AdminServices {
             return 0L;
         }
     }
-
-    /**
-     * Lấy tổng số tour
-     */
     public Long getTotalTours() {
         try {
             return tourRepository.count();
@@ -123,12 +110,39 @@ public class AdminServices {
         }
     }
 
-    // ==================== DATA RETRIEVAL ====================
+    // ==================== THỐNG KÊ THEO KHOẢNG THỜI GIAN (BỘ LỌC) ====================
 
-    /**
-     * Lấy danh sách booking gần đây
-     * @param limit Số lượng booking cần lấy
-     */
+    public BigDecimal getTotalRevenueByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        try {
+            BigDecimal revenue = bookingRepository.calculateTotalRevenueByDateRange(startDate, endDate);
+            return revenue != null ? revenue : BigDecimal.ZERO;
+        } catch (Exception e) {
+            System.out.println("Lỗi trong getTotalRevenueByDateRange: " + e.getMessage());
+            return BigDecimal.ZERO;
+        }
+    }
+
+    public Long getTotalBookingsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        try {
+            Long count = bookingRepository.countBookingsByDateRange(startDate, endDate);
+            return count != null ? count : 0L;
+        } catch (Exception e) {
+            System.out.println("Lỗi trong getTotalBookingsByDateRange: " + e.getMessage());
+            return 0L;
+        }
+    }
+
+    public Long getTotalCustomersByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        try {
+            Long count = customerRepository.countCustomersByDateRange(startDate, endDate);
+            return count != null ? count : 0L;
+        } catch (Exception e) {
+            System.out.println("Lỗi trong getTotalCustomersByDateRange: " + e.getMessage());
+            return 0L;
+        }
+    }
+
+    // ==================== DATA RETRIEVAL ====================
     public List<Booking> getRecentBookings(int limit) {
         try {
             List<Booking> bookings = bookingRepository.findTop5ByOrderByBookingDateDesc();
@@ -142,15 +156,54 @@ public class AdminServices {
         }
     }
 
-    /**
-     * Lấy danh sách booking đang chờ xử lý
-     */
+    // HÀM MỚI ĐƯỢC THÊM VÀO ĐỂ LẤY DANH SÁCH GIAO DỊCH THEO BỘ LỌC THỜI GIAN
+    public List<Booking> getBookingsListByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        try {
+            return bookingRepository.findBookingsByDateRange(startDate, endDate);
+        } catch (Exception e) {
+            System.out.println("Lỗi trong getBookingsListByDateRange: " + e.getMessage());
+            return null;
+        }
+    }
+
     public List<Booking> getPendingBookings() {
         try {
             return bookingRepository.findByStatus("pending");
         } catch (Exception e) {
             System.out.println("Lỗi trong getPendingBookings: " + e.getMessage());
             return null;
+        }
+    }
+
+
+    // ==================== QUẢN LÝ NHÂN VIÊN / HDV ====================
+
+    public List<Employee> getAllAdmins() {
+        try {
+            return employeeRepository.findAll();
+        } catch (Exception e) {
+            System.out.println("Lỗi trong getAllAdmins: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public Employee getAdminById(Integer id) {
+        try {
+            return employeeRepository.findById(id).orElse(null);
+        } catch (Exception e) {
+            System.out.println("Lỗi trong getAdminById: " + e.getMessage());
+            return null;
+        }
+    }
+    public double getCancellationRate() {
+        try {
+            long total = bookingRepository.count();
+            if (total == 0) return 0.0;
+            long cancelled = bookingRepository.countByStatus("cancelled");
+            return ((double) cancelled / total) * 100;
+        } catch (Exception e) {
+            System.out.println("Lỗi trong getCancellationRate: " + e.getMessage());
+            return 0.0;
         }
     }
 }

@@ -29,8 +29,6 @@ public class TourServices
     }
 
 
-
-
     // ==================== CÁC HÀM CỦA THÙY (PUBLIC) ====================
     public List<Tour> sortTourByPrice(boolean isAcs) {
         if(isAcs) return tourRepository.findAllByOrderByMinPriceAsc();
@@ -46,6 +44,7 @@ public class TourServices
     }
 
     // ==================== CÁC HÀM CỦA THƯ (ADMIN & THỐNG KÊ) ====================
+
     public Long getTotalTours() {
         try { return tourRepository.count(); } catch (Exception e) { return 0L; }
     }
@@ -72,6 +71,8 @@ public class TourServices
             return totalRevenue;
         } catch (Exception e) { return java.math.BigDecimal.ZERO; }
     }
+
+
 
     public Tour getTourById(Integer tourId) {
         return tourRepository.findById(tourId).orElse(null);
@@ -116,14 +117,11 @@ public class TourServices
         } catch (Exception e) { return false; }
     }
 
-
     //Lấy tour dựa trên id
     public Tour getToursByTourId(Integer id)
     {
         return repo.findById(id).orElse(null);
     }
-
-
 
 }
 

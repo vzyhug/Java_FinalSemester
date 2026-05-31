@@ -7,7 +7,6 @@ import com.example.booking_tour.Repository.BookingPassengerRepository;
 import com.example.booking_tour.Repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -28,6 +27,7 @@ public class BookingServices {
             repoPassenger.save(p);
         }
     }
+
 
     //tim danh sach booking bang id
     public Booking getBookingById(int bookingId){

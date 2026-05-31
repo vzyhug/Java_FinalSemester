@@ -2,21 +2,14 @@ package com.example.booking_tour.Repository;
 
 import com.example.booking_tour.Model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
-    /**
-     * Tìm employee theo username
-     */
+public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     Employee findByUsername(String username);
-
     /**
      * Tìm employee theo email
      */
@@ -39,4 +32,5 @@ public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
     Page<Employee> findByRole_RoleId(Integer roleId, Pageable pageable);
 
     Page<Employee> findByFullNameContainingIgnoreCaseAndRole_RoleId(String keyword, Integer roleId, Pageable pageable);
+
 }

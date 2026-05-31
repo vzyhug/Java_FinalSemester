@@ -25,4 +25,5 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
 
     List<Bill> findByBookingCustomerCustomerIdOrderByBillDateDesc(Integer customerId);
     Bill findByBookingBookingId(Integer bookingId);
+
 }

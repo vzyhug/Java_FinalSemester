@@ -3,16 +3,8 @@ package com.example.booking_tour.Model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
-
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Set;
 
 @Getter
@@ -62,12 +54,14 @@ public class Tour {
     private Double minPrice; // dùng wrapper để tránh null pointer
 
 
+
     @ManyToOne
     @JoinColumn(name = "created_by")
     private Employee createdBy;
 
-    @OneToMany(mappedBy = "tour", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER)
     private Set<ImagesTour> images;
+
     public ImagesTour getImagesThumbnails() {
         for(ImagesTour image : images) {
             if(image.isThumbnail()) {

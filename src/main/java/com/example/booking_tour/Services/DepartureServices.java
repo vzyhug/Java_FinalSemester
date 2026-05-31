@@ -331,4 +331,15 @@ public class DepartureServices {
             return false;
         }
     }
+
+
+    public List<TourDeparture> searchDepartures(String keyword, LocalDate date) {
+        return tourDepartureRepository.searchDepartures(keyword, date);
+    }
+    public List<TourDeparture> getDeparturesByMonthAndYear(int month, int year) {
+        return tourDepartureRepository.getDeparturesByMonthAndYear(month, year);
+    }
+    public List<TourDeparture> getPendingGuideDeparturesList() {
+        return tourDepartureRepository.findByGuideIsNull();
+    }
 }

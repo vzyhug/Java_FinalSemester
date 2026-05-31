@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/admin_layout :: layout(~{:: #edit-departure-content})}">
+<head>
+    <title>Sửa thông tin Chuyến đi - Vietnam Expeditions</title>
+</head>
+<body>
+<div id="edit-departure-content" class="p-8">
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-black text-amber-600 mb-2">Sửa thông tin Chuyến đi</h1>
+        <p class="text-slate-500">Cập nhật thông tin lịch trình, giá vé và số chỗ</p>
+    </div>
+
+    <div th:if="${error}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm">
+        <p class="font-bold">Lỗi:</p>
+        <p th:text="${error}"></p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 max-w-4xl">
+        <form th:action="@{/admin/departures/update}" th:object="${departure}" method="POST" class="space-y-6">
+
+            <input type="hidden" th:field="*{departureId}" />
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Thuộc Tour <span class="text-red-500">*</span></label>
+                <select th:field="*{tour.tourId}" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition" required>
+                    <option th:each="t : ${tours}" th:value="${t.tourId}" th:text="${t.title}"></option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Ngày khởi hành <span class="text-red-500">*</span></label>
+                    <input type="date" id="departureDate" th:field="*{departureDate}" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-amber-500 outline-none" required/>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Ngày trở về <span class="text-red-500">*</span></label>
+                    <input type="date" id="returnDate" th:field="*{returnDate}" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-amber-500 outline-none" required/>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-100">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Tổng số chỗ <span class="text-red-500">*</span></label>
+                    <input type="number" th:field="*{maxSeats}" min="1" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-amber-500 outline-none" required/>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Giá người lớn (VNĐ) <span class="text-red-500">*</span></label>
+                    <input type="number" th:field="*{adultPrice}" min="0" step="1000" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-amber-500 outline-none" required/>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Giá trẻ em (VNĐ) <span class="text-red-500">*</span></label>
+                    <input type="number" th:field="*{childPrice}" min="0" step="1000" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-amber-500 outline-none" required/>
+                </div>
+            </div>
+
+            <div class="flex gap-4 pt-6 mt-6 border-t border-slate-100">
+                <button type="submit" class="bg-amber-500 text-white px-8 py-3 rounded-lg font-bold hover:bg-amber-600 transition flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">save_as</span>
+                    Cập nhật thay đổi
+                </button>
+                <a th:href="@{/admin/departures/{id}(id=${departure.departureId})}" class="bg-slate-100 text-slate-700 px-8 py-3 rounded-lg font-bold hover:bg-slate-200 transition">
+                    Hủy
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const depInput = document.getElementById('departureDate');
+        const retInput = document.getElementById('returnDate');
+
+        depInput.addEventListener('change', function() {
+            retInput.min = this.value;
+            if (retInput.value && retInput.value < this.value) {
+                retInput.value = this.value;
+            }
+        });
+    });
+</script>
+</body>
+</html>

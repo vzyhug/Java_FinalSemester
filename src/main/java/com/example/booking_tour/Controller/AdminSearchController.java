@@ -2,7 +2,7 @@ package com.example.booking_tour.Controller;
 
 import com.example.booking_tour.Model.Employee;
 import com.example.booking_tour.Services.CustomerServices;
-import com.example.booking_tour.Services.TourService;
+import com.example.booking_tour.Services.TourServices;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AdminSearchController {
 
     @Autowired
-    private TourService tourService;
+    private TourServices tourService;
 
 
     @Autowired
@@ -29,7 +29,7 @@ public class AdminSearchController {
         // 1. Giữ lại trạng thái đăng nhập của Admin ngoài Layout
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
+            return "redirect:/auth/loginForm";
         }
         model.addAttribute("admin", loggedInAdmin);
 

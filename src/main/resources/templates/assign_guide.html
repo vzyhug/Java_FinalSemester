@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/admin_layout :: layout(~{:: #assign-guide-content})}">
+<head>
+    <title>Gán Hướng dẫn viên - Vietnam Expeditions</title>
+</head>
+<body>
+<div id="assign-guide-content" class="p-8">
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-black text-indigo-700 mb-2">Phân công Hướng dẫn viên</h1>
+        <p class="text-slate-500">Chuyến đi: <span class="font-bold text-slate-800" th:text="${departure.tour.title}">Tên Tour</span></p>
+        <p class="text-slate-500">Khởi hành: <span class="font-bold text-slate-800" th:text="${#temporals.format(departure.departureDate, 'dd/MM/yyyy')}">Ngày</span></p>
+    </div>
+
+    <div th:if="${error}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm">
+        <p class="font-bold">Lỗi:</p>
+        <p th:text="${error}"></p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 max-w-xl">
+        <form th:action="@{/admin/departures/save-guide}" method="POST" class="space-y-6">
+
+            <input type="hidden" name="departureId" th:value="${departure.departureId}" />
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Chọn Hướng dẫn viên <span class="text-red-500">*</span></label>
+                <select name="guideId" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 outline-none transition" required>
+                    <option value="">-- Vui lòng chọn Hướng dẫn viên --</option>
+
+                    <option th:each="g : ${guides}"
+                            th:value="${g.employeeId}"
+                            th:text="${g.fullName} + ' (' + ${g.phone} + ')'"
+                            th:selected="${departure.guide != null and departure.guide.employeeId == g.employeeId}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="flex gap-4 pt-6 border-t border-slate-100">
+                <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-indigo-700 transition flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">how_to_reg</span>
+                    Xác nhận gán
+                </button>
+                <a th:href="@{/admin/departures/{id}(id=${departure.departureId})}" class="bg-slate-100 text-slate-700 px-8 py-3 rounded-lg font-bold hover:bg-slate-200 transition">
+                    Hủy
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

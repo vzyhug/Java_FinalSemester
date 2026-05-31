@@ -1,97 +1,90 @@
 package com.example.booking_tour.Controller;
 
 import com.example.booking_tour.Model.*;
-import com.example.booking_tour.Services.AdminService;
+import com.example.booking_tour.Services.AdminServices;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     @Autowired
-    private AdminService adminService;
+    private AdminServices adminService;
 
-    // ==================== DASHBOARD ====================
-
-    /**
-     * Hiển thị form đăng nhập admin
-     */
-    @GetMapping("/loginForm")
-    public String loginForm(Model model) {
-        model.addAttribute("employee", new Employee());
-        model.addAttribute("isAdmin", true);
-        return "login_form";
-    }
-
-    /**
-     * Xử lý đăng nhập admin
-     */
-    @PostMapping("/login")
-    public String login(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            HttpSession session,
-            Model model) {
-
-        Employee admin = adminService.adminLogin(username, password);
-
-        if (admin != null) {
-            session.setAttribute("loggedInAdmin", admin);
-            return "redirect:/admin/dashboard"; // Đăng nhập đúng -> Vào thẳng Dashboard
-        } else {
-            // ĐĂNG NHẬP SAI: Thông báo lỗi ra màn hình
-            model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không chính xác!");
-
-
-            model.addAttribute("employee", new Employee());
-            model.addAttribute("isAdmin", true);
-
-            return "login_form";
-        }
-    }
-
-    /**
-     * Hiển thị trang dashboard chính
-     */
     @GetMapping("/dashboard")
-    public String dashboard(HttpSession session, Model model) {
-        // Kiểm tra admin đã đăng nhập hay chưa
+    public String dashboard(
+            @RequestParam(value = "startDate", required = false) String startDateStr,
+            @RequestParam(value = "endDate", required = false) String endDateStr,
+            HttpSession session, Model model) {
+
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
-        }
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
+
+        java.time.LocalDate startDate = null;
+        java.time.LocalDate endDate = null;
+
+        // Trả lại đúng chuỗi người dùng vừa nhập để giao diện không bị mất dữ liệu
+        model.addAttribute("selectedStartDate", startDateStr);
+        model.addAttribute("selectedEndDate", endDateStr);
 
         try {
-            // Lấy dữ liệu thống kê
-            model.addAttribute("totalRevenue", adminService.getTotalRevenue());
-            model.addAttribute("totalBookings", adminService.getTotalBookings());
-            model.addAttribute("totalCustomers", adminService.getTotalCustomers());
-            model.addAttribute("totalTours", adminService.getTotalTours());
+            if (startDateStr != null && !startDateStr.trim().isEmpty()) {
+                startDate = java.time.LocalDate.parse(startDateStr);
+            }
+            if (endDateStr != null && !endDateStr.trim().isEmpty()) {
+                endDate = java.time.LocalDate.parse(endDateStr);
+            }
 
-            // Lấy danh sách booking gần đây
-            model.addAttribute("recentBookings", adminService.getRecentBookings(5));
-
-            // Lấy booking đang chờ
-            model.addAttribute("pendingBookings", adminService.getPendingBookings());
-
-            // Thông tin admin
-            model.addAttribute("admin", loggedInAdmin);
-
-            return "admin_dashboard_management";
+            // CHẶN NGAY NẾU NGÀY ĐI > NGÀY VỀ
+            if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+                model.addAttribute("error", "Lỗi: Ngày bắt đầu không thể lớn hơn ngày kết thúc!");
+                // Hủy biến startDate và endDate để truy vấn DB không bị lỗi, lấy All-time tạm
+                startDate = null;
+                endDate = null;
+            }
         } catch (Exception e) {
-            model.addAttribute("error", "Lỗi khi tải dashboard: " + e.getMessage());
-            return "admin_dashboard_management";
+            model.addAttribute("error", "Định dạng ngày không hợp lệ!");
+            startDate = null;
+            endDate = null;
         }
-    }
 
+        // Quy đổi ra LocalDateTime để gọi Service
+        java.time.LocalDateTime start = (startDate != null) ? startDate.atStartOfDay() : java.time.LocalDateTime.of(2000, 1, 1, 0, 0);
+        java.time.LocalDateTime end = (endDate != null) ? endDate.atTime(java.time.LocalTime.MAX) : java.time.LocalDateTime.now();
+
+        // Gửi dữ liệu ra giao diện (Các thẻ thống kê)
+        model.addAttribute("totalRevenue", adminService.getTotalRevenueByDateRange(start, end));
+        model.addAttribute("totalBookings", adminService.getTotalBookingsByDateRange(start, end));
+        model.addAttribute("totalCustomers", adminService.getTotalCustomersByDateRange(start, end));
+        model.addAttribute("totalTours", adminService.getTotalTours());
+        model.addAttribute("cancellationRate", adminService.getCancellationRate());
+        // ==========================================
+        // LOGIC MỚI CHO BẢNG DANH SÁCH GIAO DỊCH
+        // ==========================================
+        boolean isFiltered = (startDate != null || endDate != null);
+
+        if (isFiltered) {
+            // Đã lọc -> Lấy TẤT CẢ các giao dịch nằm trong khoảng thời gian này
+            model.addAttribute("recentBookings", adminService.getBookingsListByDateRange(start, end));
+            model.addAttribute("isFiltered", true);
+        } else {
+            // Không lọc -> Chỉ lấy 5 giao dịch mới nhất
+            model.addAttribute("recentBookings", adminService.getRecentBookings(5));
+            model.addAttribute("isFiltered", false);
+        }
+
+        model.addAttribute("pendingBookings", adminService.getPendingBookings());
+        model.addAttribute("admin", loggedInAdmin);
+
+        return "admin_dashboard_management";
+    }
     /**
      * Đăng xuất admin
      */

@@ -307,7 +307,6 @@ public class CustomerServices {
         System.out.println("--- KẾT THÚC SERVICE ---");
     }
 
-
     //change password profile
     public void changePassword(Integer customerId, String newPassword) {
         Customer customer = customerRepository.findById(customerId)
@@ -325,4 +324,5 @@ public class CustomerServices {
 
         customerRepository.save(customer);
     }
+
 }

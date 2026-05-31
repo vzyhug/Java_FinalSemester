@@ -13,6 +13,7 @@ public class ImagesTourServices
 {
     @Autowired
     ImagesTourRepository repo;
+
     public List<ImagesTour> getAllTours()
     {
         return repo.findAll();
@@ -31,4 +32,15 @@ public class ImagesTourServices
     }
 
 
+    public ImagesTour saveImageTour(ImagesTour imagesTour) {
+        return repo.save(imagesTour);
+    }
+
+    public ImagesTour getImageById(Integer imgId) {
+        return repo.findById(imgId).orElse(null);
+    }
+
+    public void deleteImageTour(Integer imgId) {
+        repo.deleteById(imgId);
+    }
 }

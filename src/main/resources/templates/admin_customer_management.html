@@ -7,26 +7,44 @@
 <body>
 
 <div id="customer-content" class="flex flex-col md:flex-row flex-1 overflow-hidden h-full">
-  <div class="flex-1 flex flex-col h-full overflow-hidden">
-    <div class="w-full px-8 py-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+  <div class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50/50">
+
+    <div class="w-full px-8 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div class="space-y-1">
-        <h2 class="text-3xl font-black text-blue-900 tracking-tight" style="color: #1e3a8a;">Danh sách khách hàng</h2>
+        <h2 class="text-3xl font-black text-blue-900 tracking-tight">Danh sách khách hàng</h2>
         <p class="text-slate-500 font-medium">Quản lý hồ sơ, liên hệ và lịch sử trải nghiệm của khách hàng.</p>
       </div>
+
       <div class="flex items-center gap-3">
-        <button class="bg-slate-200 text-blue-900 font-semibold px-6 py-3 rounded-full hover:bg-slate-300 transition-colors flex items-center gap-2 text-sm">
-          <span class="material-symbols-outlined text-xl">file_download</span>Xuất báo cáo
-        </button>
-        <button class="bg-blue-900 text-white font-bold px-6 py-3 rounded-full shadow-lg shadow-blue-900/20 hover:scale-105 transition-all flex items-center gap-2 text-sm">
+        <form th:action="@{/customer/search}" method="GET" class="flex items-center bg-white border border-slate-200 rounded-full px-2 py-1 shadow-sm focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all">
+          <input type="text" name="keyword" th:value="${keyword}" placeholder="Nhập tên khách hàng..."
+                 class="px-3 py-2 outline-none rounded-l-full text-sm w-48 lg:w-64">
+          <button type="submit" class="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2 rounded-full transition-colors flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]">search</span>
+          </button>
+        </form>
+
+        <a th:href="@{/customer/add}" class="bg-blue-900 text-white font-bold px-6 py-2.5 rounded-full shadow-lg shadow-blue-900/20 hover:scale-105 transition-all flex items-center gap-2 text-sm">
           <span class="material-symbols-outlined text-xl">person_add</span>Thêm khách hàng
-        </button>
+        </a>
       </div>
     </div>
 
-    <section class="px-8 grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 flex-shrink-0">
+    <div class="px-8">
+      <div th:if="${message}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg shadow-sm flex items-center">
+        <span class="material-symbols-outlined mr-2">check_circle</span>
+        <span th:text="${message}"></span>
+      </div>
+      <div th:if="${error}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg shadow-sm flex items-center">
+        <span class="material-symbols-outlined mr-2">error</span>
+        <span th:text="${error}"></span>
+      </div>
+    </div>
+
+    <section class="px-8 grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 flex-shrink-0">
       <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 space-y-2">
         <p class="text-slate-500 font-semibold text-sm">Tổng khách hàng</p>
-        <p class="text-3xl font-black text-slate-800" th:text="${totalCustomers}">12,450</p>
+        <p class="text-3xl font-black text-slate-800" th:text="${totalCustomers ?: 0}">0</p>
       </div>
     </section>
 
@@ -40,26 +58,45 @@
               <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Thông tin liên hệ</th>
               <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Địa chỉ</th>
               <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Ngày tham gia</th>
-              <!-- Thêm cột Trạng thái -->
               <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Trạng thái</th>
+              <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Thao tác</th>
             </tr>
             </thead>
+
             <tbody class="divide-y divide-slate-100">
-            <tr th:each="customer : ${customers}" class="hover:bg-slate-50/80 transition-colors group">
-              <td class="px-6 py-4">
-                <p class="font-bold text-slate-800" th:text="${customer.fullName}">Tên KH</p>
+
+            <tr th:if="${customers != null}" th:each="customer : ${customers}" class="hover:bg-slate-50/80 transition-colors group">
+                <td class="px-6 py-4">
+                <a th:href="@{/customer/{id}(id=${customer.customerId})}"
+                   class="font-bold text-blue-900 hover:text-blue-600 hover:underline flex items-center gap-2"
+                   title="Xem hồ sơ chi tiết">
+                  <span class="material-symbols-outlined text-slate-300">account_circle</span>
+                  <span th:text="${customer.fullName}">Tên KH</span>
+                </a>
               </td>
-              <td class="px-6 py-4" th:text="${customer.email}">Email</td>
-              <td class="px-6 py-4" th:text="${customer.address}">Địa chỉ</td>
-              <td class="px-6 py-4 text-center" th:text="${#strings.substring(customer.createdAt, 0, 10)}">Ngày</td>
-              <!-- Nút Khóa / Mở khóa -->
+
+              <td class="px-6 py-4 space-y-1">
+                <p class="text-sm font-semibold text-slate-700 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px] text-slate-400">call</span>
+                  <span th:text="${customer.phone}">09xx</span>
+                </p>
+                <p class="text-xs text-slate-500 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px] text-slate-400">mail</span>
+                  <span th:text="${customer.email}">email@</span>
+                </p>
+              </td>
+
+              <td class="px-6 py-4 text-sm text-slate-600" th:text="${customer.address}">Địa chỉ</td>
+              <td class="px-6 py-4 text-center text-sm text-slate-600" th:text="${#strings.substring(customer.createdAt, 0, 10)}">Ngày</td>
+
               <td class="px-6 py-4 text-center">
                 <form th:action="@{/customer/toggle-status}" method="post" class="inline m-0">
                   <input type="hidden" name="customerId" th:value="${customer.customerId}" />
 
                   <button type="submit"
                           th:classappend="${customer.getIsActive() != null && customer.getIsActive()} ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'"
-                          class="px-4 py-1.5 rounded-full text-xs font-bold transition-colors inline-flex items-center gap-1"
+
+                          class="px-4 py-1.5 rounded-full text-xs font-bold transition-colors inline-flex items-center gap-1 shadow-sm"
                           th:title="${customer.getIsActive() != null && customer.getIsActive()} ? 'Nhấn để Khóa tài khoản' : 'Nhấn để Mở khóa tài khoản'"
                           onclick="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái của khách hàng này?');">
                     <span class="material-symbols-outlined text-[16px]"
@@ -69,7 +106,22 @@
                   </button>
                 </form>
               </td>
+              <td class="px-6 py-4 text-center">
+                <a th:href="@{/customer/edit/{id}(id=${customer.customerId})}"
+                   class="text-amber-500 hover:text-amber-700 transition-colors p-2 rounded-full hover:bg-amber-50 inline-flex"
+                   title="Sửa thông tin">
+                  <span class="material-symbols-outlined text-[20px]">edit_square</span>
+                </a>
+              </td>
             </tr>
+
+            <tr th:if="${customers == null or #lists.isEmpty(customers)}">
+              <td colspan="6" class="text-center py-12">
+                <span class="material-symbols-outlined text-4xl text-slate-300 mb-2 block">person_search</span>
+                <p class="text-slate-500 font-medium">Không tìm thấy khách hàng nào phù hợp.</p>
+              </td>
+            </tr>
+
             </tbody>
           </table>
         </div>
