@@ -50,6 +50,7 @@ public class CustomerController {
     @GetMapping("loginForm")
     public String loginForm(Model model) {
         // hiển thị form đăng nhập
+//        customerServices.migratePasswords();
         model.addAttribute("customer", new Customer());
         model.addAttribute("isAdmin", false);
         return "login_form"; // Trả về tên của view (customer_login.html)
@@ -57,7 +58,6 @@ public class CustomerController {
 
     // Đăng nhập tài khoản khách hàng
     @PostMapping("login")
-
     public String login(@RequestParam("email") String email,
                         @RequestParam("password") String password,
                         HttpSession session,

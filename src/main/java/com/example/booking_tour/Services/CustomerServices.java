@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,31 @@ public class CustomerServices {
     // Lưu thông tin khách hàng mới sau khi đăng ký
     @Transactional
     public void register(Customer customer) {
-        // Lưu thông tin vào database
+        String encodedPassword = passwordEncoder.encode(customer.getPasswordHash());
+        customer.setPasswordHash(encodedPassword);
         customerRepository.save(customer);
+    }
+
+    public static boolean isAlreadyHashed(String password) {
+        try {
+            BCrypt.checkpw("", password);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    //Hash password có sẵn trong db
+    public void migratePasswords() {
+        List<Customer> customers = customerRepository.findAll();
+        for (Customer customer : customers) {
+            String rawPassword = customer.getPasswordHash();
+            if(!isAlreadyHashed(rawPassword)) {
+                String encoded = passwordEncoder.encode(rawPassword);
+                customer.setPasswordHash(encoded);
+                customerRepository.save(customer);
+            }
+        }
     }
 
     // đăng nhập tài khoản khách hàng
