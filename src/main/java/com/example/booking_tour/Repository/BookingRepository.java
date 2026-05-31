@@ -16,6 +16,10 @@ public interface BookingRepository extends JpaRepository<Booking,Integer> {
 
     /**
      * Lấy booking theo trạng thái
+<<<<<<< HEAD
+=======
+     *
+>>>>>>> origin/minhthu
      * @param status pending, confirmed, cancelled, completed
      */
     List<Booking> findByStatus(String status);
@@ -29,6 +33,7 @@ public interface BookingRepository extends JpaRepository<Booking,Integer> {
      * Lấy booking của chuyến đi
      */
     List<Booking> findByDeparture_DepartureId(Integer departureId);
+
 
     public List<Booking> findByCustomer(Customer customer);
 

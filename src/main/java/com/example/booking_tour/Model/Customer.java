@@ -1,6 +1,7 @@
 package com.example.booking_tour.Model;
 
 import jakarta.persistence.*;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
 
 @Data
 @Entity
@@ -44,4 +46,8 @@ public class Customer {
 
     @Column(name = "created_at", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT true")
+    private Boolean isActive = true;
+
 }

@@ -54,6 +54,4 @@ public class TourDepartureServices
         return repoTD.findById(id).orElse(null);
     }
 
-
-
 }

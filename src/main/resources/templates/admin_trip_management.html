@@ -69,10 +69,13 @@
         Đã hủy
       </a>
     </div>
-    <button onclick="openAddDepartureModal()" class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-green-700 transition whitespace-nowrap">
+
+
+    <a th:href="@{/admin/departures/add}"
+       class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-green-700 transition whitespace-nowrap">
       <span class="material-symbols-outlined text-lg">add</span>
       Thêm Chuyến
-    </button>
+    </a>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -90,14 +93,15 @@
       </div>
 
       <div class="p-6 space-y-4">
+
         <div class="grid grid-cols-2 gap-4">
           <div>
             <p class="text-xs text-slate-600 font-semibold mb-1">Khởi hành</p>
-            <p class="font-bold text-blue-900" th:text="${#temporals.format(dep.startDate, 'dd/MM/yyyy HH:mm')}">01/02/2024 08:00</p>
+            <p class="font-bold text-blue-900" th:text="${dep.departureDate != null ? #temporals.format(dep.departureDate, 'dd/MM/yyyy') : 'Chưa cập nhật'}">01/02/2024</p>
           </div>
           <div>
             <p class="text-xs text-slate-600 font-semibold mb-1">Trở về</p>
-            <p class="font-bold text-blue-900" th:text="${#temporals.format(dep.returnDate, 'dd/MM/yyyy HH:mm')}">03/02/2024 18:00</p>
+            <p class="font-bold text-blue-900" th:text="${dep.returnDate != null ? #temporals.format(dep.returnDate, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}">03/02/2024 18:00</p>
           </div>
         </div>
 

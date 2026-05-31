@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,10 @@ public class CustomerServices {
     @Autowired
     private BookingRepository bookingRepository;
 
+
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+
     // Lưu thông tin khách hàng mới sau khi đăng ký
     @Transactional
     public void register(Customer customer) {
@@ -30,22 +35,20 @@ public class CustomerServices {
     }
 
     // đăng nhập tài khoản khách hàng
-    public Customer login(String email, String password) {
+    public Customer login(String email, String password)
+    {
         // Tìm khách hàng trong database
         Customer existingCustomer = customerRepository.findByEmail(email);
         // Nếu tìm thấy khách hàng và mật khẩu khớp thì trả về đối tượng Customer
-        if (existingCustomer != null && existingCustomer.getPasswordHash().equals(password)) {
-            return existingCustomer;
-        }
+        if (existingCustomer != null && passwordEncoder.matches(password, existingCustomer.getPasswordHash())) {
+
+                return existingCustomer;
+            }
         return null; // Đăng nhập thất bại
     }
 
 
-    // ==================== STATISTICS ====================
 
-    /**
-     * Lấy tổng số khách hàng trong hệ thống
-     */
     public Long getTotalCustomers() {
         try {
             return customerRepository.count();
@@ -273,5 +276,53 @@ public class CustomerServices {
             System.out.println("Lỗi trong deactivateCustomer: " + e.getMessage());
             return false;
         }
+    }
+
+    @Transactional
+    public void toggleCustomerStatus(Integer customerId) {
+        System.out.println("--- BẮT ĐẦU VÀO SERVICE ---");
+
+        // 1. Tìm khách hàng
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+
+        if (customer != null) {
+            System.out.println("- Đã tìm thấy khách hàng: " + customer.getFullName());
+            System.out.println("- Trạng thái cũ trong DB: " + customer.getIsActive());
+
+            // 2. Đổi trạng thái
+            boolean currentStatus = customer.getIsActive() != null ? customer.getIsActive() : true;
+            customer.setIsActive(!currentStatus);
+
+            System.out.println("- Trạng thái MỚI chuẩn bị lưu: " + customer.getIsActive());
+
+            // 3. Lưu xuống DB
+            customerRepository.save(customer);
+            System.out.println("- Đã gọi lệnh SAVE thành công!");
+
+        } else {
+            System.out.println("- LỖI: Không tìm thấy khách hàng với ID: " + customerId);
+            throw new RuntimeException("Không tìm thấy khách hàng trong cơ sở dữ liệu!");
+        }
+
+        System.out.println("--- KẾT THÚC SERVICE ---");
+    }
+
+
+    //change password profile
+    public void changePassword(Integer customerId, String newPassword) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
+
+        // Mã hóa mật khẩu mới
+        String encoded = passwordEncoder.encode(newPassword);
+        customer.setPasswordHash(encoded);
+
+        customerRepository.save(customer);
+    }
+
+    @Transactional
+    public void updateCustomer(Customer customer) {
+
+        customerRepository.save(customer);
     }
 }

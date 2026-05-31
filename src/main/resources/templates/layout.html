@@ -110,7 +110,13 @@
         </div>
         <div class="flex items-center gap-4">
             <th:block th:if="${session.loggedInCustomer != null}">
-                <span class="text-blue-900 dark:text-white font-bold">Xin chào, <span th:text="${session.loggedInCustomer.fullName}"></span></span>
+
+<!--                <span class="text-blue-900 dark:text-white font-bold">Xin chào, <span th:text="${session.loggedInCustomer.fullName}"></span></span>-->
+                <a th:href="@{/customer/profile}"
+                   class="text-blue-900 dark:text-white font-bold hover:text-blue-600 transition">
+                    Xin chào,
+                    <span th:text="${session.loggedInCustomer.fullName}"></span>
+                </a>
                 <a th:href="@{/customer/logout}"
                    class="px-4 py-2 rounded-full text-sm font-bold text-red-600 hover:bg-red-50 transition-transform active:scale-90 inline-block">
                     Đăng xuất

@@ -5,9 +5,6 @@ import com.example.booking_tour.Model.TourDeparture;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.example.booking_tour.Model.Tour;
-import com.example.booking_tour.Model.TourDeparture;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 
 import java.time.LocalDate;
@@ -16,46 +13,34 @@ import java.util.List;
 @Repository
 public interface TourDepartureRepository extends JpaRepository<TourDeparture, Integer> {
 
-    // ==================== CUSTOM QUERIES ====================
 
-    /**
-     * ĐÃ SỬA: Thêm dấu gạch dưới (_) để map chính xác vào thuộc tính tourId
-     * nằm bên trong thực thể Tour. Giúp DepartureService hết báo lỗi đỏ.
-     */
+
+
+    // ==================== 1. TÌM KIẾM THEO TOUR & NHÂN VIÊN ====================
+
     List<TourDeparture> findByTour_TourId(Integer tourId);
 
-    /**
-     * Tìm chuyến đi theo trạng thái (open, full, cancelled)
-     */
-    List<TourDeparture> findByStatus(String status);
+    List<TourDeparture> findByTour(Tour tour);
 
-    /**
-     * Tìm chuyến đi theo ngày khởi hành
-     */
-    List<TourDeparture> findByDepartureDate(LocalDate departureDate);
-
-    /**
-     * ĐÃ SỬA: Thêm dấu gạch dưới (_) để map chính xác thuộc tính employeeId
-     * của thực thể Employee (được đặt tên biến liên kết là guide).
-     */
     List<TourDeparture> findByGuide_EmployeeId(Integer employeeId);
 
-    //================= tim kiem ==================
+    // ==================== 2. TÌM KIẾM THEO NGÀY THÁNG ====================
 
-    //Tim kiem Tour departure thong qua id tour
-    public List<TourDeparture> findByTour(Tour tour);
-    //Tim kiem tour departure bang ngay ve
-    public List<TourDeparture> findByReturnDate(LocalDate returnDate);
-    //Tim kiem tour dua tren ngay di va ve
-    public List<TourDeparture> findByDepartureDateAndReturnDate(LocalDate departureDate,LocalDate returnDate);
-    //Tim kiem tour departure bang so ghe trong
-    public List<TourDeparture> findByAvailableSeats(int availableSeats);
+    List<TourDeparture> findByDepartureDate(LocalDate departureDate);
 
-    //===================== sort danh sach ===================
-    //Sap xep theo gia ve
-    //---- sort asc
-    public List<TourDeparture> findAllByOrderByAdultPriceAsc();
-    //---- sort desc
-    public List<TourDeparture> findAllByOrderByAdultPriceDesc();
+    List<TourDeparture> findByReturnDate(LocalDate returnDate);
+
+    List<TourDeparture> findByDepartureDateAndReturnDate(LocalDate departureDate, LocalDate returnDate);
+
+    // ==================== 3. TÌM KIẾM THEO TRẠNG THÁI & CHỖ NGỒI ====================
+
+    List<TourDeparture> findByStatus(String status);
+
+    List<TourDeparture> findByAvailableSeats(int availableSeats);
+
+    // ==================== 4. SẮP XẾP DANH SÁCH ====================
+
+    List<TourDeparture> findAllByOrderByAdultPriceAsc();
+
+    List<TourDeparture> findAllByOrderByAdultPriceDesc();
 }
-

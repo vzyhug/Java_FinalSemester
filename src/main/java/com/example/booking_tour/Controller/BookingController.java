@@ -32,7 +32,7 @@ public class BookingController {
     private BookingServices BServices;
 
     @Autowired
-    private CutomerServices CServices;
+    private CustomerServices CServices;
 
     //Chuyen qua man hinh dat tour
     @GetMapping("")
@@ -99,8 +99,7 @@ public class BookingController {
     }
 
     @GetMapping("/add_passenger")
-    public String add_passenger(Model model, HttpSession session)
-    {
+    public String add_passenger(Model model, HttpSession session) {
         Map<String, Object> bookingStage1 = (Map<String, Object>) session.getAttribute("bookingStage1");
 
         if (bookingStage1 == null) {
@@ -123,10 +122,10 @@ public class BookingController {
 
     @PostMapping("/save_state2")
     public String saveState2(@RequestParam("passengerNames") List<String> names,
-                                 @RequestParam("passengerBirthdays") List<String> birthdays,
-                                 @RequestParam("passengerIds") List<String> idCards,
-                                 @RequestParam("passengerTypes") List<String> types,
-                                 HttpSession session) {
+                             @RequestParam("passengerBirthdays") List<String> birthdays,
+                             @RequestParam("passengerIds") List<String> idCards,
+                             @RequestParam("passengerTypes") List<String> types,
+                             HttpSession session) {
 
         List<BookingPassenger> passengerList = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
@@ -142,5 +141,4 @@ public class BookingController {
         session.setAttribute("bookingPassengers", passengerList);
         return "payments_invoices";
     }
-
 }

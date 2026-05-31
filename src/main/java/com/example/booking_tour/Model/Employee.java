@@ -1,5 +1,7 @@
+
 package com.example.booking_tour.Model;
 
+import com.example.booking_tour.Model.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -34,4 +36,6 @@ public class Employee {
 
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean isActive = true;
+
 }
+

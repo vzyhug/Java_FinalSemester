@@ -1,15 +1,17 @@
 package com.example.booking_tour.Controller;
 
-import com.example.booking_tour.Model.Employee;
+import com.example.booking_tour.Model.*;
 import com.example.booking_tour.Services.AdminService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -101,13 +103,6 @@ public class AdminController {
 
     // ==================== NAVIGATION ====================
 
-    /**
-     * Redirect tới trang quản lý tour
-     */
-    @GetMapping("/tours")
-    public String redirectToTours() {
-        return "redirect:/tour/manager"; // Trỏ về đúng RequestMapping của Tour Controller
-    }
 
     @GetMapping("/customers")
     public String redirectToCustomers() {
@@ -121,4 +116,10 @@ public class AdminController {
 //    public String redirectToDepartures() {
 //        return "redirect:/admin/departures";
 //    }
+
+    @GetMapping("/tours")
+    public String redirectToTours() { return "redirect:/tour/manager"; }
+
+
 }
+

@@ -40,16 +40,35 @@
               <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Thông tin liên hệ</th>
               <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Địa chỉ</th>
               <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Ngày tham gia</th>
+              <!-- Thêm cột Trạng thái -->
+              <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Trạng thái</th>
             </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-            <tr th:each="customer : ${customers}" class="hover:bg-slate-50/80 transition-colors cursor-pointer group">
+            <tr th:each="customer : ${customers}" class="hover:bg-slate-50/80 transition-colors group">
               <td class="px-6 py-4">
                 <p class="font-bold text-slate-800" th:text="${customer.fullName}">Tên KH</p>
               </td>
               <td class="px-6 py-4" th:text="${customer.email}">Email</td>
               <td class="px-6 py-4" th:text="${customer.address}">Địa chỉ</td>
               <td class="px-6 py-4 text-center" th:text="${#strings.substring(customer.createdAt, 0, 10)}">Ngày</td>
+              <!-- Nút Khóa / Mở khóa -->
+              <td class="px-6 py-4 text-center">
+                <form th:action="@{/customer/toggle-status}" method="post" class="inline m-0">
+                  <input type="hidden" name="customerId" th:value="${customer.customerId}" />
+
+                  <button type="submit"
+                          th:classappend="${customer.getIsActive() != null && customer.getIsActive()} ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'"
+                          class="px-4 py-1.5 rounded-full text-xs font-bold transition-colors inline-flex items-center gap-1"
+                          th:title="${customer.getIsActive() != null && customer.getIsActive()} ? 'Nhấn để Khóa tài khoản' : 'Nhấn để Mở khóa tài khoản'"
+                          onclick="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái của khách hàng này?');">
+                    <span class="material-symbols-outlined text-[16px]"
+                          th:text="${customer.getIsActive() != null && customer.getIsActive()} ? 'lock_open' : 'lock'">
+                    </span>
+                    <span th:text="${customer.getIsActive() != null && customer.getIsActive()} ? 'Hoạt động' : 'Đã khóa'"></span>
+                  </button>
+                </form>
+              </td>
             </tr>
             </tbody>
           </table>

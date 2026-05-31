@@ -9,8 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.example.booking_tour.Model.*;
 import com.example.booking_tour.Services.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import com.example.booking_tour.Model.*;
+import com.example.booking_tour.Repository.TourRepository;
+import com.example.booking_tour.Services.*;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -26,10 +30,13 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/tour")
+
+@RequiredArgsConstructor
 public class TourController {
 
     @Autowired
-    private TourService tourService;
+    private TourServices tourServices;
+    private TourServices TServices;
 
 
     @Autowired
@@ -47,21 +54,25 @@ public class TourController {
     @Autowired
     private TourDepartureServices TDServices;
 
+
+    @Autowired
+    private final TourRepository tourRepository;
+
     @GetMapping("")
     @Transactional(readOnly = true)
     public String list_tour(Model model, @RequestParam(value = "sort", required = false) String sort) {
         List<Tour> listTour;
         List<TourCategory> listTourCategory = TCServices.getAllTourCategories();
+
+
         if ("asc".equals(sort)) {
-            listTour = tourService.sortTourByPrice(true);
+            listTour = tourServices.sortTourByPrice(true);
+        } else if ("desc".equals(sort)) {
+            listTour = tourServices.sortTourByPrice(false);
+        } else {
+            listTour = tourServices.getAllTours();
         }
-        else if ("desc".equals(sort)) {
-            listTour = tourService.sortTourByPrice(false);
-        }
-        else
-        {
-            listTour = tourService.getAllTours();
-        }
+
         model.addAttribute("listCategory", listTourCategory);
         model.addAttribute("listTours", listTour);
         model.addAttribute("currentSort", sort);
@@ -71,7 +82,7 @@ public class TourController {
     @GetMapping("region/{region}")
     @Transactional(readOnly = true)
     public String list_tour_region(Model model,@PathVariable(value = "region") String regionName) {
-        List<Tour> listTour=tourService.getAllTours();
+        List<Tour> listTour=tourServices.getAllTours();
         List<TourCategory> listTourCategory = TCServices.getAllTourCategories();
         List<Tour> tourRegion=new ArrayList<Tour>();
         for (Tour tour : listTour) {
@@ -85,7 +96,6 @@ public class TourController {
         model.addAttribute("listCategory", listTourCategory);
         model.addAttribute("listTours", tourRegion);
         return "list_tour";
-
     }
 
     @GetMapping("/{id}")
@@ -95,13 +105,14 @@ public class TourController {
         List<Tour> listTour;
 
         // Tu danh sach tour lay ra thong tin tour: lich trinh, anh, review
-        Tour tourDetail=tourService.getToursByTourId(tourId);
+        Tour tourDetail=tourServices.getToursByTourId(tourId);
         List<TourSchedule> listSchedule= TSCServices.getTourSchedulesByTour(tourDetail);
         List<ImagesTour> listImages= IServices.getAllImagesToursByTour(tourDetail);
         List<Review> listReview=RServices.getAllReviewByTour(tourDetail);
         List<TourDeparture> listDeparture=TDServices.getTourDepartureByTour(tourDetail);
 
         double startAverage= RServices.getStarAverage(listReview);
+
         model.addAttribute("tourDetail", tourDetail);
         model.addAttribute("listSchedule", listSchedule);
         model.addAttribute("listImages", listImages);
@@ -142,32 +153,19 @@ public class TourController {
 
 
     // ==================== TOUR MANAGEMENT PAGE ====================
+
     @GetMapping("/manager")
     public String tourManagement(HttpSession session, Model model) {
-        // Kiểm tra admin đã đăng nhập hay chưa
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
-        }
+        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
 
         try {
-            // Lấy stats từ TourService
-            Long totalTours = tourService.getTotalTours();           // Tổng tour
-            Long activeTours = tourService.getActiveTours();         // Tour hoạt động
-            java.math.BigDecimal expectedRevenue = tourService.getExpectedRevenue(); // Doanh thu
-
-            // Lấy danh sách tour
-            List<Tour> tours = tourService.getAllTours();
-
-            // Truyền dữ liệu vào Model để HTML có thể truy cập
-            // Trong HTML: th:text="${totalTours}" để hiển thị
-            model.addAttribute("totalTours", totalTours);
-            model.addAttribute("activeTours", activeTours);
-            model.addAttribute("expectedRevenue", expectedRevenue);
-            model.addAttribute("tours", tours);
+            model.addAttribute("totalTours", tourServices.getTotalTours());
+            model.addAttribute("activeTours", tourServices.getActiveTours());
+            model.addAttribute("expectedRevenue", tourServices.getExpectedRevenue());
+            model.addAttribute("tours", tourServices.getAllTours());
             model.addAttribute("admin", loggedInAdmin);
-
-            return "admin_tour_management"; // Đảm bảo file nằm ở: src/main/resources/templates/admin/tour_management.html
+            return "admin_tour_management";
         } catch (Exception e) {
             model.addAttribute("error", "Lỗi khi tải dữ liệu: " + e.getMessage());
             return "admin_tour_management";
@@ -188,49 +186,18 @@ public class TourController {
         }
 
         try {
-            List<Tour> searchResults = tourService.searchTours(keyword);
+            List<Tour> searchResults = tourServices.searchTours(keyword);
 
             model.addAttribute("tours", searchResults);
             model.addAttribute("keyword", keyword);
-            model.addAttribute("totalTours", tourService.getTotalTours());
-            model.addAttribute("activeTours", tourService.getActiveTours());
-            model.addAttribute("expectedRevenue", tourService.getExpectedRevenue());
+            model.addAttribute("totalTours", tourServices.getTotalTours());
+            model.addAttribute("activeTours", tourServices.getActiveTours());
+            model.addAttribute("expectedRevenue", tourServices.getExpectedRevenue());
             model.addAttribute("admin", loggedInAdmin);
 
             return "admin_tour_management";
         } catch (Exception e) {
             model.addAttribute("error", "Lỗi tìm kiếm: " + e.getMessage());
-            return "admin_tour_management";
-        }
-    }
-
-    // ==================== TOUR DETAIL ====================
-
-    @GetMapping("/{id}")
-    public String getTourDetail(
-            @PathVariable(value = "id") Integer tourId,
-            HttpSession session,
-            Model model) {
-
-        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
-        }
-
-        try {
-            Tour tour = tourService.getTourById(tourId);
-
-            if (tour == null) {
-                model.addAttribute("error", "Tour không tồn tại!");
-                return "admin_tour_management";
-            }
-
-            model.addAttribute("tour", tour);
-            model.addAttribute("admin", loggedInAdmin);
-
-            return "tour_detail";
-        } catch (Exception e) {
-            model.addAttribute("error", "Lỗi: " + e.getMessage());
             return "admin_tour_management";
         }
     }
@@ -259,7 +226,7 @@ public class TourController {
             tour.setDurationNights(durationNights);
             tour.setIsActive(true);
 
-            Tour savedTour = tourService.saveTour(tour);
+            Tour savedTour = tourServices.saveTour(tour);
 
             if (savedTour != null) {
                 // Lưu thành công, trả về trang quản lý
@@ -287,7 +254,7 @@ public class TourController {
         }
 
         try {
-            boolean success = tourService.deactivateTour(tourId);
+            boolean success = tourServices.deactivateTour(tourId);
 
             if (success) {
                 return "redirect:/tour/manager?success=Tour đã được xóa";
@@ -298,6 +265,34 @@ public class TourController {
             return "redirect:/tour/manager?error=" + e.getMessage();
         }
     }
+
+    @GetMapping("/manager/detail/{id}")
+    public String getTourDetail(@PathVariable(value = "id") Integer tourId, HttpSession session, Model model) {
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
+
+        Tour tour = tourServices.getTourById(tourId);
+        if (tour == null) {
+            model.addAttribute("error", "Tour không tồn tại!");
+            return "admin_tour_management";
+        }
+        model.addAttribute("tour", tour);
+        model.addAttribute("admin", loggedInAdmin);
+        return "tour_detail";
+    }
+
+
+
+
+    //xem tour
+    @GetMapping("/tours/by-province/{provinceId}")
+    public String getToursByProvince(@PathVariable Integer provinceId, Model model) {
+        List<Tour> tours = tourRepository.findByProvince_ProvinceId(provinceId);
+        model.addAttribute("tours", tours);
+        return "tours_by_province"; // view hiển thị danh sách tour
+    }
+
+
 }
 
 

@@ -50,19 +50,41 @@
       <span class="material-symbols-outlined">map</span><span>Quản lý Chuyến đi</span>
     </a>
 
-    <a class="text-slate-600 hover:bg-slate-100 rounded-xl mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-all font-semibold text-sm" href="#">
-      <span class="material-symbols-outlined">location_on</span><span>Quản lý Địa điểm</span>
+    <a class="text-slate-600 hover:bg-slate-100 rounded-xl mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-all font-semibold text-sm"
+       th:classappend="${#execInfo.templateName.contains('admin_location_management')}
+   ? 'bg-blue-50 text-blue-900 font-bold'
+   : 'text-slate-600 hover:bg-slate-100'"
+       th:href="@{/location_management}">
+    <span class="material-symbols-outlined">
+        location_on
+    </span>
+      <span>
+        Quản lý Địa điểm
+    </span>
     </a>
-    <a class="text-slate-600 hover:bg-slate-100 rounded-xl mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-all font-semibold text-sm" href="#">
+    <a class="text-slate-600 hover:bg-slate-100 rounded-xl mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-all font-semibold text-sm"
+       th:classappend="${#execInfo.templateName.contains('admin_transaction_management')} ? 'bg-blue-50 text-blue-900 font-bold' : 'text-slate-600 hover:bg-slate-100'"
+       th:href="@{/payment_management}">
       <span class="material-symbols-outlined">payments</span><span>Quản lý Giao dịch</span>
     </a>
-    <a class="text-slate-600 hover:bg-slate-100 rounded-xl mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-all font-semibold text-sm" href="#">
-      <span class="material-symbols-outlined">badge</span><span>Quản lý Nhân viên</span>
+    <a class="text-slate-600 hover:bg-slate-100 rounded-xl mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-all font-semibold text-sm"
+       th:classappend="${#execInfo.templateName.contains('admin_human_resource_management')}
+   ? 'bg-blue-50 text-blue-900 font-bold'
+   : 'text-slate-600 hover:bg-slate-100'"
+       th:href="@{/employees}">
+    <span class="material-symbols-outlined">
+        badge
+    </span>
+      <span>
+        Quản lý Nhân Viên
+    </span>
     </a>
   </nav>
   <div class="px-4 mt-auto border-t border-slate-200 pt-4">
-    <a class="text-red-500 hover:bg-red-50 rounded-xl px-4 py-2 flex items-center gap-3 transition-all text-sm font-semibold" th:href="@{/admin/logout}">
-      <span class="material-symbols-outlined">logout</span><span>Logout</span>
+    <a class="text-red-500 hover:bg-red-50 rounded-xl px-4 py-2 flex items-center gap-3 transition-all text-sm font-semibold"
+       th:href="@{/auth/logout}">
+      <span class="material-symbols-outlined">logout</span>
+      <span>Logout</span>
     </a>
   </div>
 </aside>

@@ -1,5 +1,6 @@
 package com.example.booking_tour.Model;
 
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,6 +8,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Set;
 
 @Getter
@@ -48,25 +54,28 @@ public class Tour {
     @Column(name = "included_services")
     private String includedServices;
 
-    @Column(name = "is_active",columnDefinition = "BOOLEAN DEFAULT true")
+
+    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean isActive = true;
 
     @Column(name = "min_price")
-    private double minPrice;
+    private Double minPrice; // dùng wrapper để tránh null pointer
+
 
     @ManyToOne
     @JoinColumn(name = "created_by")
     private Employee createdBy;
 
-    @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "tour", fetch = FetchType.LAZY)
     private Set<ImagesTour> images;
-
     public ImagesTour getImagesThumbnails() {
         for(ImagesTour image : images) {
             if(image.isThumbnail()) {
                 return image;
+                }
             }
-        }
         return null;
     }
+
 }
+
