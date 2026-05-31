@@ -157,5 +157,52 @@
     </section>
 
 </div>
+<!-- JS Kiểm tra hết hạn 20 phút JWT & Phục hồi Session -->
+<script>
+    document.addEventListener('DOMContentLoaded', checkSession);
+
+    async function checkSession() {
+        const token = localStorage.getItem('jwtToken');
+        const expirationTime = localStorage.getItem('tokenExpiration');
+
+        if (token && expirationTime) {
+            const currentTime = new Date().getTime();
+            if (currentTime > parseInt(expirationTime)) {
+                console.log("Phiên đã hết hạn (quá 20 phút). Đang xóa...");
+                handleLogoutClient();
+            } else {
+                // Token CÒN HẠN!
+                // Kiểm tra xem Server có lỡ quên mình chưa (do tắt app chạy lại)
+                // Bằng cách tìm xem giao diện có đang hiện nút "Đăng nhập" không
+                const loginBtn = document.querySelector('a[href*="/customer/loginForm"]');
+                if (loginBtn) {
+                    console.log("Server mất Session, đang dùng JWT để phục hồi...");
+                    try {
+                        const res = await fetch('/api/auth/restore-session', {
+                            method: 'POST',
+                            headers: { 'Authorization': 'Bearer ' + token }
+                        });
+                        
+                        if (res.ok) {
+                            // Phục hồi thành công! Tải lại trang để Thymeleaf vẽ lại Navbar
+                            window.location.reload();
+                        } else {
+                            // Token sai hoặc bị từ chối
+                            handleLogoutClient();
+                        }
+                    } catch (e) {
+                        console.error("Lỗi phục hồi phiên", e);
+                    }
+                }
+            }
+        }
+    }
+
+    function handleLogoutClient() {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('tokenExpiration');
+        window.location.href = '/customer/logout';
+    }
+</script>
 
 </html>
