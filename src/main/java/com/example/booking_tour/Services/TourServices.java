@@ -8,6 +8,7 @@ import com.example.booking_tour.Repository.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -123,6 +124,32 @@ public class TourServices
         return repo.findById(id).orElse(null);
     }
 
+    public List<Tour> filterTourByCategoryMaxPriceAndDurationDay(Integer durationDay,List<Integer> categoriesId, double maxPrice)
+    {
+        List<Tour> listTourFilter=new ArrayList<Tour>();
+        if(durationDay==null)
+        {
+            durationDay=30;
+        }
+        if(categoriesId.size()!=0 && categoriesId!=null)
+        {
+            listTourFilter=repo.findByCategory_CategoryIdIn(categoriesId);
+
+        }
+        else
+        {
+            listTourFilter=repo.findAll();
+        }
+        List<Tour> listTourFinal=new ArrayList<Tour>();
+        for(Tour tour:listTourFilter)
+        {
+            if(tour.getMinPrice()<=maxPrice && tour.getDurationDays()<=durationDay)
+            {
+                listTourFinal.add(tour);
+            }
+        }
+        return listTourFinal;
+    }
 }
 
 

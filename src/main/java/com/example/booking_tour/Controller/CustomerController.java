@@ -2,9 +2,8 @@ package com.example.booking_tour.Controller;
 
 
 
-import com.example.booking_tour.Model.Booking;
-import com.example.booking_tour.Model.BookingPassenger;
-import com.example.booking_tour.Services.BookingServices;
+import com.example.booking_tour.Model.*;
+import com.example.booking_tour.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,19 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
-import com.example.booking_tour.Model.Customer;
-import com.example.booking_tour.Model.Employee;
-import com.example.booking_tour.Services.CustomerServices;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import com.example.booking_tour.Model.Bill;
-import com.example.booking_tour.Model.Payment;
-import com.example.booking_tour.Services.BillServices;
-import com.example.booking_tour.Services.PaymentServices;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -43,6 +35,8 @@ public class CustomerController {
     @Autowired
     private final BookingServices bookingServices;
 
+    @Autowired
+    private final ReviewServices reviewServices;
 
     private final PaymentServices paymentService;
     private final BillServices billService;
@@ -217,14 +211,6 @@ public class CustomerController {
         return "my_tour";
     }
 
-    @GetMapping("/booking/{idBooking}")
-    public String customerBookingHistory(Model model, @PathVariable("idBooking") int idBooking, HttpSession session) {
-        Booking booking = bookingServices.getBookingById(idBooking);
-        List<BookingPassenger> listPassenger = bookingServices.getPassengerByBookingId(idBooking);
-        model.addAttribute("listPassenger", listPassenger);
-        model.addAttribute("booking", booking);
-        return "my_tour_detail";
-    }
 
 
     @PostMapping("/toggle-status")
@@ -468,5 +454,50 @@ public class CustomerController {
             redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật: " + e.getMessage());
         }
         return "redirect:/customer";
+    }
+
+    @GetMapping("/booking/{idBooking}/review")
+    public String customerBookingReview(Model model,
+                                        @PathVariable("idBooking") int idBooking,
+                                        HttpSession session)
+    {
+        Booking booking=bookingServices.getBookingById(idBooking);
+        model.addAttribute("booking", booking);
+        Customer Customer=(Customer)session.getAttribute("loggedInCustomer");
+
+        return  "my_tour_review";
+    }
+
+    @PostMapping("/booking/{idBooking}/review/save_review")
+    public String saveReview(Model model,
+                             @PathVariable("idBooking") int idBooking,
+                             @RequestParam("feedback") String feedback,
+                             @RequestParam("rating") double rating,
+                             HttpSession session )
+    {
+        Booking booking=bookingServices.getBookingById(idBooking);
+        Customer customer=(Customer)session.getAttribute("loggedInCustomer");
+        Review review=new Review(customer,booking.getDeparture().getTour(), feedback,rating);
+        reviewServices.addReview(review);
+        return "redirect:/customer/booking/"+idBooking;
+    }
+
+    @GetMapping("/booking/{idBooking}")
+    public String customerBookingHistory(Model model, @PathVariable("idBooking") int idBooking,
+                                         HttpSession session)
+    {
+        Customer customer = (Customer) session.getAttribute("loggedInCustomer");
+        Booking booking=bookingServices.getBookingById(idBooking);
+        List<BookingPassenger> listPassenger=bookingServices.getPassengerByBookingId(idBooking);
+        //Kiểm tra điều kiện để hiển thị nút review
+        int showReview=0;
+        List<Review> review=reviewServices.getAllReviewByCustomerAnhTour(customer,booking.getDeparture().getTour());
+        if ("completed".equalsIgnoreCase(booking.getStatus()) && review.isEmpty()) {
+            showReview = 1;
+        }
+        model.addAttribute("listPassenger", listPassenger);
+        model.addAttribute("booking", booking);
+        model.addAttribute("showReview",showReview);
+        return "my_tour_detail";
     }
 }

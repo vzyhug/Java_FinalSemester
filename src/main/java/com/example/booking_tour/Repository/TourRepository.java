@@ -28,6 +28,8 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
 
     List<Tour> findByIsActive(Boolean isActive);
 
+    List<Tour> findByCategory_CategoryIdIn(List<Integer> categoryIds);
+
     List<Tour> findTop10ByOrderByTourIdDesc();
 
     long countByProvince_ProvinceId(Integer provinceId);
@@ -51,4 +53,6 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
 
     List<Tour> findAllByOrderByMinPriceDesc();
 
+
 }
+

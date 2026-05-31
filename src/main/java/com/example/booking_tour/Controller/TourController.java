@@ -37,6 +37,8 @@ public class TourController {
 
     @Autowired
     private TourServices tourServices;
+
+    @Autowired
     private TourServices TServices;
 
 
@@ -473,5 +475,20 @@ public class TourController {
             redirectAttributes.addFlashAttribute("error", "Lỗi khi xóa ảnh!");
         }
         return "redirect:/tour/manager";
+    }
+
+    @GetMapping("filter_tour")
+    public String filter_tour(
+            @RequestParam(value = "durationDay", required = false, defaultValue = "30") Integer durationDay,
+            @RequestParam(value = "categoriesId", required = false) List<Integer> categoriesId,
+            @RequestParam(value = "maxPrice", required = false, defaultValue = "100000000") Double maxPrice,
+            Model model) {
+        List<Tour> listTourFilter = TServices.filterTourByCategoryMaxPriceAndDurationDay(durationDay, categoriesId, maxPrice);
+        model.addAttribute("listTours", listTourFilter);
+        model.addAttribute("selectedCategories", categoriesId);
+        model.addAttribute("currentMaxPrice", maxPrice);
+        model.addAttribute("currentDuration", durationDay);
+        model.addAttribute("listCategory", TCServices.getAllTourCategories());
+        return "list_tour";
     }
 }

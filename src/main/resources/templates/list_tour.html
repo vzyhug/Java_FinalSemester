@@ -2,129 +2,144 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <div layout:fragment="content" >
   <div class="pt-24 pb-20 px-6 max-w-screen-2xl mx-auto flex flex-col md:flex-row gap-8">
-  <!-- Sidebar Filters -->
-  <aside class="w-full md:w-72 flex-shrink-0">
-    <div class="sticky top-28 space-y-8">
-      <!-- Breadcrumbs -->
-      <nav aria-label="Breadcrumb" class="flex text-xs font-label text-outline mb-6">
-        <ol class="flex items-center space-x-2">
-          <li><a class="hover:text-primary" href="#">Trang chủ</a></li>
-          <li><span class="material-symbols-outlined text-[10px]">chevron_right</span></li>
-          <li><a class="hover:text-primary font-bold text-on-surface" href="#">Tour Việt Nam</a></li>
-        </ol>
-      </nav>
-      <div class="bg-surface-container-low p-6 rounded-xl">
-        <h2 class="font-headline font-bold text-lg mb-6 text-primary">Bộ lọc tìm kiếm</h2>
-        <!-- Tour Type -->
-        <div class="mb-8">
-          <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-3">Loại hình Tour</label>
-          <div class="space-y-2" >
-            <div th:each="category : ${listCategory}">
-            <label class="flex items-center space-x-3 cursor-pointer group">
-              <input class="category-filter rounded text-primary focus:ring-primary-fixed border-outline-variant w-5 h-5"
-                     type="checkbox"
-                     th:value="${category.categoryId}"
-                     th:checked="${selectedCategories != null && selectedCategories.contains(category.categoryId)}"
-              />
-              <span class="text-sm font-medium text-on-surface-variant group-hover:text-primary">
-                <span th:text="${category.categoryName}"> </span>
-              </span>
-            </label>
+    <!-- Sidebar Filters -->
+    <aside class="w-full md:w-72 flex-shrink-0">
+      <div class="sticky top-28 space-y-8">
+        <!-- Breadcrumbs -->
+        <nav aria-label="Breadcrumb" class="flex text-xs font-label text-outline mb-6">
+          <ol class="flex items-center space-x-2">
+            <li><a class="hover:text-primary" href="#">Trang chủ</a></li>
+            <li><span class="material-symbols-outlined text-[10px]">chevron_right</span></li>
+            <li><a class="hover:text-primary font-bold text-on-surface" href="#">Tour Việt Nam</a></li>
+          </ol>
+        </nav>
+        <form th:action="@{/tour/filter_tour}" method="get" id="filter_tour">
+          <div class="bg-surface-container-low p-6 rounded-xl">
+            <h2 class="font-headline font-bold text-lg mb-6 text-primary">Bộ lọc tìm kiếm</h2>
+            <div class="mb-8">
+              <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-3">Loại hình Tour</label>
+              <div class="space-y-2">
+                <div th:each="category : ${listCategory}">
+                  <label class="flex items-center space-x-3 cursor-pointer group">
+                    <input class="category-filter rounded text-primary focus:ring-primary-fixed border-outline-variant w-5 h-5"
+                           type="checkbox"
+                           name="categoriesId"
+                           th:value="${category.categoryId}"
+                           th:checked="${selectedCategories != null && selectedCategories.contains(category.categoryId)}"/>
+                    <span class="text-sm font-medium text-on-surface-variant group-hover:text-primary">
+              <span th:text="${category.categoryName}"></span>
+            </span>
+                  </label>
+                </div>
+              </div>
             </div>
+            <div class="mb-8">
+              <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-3">Khoảng giá tối đa</label>
+              <input class="w-full h-1.5 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary"
+                     type="range"
+                     name="maxPrice"
+                     min="0"
+                     max="100000000"
+                     th:value="${currentMaxPrice != null ? currentMaxPrice : 100000000}"
+                     oninput="this.nextElementSibling.innerText = Number(this.value).toLocaleString('vi-VN') + ' VNĐ'"/>
+              <div class="text-xs font-medium text-outline mt-1 text-right" th:text="${currentMaxPrice != null ? #numbers.formatDecimal(currentMaxPrice, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : '100,000,000 VNĐ'}">100,000,000 VNĐ</div>
+              <div class="flex justify-between mt-1 text-xs font-medium text-outline">
+                <span>0 VNĐ</span>
+                <span>100tr VNĐ</span>
+              </div>
+            </div>
+            <div class="mb-8">
+              <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-3">Thời gian tối đa</label>
+              <input class="w-full h-1.5 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary"
+                     type="range"
+                     name="durationDay"
+                     min="1"
+                     max="30"
+                     th:value="${currentDuration != null ? currentDuration : 30}"
+                     oninput="this.nextElementSibling.innerText = this.value + ' ngày'"/>
+              <div class="text-xs font-medium text-outline mt-1 text-right" th:text="${currentDuration != null ? currentDuration + ' ngày' : '30 ngày'}">30 ngày</div>
+              <div class="flex justify-between mt-1 text-xs font-medium text-outline">
+                <span>1 ngày</span>
+                <span>30 ngày</span>
+              </div>
+            </div>
+            <button type="submit" class="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary-dark transition font-medium text-sm">
+              Áp dụng
+            </button>
           </div>
-        </div>
-        <!-- Price Range -->
-        <div class="mb-8">
-          <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-3">Khoảng giá</label>
-          <input class="w-full h-1.5 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary" type="range"/>
-          <div class="flex justify-between mt-3 text-xs font-medium text-outline">
-            <span>2tr VNĐ</span>
-            <span>100tr VNĐ</span>
-          </div>
-        </div>
-        <!-- Duration -->
-        <div class="mb-8">
-          <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-3">Thời gian</label>
-          <div class="grid grid-cols-2 gap-2">
-            <button class="px-3 py-2 rounded-lg bg-surface-container-lowest text-xs font-semibold text-on-surface border border-transparent hover:border-primary transition-all">1-3 Ngày</button>
-            <button class="px-3 py-2 rounded-lg bg-primary text-white text-xs font-semibold">4-7 Ngày</button>
-            <button class="px-3 py-2 rounded-lg bg-surface-container-lowest text-xs font-semibold text-on-surface border border-transparent hover:border-primary transition-all">8-14 Ngày</button>
-            <button class="px-3 py-2 rounded-lg bg-surface-container-lowest text-xs font-semibold text-on-surface border border-transparent hover:border-primary transition-all">15+ Ngày</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </aside>
-  <!-- Main Content Area -->
-  <section class="flex-1">
-    <!-- Header & Sorting -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-      <div>
-        <span class="text-secondary font-bold text-xs uppercase tracking-[0.2em]">Bộ sưu tập chọn lọc</span>
-        <h1 class="text-4xl font-black font-headline text-primary mt-1 tracking-tight">Khám phá Việt Nam</h1>
-      </div>
-      <div class="flex items-center space-x-4 bg-surface-container-low px-4 py-2 rounded-full">
-        <span class="text-xs font-bold text-outline uppercase">Sắp xếp</span>
-        <form th:action="@{/tour}" method="get">
-          <select name="sort"
-                  class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer"
-                  onchange="this.form.submit()">
-            <option value="" th:selected="${currentSort == 'null'}">Sắp xếp theo</option>
-            <option value="asc" th:selected="${currentSort == 'asc'}">Giá: Thấp đến Cao</option>
-            <option value="desc" th:selected="${currentSort == 'desc'}">Giá: Cao đến Thấp</option>
-          </select>
         </form>
       </div>
-    </div>
-    <!-- Tour Grid -->
-    <div  class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div th:each="tour: ${listTours}">
-        <div class="group bg-surface-container-low rounded-xl overflow-hidden flex flex-col">
-          <div class="relative h-64 overflow-hidden">
-            <img th:src="${tour.imagesThumbnails!=null ? tour.imagesThumbnails.imgURL: ''}" th:alt="${tour.imagesThumbnails!=null ? tour.imagesThumbnails.imgURL :'Link url bi null'}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-            <div class="absolute bottom-4 right-4 bg-primary text-white px-4 py-1 rounded-full text-xs font-bold">
-              <span th:text="${#numbers.formatDecimal(tour.minPrice, 0, 'POINT', 0, 'COMMA')}"></span>
-              VNĐ</div>
-          </div>
-          <div class="p-6 flex-1 flex flex-col justify-between bg-surface-container-lowest">
-            <div>
-              <div class="flex items-center text-secondary mb-2">
-                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
-                <span th:text="${tour.province.provinceName}" class="text-xs font-bold uppercase ml-1 tracking-wider">
+    </aside>
+    <!-- Main Content Area -->
+    <section class="flex-1">
+      <!-- Header & Sorting -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
+          <span class="text-secondary font-bold text-xs uppercase tracking-[0.2em]">Bộ sưu tập chọn lọc</span>
+          <h1 class="text-4xl font-black font-headline text-primary mt-1 tracking-tight">Khám phá Việt Nam</h1>
+        </div>
+        <div class="flex items-center space-x-4 bg-surface-container-low px-4 py-2 rounded-full">
+          <span class="text-xs font-bold text-outline uppercase">Sắp xếp</span>
+          <form th:action="@{/tour}" method="get">
+            <select name="sort"
+                    class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer"
+                    onchange="this.form.submit()">
+              <option value="" th:selected="${currentSort == 'null'}">Sắp xếp theo</option>
+              <option value="asc" th:selected="${currentSort == 'asc'}">Giá: Thấp đến Cao</option>
+              <option value="desc" th:selected="${currentSort == 'desc'}">Giá: Cao đến Thấp</option>
+            </select>
+          </form>
+        </div>
+      </div>
+      <!-- Tour Grid -->
+      <div  class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div th:each="tour: ${listTours}">
+          <div class="group bg-surface-container-low rounded-xl overflow-hidden flex flex-col">
+            <div class="relative h-64 overflow-hidden">
+              <img th:src="${tour.imagesThumbnails!=null ? tour.imagesThumbnails.imgURL: ''}" th:alt="${tour.imagesThumbnails!=null ? tour.imagesThumbnails.imgURL :'Link url bi null'}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <div class="absolute bottom-4 right-4 bg-primary text-white px-4 py-1 rounded-full text-xs font-bold">
+                <span th:text="${#numbers.formatDecimal(tour.minPrice, 0, 'POINT', 0, 'COMMA')}"></span>
+                VNĐ</div>
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between bg-surface-container-lowest">
+              <div>
+                <div class="flex items-center text-secondary mb-2">
+                  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                  <span th:text="${tour.province.provinceName}" class="text-xs font-bold uppercase ml-1 tracking-wider">
 
                 </span>
-              </div>
-              <h3 class="text-xl font-bold font-headline text-primary mb-3">
-                <span th:text="${tour.title}"></span>
-              </h3>
-              <div class="flex items-center space-x-3 text-outline text-xs mb-4">
+                </div>
+                <h3 class="text-xl font-bold font-headline text-primary mb-3">
+                  <span th:text="${tour.title}"></span>
+                </h3>
+                <div class="flex items-center space-x-3 text-outline text-xs mb-4">
                 <span class="flex items-center">
                   <span class="material-symbols-outlined text-xs mr-1">schedule</span>
                   <span th:text="|${tour.durationDays} ngày|"></span>
                 </span>
+                </div>
               </div>
+              <a th:href="@{/tour/{id}(id=${tour.tourId})}"
+                 class="block text-center w-full py-3 bg-surface-container-highest text-primary rounded-full font-bold text-sm hover:bg-primary hover:text-white transition-all">
+                Xem chi tiết
+              </a>
             </div>
-            <a th:href="@{/tour/{id}(id=${tour.tourId})}"
-               class="block text-center w-full py-3 bg-surface-container-highest text-primary rounded-full font-bold text-sm hover:bg-primary hover:text-white transition-all">
-              Xem chi tiết
-            </a>
           </div>
         </div>
       </div>
-    </div>
-    <!-- Pagination -->
-    <div class="mt-20 flex justify-center items-center space-x-4">
-      <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
-        <span class="material-symbols-outlined">chevron_left</span>
-      </button>
-      <button class="w-10 h-10 rounded-full bg-primary text-white font-bold flex items-center justify-center">1</button>
-      <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all font-bold">2</button>
-      <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all font-bold">3</button>
-      <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
-        <span class="material-symbols-outlined">chevron_right</span>
-      </button>
-    </div>
-  </section>
+      <!-- Pagination -->
+      <div class="mt-20 flex justify-center items-center space-x-4">
+        <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <button class="w-10 h-10 rounded-full bg-primary text-white font-bold flex items-center justify-center">1</button>
+        <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all font-bold">2</button>
+        <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all font-bold">3</button>
+        <button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+    </section>
   </div>
 </div>
 
