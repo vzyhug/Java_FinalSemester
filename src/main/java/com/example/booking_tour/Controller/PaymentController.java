@@ -1,31 +1,53 @@
 package com.example.booking_tour.Controller;
 
 import com.example.booking_tour.Model.BookingPaymentDTO;
+import com.example.booking_tour.Model.BookingPassenger;
+import com.example.booking_tour.Model.Customer;
+import com.example.booking_tour.Services.BookingServices;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/payment")
 public class PaymentController {
 
+    @Autowired
+    private BookingServices bookingServices;
+
     // 1. Endpoint nhận dữ liệu Đặt Tour và khởi tạo Thanh toán
     @PostMapping("/process")
-    public String processPayment(@ModelAttribute BookingPaymentDTO dto, HttpSession session) {
+    public String processPayment(@ModelAttribute BookingPaymentDTO dto, HttpSession session, Model model) {
         
-        // LƯU TẠM DỮ LIỆU: Đưa cục DTO vào Session với key "TEMP_BOOKING"
-        session.setAttribute("TEMP_BOOKING", dto);
+        Map<String, Object> bookingStage1 = (Map<String, Object>) session.getAttribute("bookingStage1");
+        @SuppressWarnings("unchecked")
+        List<BookingPassenger> bookingPassengers = (List<BookingPassenger>) session.getAttribute("bookingPassengers");
+        Customer loggedInCustomer = (Customer) session.getAttribute("loggedInCustomer");
         
-        // --- LOGIC GỌI CỔNG THANH TOÁN (VNPAY / MOMO) ---
-        // Tại đây bạn sẽ build URL gọi API của cổng thanh toán theo tài liệu của họ
-        // Ví dụ: Tạo ra một cái URL chứa mã đơn hàng, số tiền, url trả về (returnUrl)
-        String vnpayPaymentUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?..."; 
+        if (bookingStage1 == null || bookingPassengers == null || loggedInCustomer == null) {
+            model.addAttribute("error", "Dữ liệu đặt tour không hợp lệ hoặc phiên giao dịch đã hết hạn.");
+            return "redirect:/"; 
+        }
         
-        // (Đây chỉ là URL giả lập, thực tế phải build URL kèm chữ ký số checksum)
-        
-        // Chuyển hướng người dùng sang cổng thanh toán của bên thứ 3
-        return "redirect:" + vnpayPaymentUrl; 
+        try {
+            // Lưu trực tiếp vào Database để hoàn thiện Booking
+            bookingServices.saveBookingAndPassengerAndPayment(dto, bookingStage1, bookingPassengers, loggedInCustomer);
+            
+            // Xóa session sau khi lưu xong
+            session.removeAttribute("bookingStage1");
+            session.removeAttribute("bookingPassengers");
+            
+            // Chuyển hướng về trang lịch sử thanh toán hoặc trang chủ
+            return "redirect:/customer/payment-history"; 
+        } catch (Exception e) {
+            model.addAttribute("error", "Đã xảy ra lỗi khi lưu thông tin: " + e.getMessage());
+            return "redirect:/";
+        }
     }
 
     // 2. Endpoint nhận Callback (Kết quả trả về) từ cổng thanh toán
