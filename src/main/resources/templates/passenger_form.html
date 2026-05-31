@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+</head>
+<body>
+<div layout:fragment="content">
+    <form th:action="@{/booking/save_state2}" method="POST">
+        <div class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto">
+            <div class="flex items-center gap-2 text-xs text-on-surface-variant mb-6 font-medium">
+                <span class="material-symbols-outlined text-sm">laptop_mac</span>
+                <span>Thông tin hành khách - Vietnam Expeditions</span>
+            </div>
+
+            <div class="max-w-xl mx-auto mb-10 relative flex justify-between items-center text-xs font-bold text-on-surface-variant">
+                <div class="absolute h-[2px] bg-surface-container-high w-full top-4 left-0 -z-10"></div>
+                <div class="flex flex-col items-center gap-2">
+                    <span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm">✓</span>
+                    <span class="text-primary">Chọn chuyến đi</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <span class="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center text-sm">2</span>
+                    <span class="text-secondary">Thông tin hành khách</span>
+                </div>
+                <div class="flex flex-col items-center gap-2 opacity-40">
+                    <span class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-sm">3</span>
+                    <span>Thanh toán</span>
+                </div>
+                <div class="flex flex-col items-center gap-2 opacity-40">
+                    <span class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-sm">4</span>
+                    <span>Hoàn tất</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!--Them thong tin cac hanh khach cua tour-->
+                <div class="lg:col-span-8 space-y-6">
+                    <h2 class="font-headline font-extrabold text-2xl text-primary mb-2">Chi tiết hành khách</h2>
+                    <div th:if="${adultCount > 0}" th:each="i : ${#numbers.sequence(1, adultCount)}"
+                         class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container">
+                        <div class="flex items-center gap-2 mb-6 text-secondary">
+                            <span class="material-symbols-outlined font-bold">person</span>
+                            <h3 class="font-headline font-bold text-base" th:text="'Hành khách ' + ${i} + ' (Người lớn)'"></h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1.5">
+                                <label class="text-xs font-bold text-on-surface-variant px-1">Họ và tên *</label>
+                                <input type="text" name="passengerNames" placeholder="Nhập họ và tên như trên hộ chiếu" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-secondary transition-all" required/>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-xs font-bold text-on-surface-variant px-1">Ngày sinh *</label>
+                                <input type="date" name="passengerBirthdays" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-secondary transition-all" required/>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-xs font-bold text-on-surface-variant px-1">Số CMND/CCCD/Hộ chiếu *</label>
+                                <input type="text" name="passengerIds" placeholder="Ví dụ: 01234567" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-secondary transition-all" required/>
+                            </div>
+                            <input type="hidden" name="passengerTypes" value="adult" />
+                        </div>
+                    </div>
+
+                    <div th:if="${childCount > 0}" th:each="i : ${#numbers.sequence(1, childCount)}"
+                         class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container">
+                        <div class="flex items-center gap-2 mb-6 text-secondary">
+                            <span class="material-symbols-outlined font-bold">child_care</span>
+                            <h3 class="font-headline font-bold text-base" th:text="'Hành khách ' + ${i + adultCount} + ' (Trẻ em)'"></h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1.5">
+                                <label class="text-xs font-bold text-on-surface-variant px-1">Họ và tên *</label>
+                                <input type="text" name="passengerNames" placeholder="Nhập họ và tên bé" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-secondary transition-all" required/>
+                            </div>
+                            <div class="space-y-1.5 md:col-span-2">
+                                <label class="text-xs font-bold text-on-surface-variant px-1">Ngày sinh *</label>
+                                <input type="date" name="passengerBirthdays" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-secondary transition-all" required/>
+                            </div>
+                            <input type="hidden" name="passengerIds" value="" />
+                            <input type="hidden" name="passengerTypes" value="child" />
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2">
+                        <a th:href="@{/booking(departureId=${departure.departureId}, adult=${adultCount}, child=${childCount})}"
+                           class="flex items-center gap-1 text-sm font-bold text-on-surface-variant hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-sm">arrow_back</span>
+                            Quay lại
+                        </a>
+                        <button type="submit" class="px-8 py-3.5 rounded-full font-bold bg-primary text-white shadow-md transition-transform hover:scale-[1.02] flex items-center gap-2 text-sm">
+                            Tiếp tục thanh toán
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Thong tin booking hien tai -->
+                <div class="lg:col-span-4">
+                    <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-surface-container">
+                        <div class="rounded-xl overflow-hidden mb-4 h-44 relative">
+                            <img th:src="${tour.imagesThumbnails != null ? tour.imagesThumbnails.imgURL : ''}"
+                                 alt="Tour Image"
+                                 class="w-full h-full object-cover"/>
+                            <span class="absolute top-3 left-3 bg-teal-600 text-white text-[10px] font-bold px-2 py-1 rounded"
+                                  th:text="|${tour.durationDays} ngày ${tour.durationNights} đêm|"></span>
+                        </div>
+                        <h3 class="font-headline font-bold text-base text-primary mb-3" th:text="${tour.title}"></h3>
+
+                        <div class="space-y-3 mb-5">
+                            <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+                                <span class="material-symbols-outlined text-sm text-primary">calendar_month</span>
+                                <span>Ngày đi: <span th:text="${#temporals.format(departure.departureDate, 'dd/MM/yyyy')}"></span></span>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+                                <span class="material-symbols-outlined text-sm text-primary">group</span>
+                                <span th:text="|${adultCount + childCount} Người (${adultCount} Người lớn, ${childCount} Trẻ em)|"></span>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+                                <span class="material-symbols-outlined text-sm text-primary">location_on</span>
+                                <span>Khởi hành: <span th:text="${tour.pickupPoint}"></span></span>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-surface-container pt-4 space-y-2 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant" th:text="|Người lớn (x${adultCount})|"></span>
+                                <span class="font-semibold" th:text="${#numbers.formatDecimal(adultTotal, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                            </div>
+                            <div class="flex justify-between" th:if="${childCount > 0}">
+                                <span class="text-on-surface-variant" th:text="|Trẻ em (x${childCount})|"></span>
+                                <span class="font-semibold" th:text="${#numbers.formatDecimal(childTotal, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                            </div>
+                            <div class="flex justify-between items-end border-t border-surface-container pt-3 mt-2">
+                                <span class="font-bold text-sm text-on-surface">Tổng cộng</span>
+                                <span class="text-2xl font-black text-secondary" th:text="${#numbers.formatDecimal(totalAll, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-3 bg-blue-50 rounded-xl flex items-start gap-2 border border-blue-100">
+                            <span class="material-symbols-outlined text-blue-600 text-sm mt-0.5">verified</span>
+                            <p class="text-[11px] text-blue-800 leading-relaxed">Giá đã bao gồm thuế VAT và phí tham quan thắng cảnh.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,15 +1,21 @@
 package com.example.booking_tour.Controller;
 
+
+import com.example.booking_tour.Model.Booking;
+import com.example.booking_tour.Model.BookingPassenger;
+import com.example.booking_tour.Services.BookingServices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
 import com.example.booking_tour.Model.Customer;
 import com.example.booking_tour.Model.Employee;
 import com.example.booking_tour.Services.CustomerServices;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +25,13 @@ import java.util.List;
 @RequestMapping("/customer")
 @RequiredArgsConstructor
 public class CustomerController {
-    private final CustomerServices customerService;
+
+    @Autowired
+    private final CustomerServices customerServices;
+
+    @Autowired
+    private final BookingServices bookingServices;
+
     // Hiển thị trang đăng nhập cho khách hàng
     @GetMapping("loginForm")
     public String loginForm(Model model) {
@@ -34,7 +46,7 @@ public class CustomerController {
                         @RequestParam("password") String password, 
                         HttpSession session, 
                         Model model) {
-        Customer loggedInCustomer = customerService.login(email, password);
+        Customer loggedInCustomer = customerServices.login(email, password);
         if (loggedInCustomer != null) {
             session.setAttribute("loggedInCustomer", loggedInCustomer);
             return "redirect:/";
@@ -66,10 +78,9 @@ public class CustomerController {
             return "register_form"; // Trả lại form nếu có lỗi
         }
         // Lưu thông tin vào database
-        customerService.register(customer);
+        customerServices.register(customer);
         return "redirect:/customer/loginForm";
     }
-
 
     // Trang quản lý khách hàng
     @GetMapping
@@ -80,15 +91,15 @@ public class CustomerController {
         }
 
         try {
-            Long totalCustomers = customerService.getTotalCustomers();
-            Long newCustomers = customerService.getNewCustomersThisMonth();
-            Double returnRate = customerService.getReturnRate();
-            Double avgRating = customerService.getAverageRating();
-            List<Customer> customers = customerService.getAllCustomers();
+            Long totalCustomers = customerServices.getTotalCustomers();
+            Long newCustomers = customerServices.getNewCustomersThisMonth();
+            Double returnRate = customerServices.getReturnRate();
+            Double avgRating = customerServices.getAverageRating();
+            List<Customer> customers = customerServices.getAllCustomers();
 
             model.addAttribute("totalCustomers", totalCustomers);
-            model.addAttribute("newCustomersThisMonth", customerService.getNewCustomersThisMonth());
-            model.addAttribute("returnRate", customerService.getReturnRate());
+            model.addAttribute("newCustomersThisMonth", customerServices.getNewCustomersThisMonth());
+            model.addAttribute("returnRate", customerServices.getReturnRate());
             model.addAttribute("avgRating", avgRating);
             model.addAttribute("customers", customers);
             model.addAttribute("admin", loggedInAdmin);
@@ -113,14 +124,14 @@ public class CustomerController {
         }
 
         try {
-            List<Customer> results = customerService.searchCustomersByName(keyword);
+            List<Customer> results = customerServices.searchCustomersByName(keyword);
 
             model.addAttribute("customers", results);
             model.addAttribute("keyword", keyword);
-            model.addAttribute("totalCustomers", customerService.getTotalCustomers());
-            model.addAttribute("newCustomers", customerService.getNewCustomersThisMonth());
-            Double returnRate = customerService.getReturnRate();
-            model.addAttribute("avgRating", customerService.getAverageRating());
+            model.addAttribute("totalCustomers", customerServices.getTotalCustomers());
+            model.addAttribute("newCustomers", customerServices.getNewCustomersThisMonth());
+            Double returnRate = customerServices.getReturnRate();
+            model.addAttribute("avgRating", customerServices.getAverageRating());
             model.addAttribute("admin", loggedInAdmin);
 
             return "admin_customer_management";
@@ -143,15 +154,15 @@ public class CustomerController {
         }
 
         try {
-            Customer customer = customerService.getCustomerById(customerId);
+            Customer customer = customerServices.getCustomerById(customerId);
 
             if (customer == null) {
                 model.addAttribute("error", "Khách hàng không tồn tại!");
                 return "admin_customer_management";
             }
 
-            Long tourCount = customerService.getCustomerTourCount(customerId);
-            java.math.BigDecimal totalSpent = customerService.getCustomerTotalSpent(customerId);
+            Long tourCount = customerServices.getCustomerTourCount(customerId);
+            java.math.BigDecimal totalSpent = customerServices.getCustomerTotalSpent(customerId);
 
             model.addAttribute("customer", customer);
             model.addAttribute("tourCount", tourCount);
@@ -163,5 +174,25 @@ public class CustomerController {
             model.addAttribute("error", "Lỗi: " + e.getMessage());
             return "admin_customer_management";
         }
+    }
+
+    @GetMapping("booking")
+    public String customerBookingHistory(Model model, HttpSession session)
+    {
+        Customer customer = (Customer) session.getAttribute("loggedInCustomer");
+        List<Booking> listBookingOfCustomer=bookingServices.getBookingByPassenger(customer);
+        model.addAttribute("listBooking", listBookingOfCustomer);
+        return "my_tour";
+    }
+
+    @GetMapping("/booking/{idBooking}")
+    public String customerBookingHistory(Model model, @PathVariable("idBooking") int idBooking, HttpSession session)
+    {
+        Booking booking=bookingServices.getBookingById(idBooking);
+        List<BookingPassenger> listPassenger=bookingServices.getPassengerByBookingId(idBooking);
+        model.addAttribute("listPassenger", listPassenger);
+        model.addAttribute("booking", booking);
+        return "my_tour_detail";
+
     }
 }

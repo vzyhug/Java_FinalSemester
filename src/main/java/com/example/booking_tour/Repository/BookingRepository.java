@@ -1,6 +1,7 @@
 package com.example.booking_tour.Repository;
 
 import com.example.booking_tour.Model.Booking;
+import com.example.booking_tour.Model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -28,4 +29,7 @@ public interface BookingRepository extends JpaRepository<Booking,Integer> {
      * Lấy booking của chuyến đi
      */
     List<Booking> findByDeparture_DepartureId(Integer departureId);
+
+    public List<Booking> findByCustomer(Customer customer);
+
 }

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{user_layout}">
+
+<div layout:fragment="content">
+<div class="ml-64 p-8 max-w-7xl mx-auto space-y-6">
+    <!-- Breadcrumbs -->
+    <div class="text-xs text-slate-400 flex items-center gap-2">
+        <a href="#" class="hover:text-primary">Chuyến đi của tôi</a>
+        <span class="material-symbols-outlined text-xs">chevron_right</span>
+        <span class="text-slate-600 font-semibold">Chi tiết chuyến đi</span>
+    </div>
+
+    <!-- Bento Big Card (Hero Section) -->
+    <div class="relative h-72 rounded-2xl overflow-hidden shadow-sm group">
+        <img th:src="${booking.departure.tour.imagesThumbnails!=null ? booking.departure.tour.imagesThumbnails.imgURL: ''}" alt="Hạ Long" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+
+        <!-- Tags -->
+        <div class="absolute top-6 left-6 flex gap-2">
+            <span th:text="${booking.bookingCode}" class="bg-primary/95 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-md backdrop-blur-sm"></span>
+            <span class="bg-green-600 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-md flex items-center gap-1">
+          <span th:text="${booking.status}" class="material-symbols-outlined text-xs filled">check_circle</span>
+        </span>
+        </div>
+
+        <!-- Hero Title and Action Button -->
+        <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+            <div class="text-white max-w-xl">
+                <h2 th:text="${booking.departure.tour.title}" class="text-3xl font-black tracking-tight mb-2"></h2>
+                <div class="flex items-center gap-4 text-xs text-slate-300">
+                    <span th:text="|Khởi hành: ${#temporals.format(booking.departure.departureDate, 'dd/MM/yyyy')}|" class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">flight_takeoff</span> </span>
+                    <span th:text="${booking.departure.tour.province.provinceName}" class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span></span>
+                </div>
+            </div>
+            <button onclick="window.location.href='review.html'" class="bg-[#ffb612] hover:bg-[#e09e07] text-on-background font-bold text-xs px-5 py-3 rounded-xl flex flex-col items-center gap-1 transition-all shadow-md">
+                <span class="material-symbols-outlined text-lg">star</span>
+                Đánh giá tour
+            </button>
+        </div>
+    </div>
+
+    <!-- Bento Grid Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Time Card -->
+        <div class="bg-surface-container-low p-5 rounded-xl border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-blue-100 text-primary flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl">calendar_month</span>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-bold uppercase">THỜI GIAN</p>
+                <p th:text="|${#temporals.format(booking.departure.departureDate, 'dd/MM/yyyy')} - ${#temporals.format(booking.departure.returnDate, 'dd/MM/yyyy')} |" class="text-sm font-black text-primary mt-0.5"></p>
+            </div>
+        </div>
+
+        <!-- Tour Guide Card -->
+        <div class="bg-surface-container-low p-5 rounded-xl border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-orange-100 text-secondary flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl">support_agent</span>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-bold uppercase">HƯỚNG DẪN VIÊN</p>
+                <p th:text="${booking.departure.guide.fullName}" class="text-sm font-black text-on-surface mt-0.5"></p>
+                <p th:text="${booking.departure.guide.phone}" class="text-xs text-slate-500 font-medium"></p>
+            </div>
+        </div>
+
+        <!-- Payment Summary (Spans 2 rows) -->
+        <div class="bg-surface-container-low p-5 rounded-xl border border-slate-100 row-span-2 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-2 mb-3 border-b border-slate-200 pb-2">
+                    <span class="material-symbols-outlined text-primary">credit_card</span>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-on-surface">Chi tiết thanh toán</h4>
+                </div>
+                <div class="space-y-1.5 text-xs text-on-surface-variant">
+                    <div class="flex justify-between"><span>Giá người lớn:</span><span th:text="|${booking.departure.adultPrice * booking.totalAdults} VNĐ|" class="font-semibold"></span></div>
+                    <div class="flex justify-between"><span>Giá trẻ em:</span><span th:text="|${booking.departure.childPrice * booking.totalChildren} VNĐ|"  class="font-semibold"></span></div>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-dashed border-slate-300">
+                <div class="flex justify-between items-end mb-4">
+                    <span class="text-xs font-bold text-slate-500">TỔNG CỘNG</span>
+                    <span class="text-lg font-black text-primary" th:text="${booking.totalAmount}">18.300.000đ</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Passengers List Card -->
+        <div class="bg-surface-container-lowest p-6 rounded-xl border border-slate-100 md:col-span-2">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+                    <span class="material-symbols-outlined">groups</span> Danh sách hành khách
+                </h4>
+                <span th:text="${booking.totalAdults + booking.totalChildren}" class="text-xs bg-slate-100 px-2.5 py-1 rounded-full font-bold text-slate-600"></span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                    <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase text-[10px]">
+                        <th class="py-2.5">Họ và tên</th>
+                        <th class="py-2.5">Ngày sinh</th>
+                        <th class="py-2.5 text-right">Loại vé</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50 text-on-surface font-medium">
+                    <div th:each="passenger: ${listPassenger}">
+                    <tr>
+                        <td th:text="${passenger.fullName}" class="py-3 font-bold text-primary"> </td>
+                        <td th:text="${#temporals.format(passenger.dateOfBirth, 'dd/MM/yyyy')}" class="py-3 text-slate-500"></td>
+                        <td class="py-3 text-right"><span th:text="${passenger.passengerType}" class="bg-blue-50 text-primary font-bold px-2 py-0.5 rounded text-[10px]"></span></td>
+                    </tr>
+                    </div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
