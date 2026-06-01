@@ -251,6 +251,12 @@ public class TourController {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) return "redirect:/auth/loginForm";
 
+        // Kiểm tra Tên Tour trống
+        if (title == null || title.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Tên Tour không được để trống!");
+            return "redirect:/tour/add";
+        }
+
         // 1. KIỂM TRA LOGIC NGÀY/ĐÊM
         if (durationNights > durationDays) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Số đêm không được lớn hơn số ngày!");
@@ -358,6 +364,12 @@ public class TourController {
 
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) return "redirect:/auth/loginForm";
+
+        // Kiểm tra Tên Tour trống
+        if (title == null || title.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Tên Tour không được để trống!");
+            return "redirect:/tour/edit/" + tourId;
+        }
 
         // ==========================================
         // 1. KIỂM TRA LOGIC NGÀY/ĐÊM

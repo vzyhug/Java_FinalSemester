@@ -12,6 +12,16 @@
     <p class="text-slate-500">Quản lý các chuyến khởi hành thực tế của tour</p>
   </div>
 
+  <div th:if="${error != null || param.error != null}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm flex items-center">
+    <span class="material-symbols-outlined mr-2">error</span>
+    <span th:text="${error != null ? error : param.error}"></span>
+  </div>
+
+  <div th:if="${success != null || param.success != null || message != null || param.message != null}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg shadow-sm flex items-center">
+    <span class="material-symbols-outlined mr-2">check_circle</span>
+    <span th:text="${success != null ? success : (message != null ? message : (param.success != null ? param.success : param.message))}"></span>
+  </div>
+
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
       <div class="flex items-center justify-between mb-4">

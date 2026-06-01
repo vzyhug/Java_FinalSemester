@@ -11,9 +11,9 @@
         <p class="text-slate-500">Cập nhật thông tin lịch trình, giá vé và số chỗ</p>
     </div>
 
-    <div th:if="${error}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm">
+    <div th:if="${error != null || param.error != null}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm">
         <p class="font-bold">Lỗi:</p>
-        <p th:text="${error}"></p>
+        <p th:text="${error != null ? error : param.error}"></p>
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 max-w-4xl">
@@ -24,7 +24,7 @@
             <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2">Thuộc Tour <span class="text-red-500">*</span></label>
                 <select th:field="*{tour.tourId}" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition" required>
-                    <option th:each="t : ${tours}" th:value="${t.tourId}" th:text="${t.title}"></option>
+                    <option th:each="t : ${tours}" th:value="${t.tourId}" th:data-days="${t.durationDays}" th:text="${t.title + ' (' + t.durationDays + ' ngày ' + t.durationNights + ' đêm)'}"></option>
                 </select>
             </div>
 

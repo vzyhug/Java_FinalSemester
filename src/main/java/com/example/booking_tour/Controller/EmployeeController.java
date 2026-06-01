@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -145,7 +147,34 @@ public class EmployeeController {
     @PostMapping("/save")
     public String saveEmployee(
             @ModelAttribute Employee employee,
-            @RequestParam("roleId") Integer roleId) {
+            @RequestParam("roleId") Integer roleId,
+            RedirectAttributes redirectAttributes) {
+
+        // 1. Kiểm tra Họ và tên không được trống
+        if (employee.getFullName() == null || employee.getFullName().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Họ và tên không được để trống!");
+            return "redirect:/employees/add";
+        }
+        // 2. Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
+        if (employee.getEmail() == null || employee.getEmail().trim().isEmpty() || !employee.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Email không đúng định dạng!");
+            return "redirect:/employees/add";
+        }
+        // 3. Kiểm tra số điện thoại chỉ được chứa số
+        if (employee.getPhone() == null || employee.getPhone().trim().isEmpty() || !employee.getPhone().matches("^[0-9]+$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Số điện thoại phải là số!");
+            return "redirect:/employees/add";
+        }
+        // 4. Kiểm tra Tên đăng nhập không trống
+        if (employee.getUsername() == null || employee.getUsername().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Tên đăng nhập không được để trống!");
+            return "redirect:/employees/add";
+        }
+        // 5. Kiểm tra độ dài mật khẩu tối thiểu 5 ký tự
+        if (employee.getPasswordHash() == null || employee.getPasswordHash().length() < 5) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Mật khẩu phải có ít nhất 5 ký tự!");
+            return "redirect:/employees/add";
+        }
 
         Role role =
                 roleRepository.findById(roleId).orElse(null);
@@ -199,7 +228,43 @@ public class EmployeeController {
     @PostMapping("/update")
     public String updateEmployee(
             @ModelAttribute Employee employee,
-            @RequestParam("roleId") Integer roleId) {
+            @RequestParam("roleId") Integer roleId,
+            RedirectAttributes redirectAttributes) {
+
+        // 1. Kiểm tra Họ và tên không được trống
+        if (employee.getFullName() == null || employee.getFullName().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Họ và tên không được để trống!");
+            return "redirect:/employees/edit/" + employee.getEmployeeId();
+        }
+        // 2. Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
+        if (employee.getEmail() == null || employee.getEmail().trim().isEmpty() || !employee.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Email không đúng định dạng!");
+            return "redirect:/employees/edit/" + employee.getEmployeeId();
+        }
+        // 3. Kiểm tra số điện thoại chỉ được chứa số
+        if (employee.getPhone() == null || employee.getPhone().trim().isEmpty() || !employee.getPhone().matches("^[0-9]+$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Số điện thoại phải là số!");
+            return "redirect:/employees/edit/" + employee.getEmployeeId();
+        }
+        // 4. Kiểm tra Tên đăng nhập không trống
+        if (employee.getUsername() == null || employee.getUsername().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Tên đăng nhập không được để trống!");
+            return "redirect:/employees/edit/" + employee.getEmployeeId();
+        }
+
+        // Nếu mật khẩu rỗng thì giữ nguyên mật khẩu cũ
+        if (employee.getPasswordHash() == null || employee.getPasswordHash().trim().isEmpty()) {
+            Employee existing = employeeService.getEmployeeById(employee.getEmployeeId());
+            if (existing != null) {
+                employee.setPasswordHash(existing.getPasswordHash());
+            }
+        } else {
+            // Có đổi mật khẩu -> validate độ dài
+            if (employee.getPasswordHash().length() < 5) {
+                redirectAttributes.addFlashAttribute("error", "Lỗi: Mật khẩu mới phải có ít nhất 5 ký tự!");
+                return "redirect:/employees/edit/" + employee.getEmployeeId();
+            }
+        }
 
         Role role =
                 roleRepository.findById(roleId).orElse(null);

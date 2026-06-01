@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.Set;
 
+import jakarta.validation.constraints.*;
+
 @Getter
 @Setter
 @Entity
@@ -17,6 +19,7 @@ public class Tour {
     @Column(name = "tour_id")
     private Integer tourId;
 
+    @NotBlank(message = "Tên Tour không được để trống")
     @Column(name = "title", nullable = false, length = 200)
     private String title;
 
@@ -50,6 +53,7 @@ public class Tour {
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean isActive = true;
 
+    @DecimalMin(value = "0.0", message = "Giá tiền không được là số âm")
     @Column(name = "min_price")
     private Double minPrice; // dùng wrapper để tránh null pointer
 

@@ -126,6 +126,14 @@ public class DepartureController {
         }
 
         // 3. GIÁ TIỀN
+        if (departure.getAdultPrice() != null && departure.getAdultPrice().compareTo(java.math.BigDecimal.ZERO) < 0) {
+            redirectAttributes.addAttribute("error", "Lỗi: Giá người lớn không được là số âm!");
+            return "redirect:/admin/departures/add";
+        }
+        if (departure.getChildPrice() != null && departure.getChildPrice().compareTo(java.math.BigDecimal.ZERO) < 0) {
+            redirectAttributes.addAttribute("error", "Lỗi: Giá trẻ em không được là số âm!");
+            return "redirect:/admin/departures/add";
+        }
         if (departure.getAdultPrice() != null && departure.getChildPrice() != null) {
             if (departure.getChildPrice().compareTo(departure.getAdultPrice()) > 0) {
                 redirectAttributes.addAttribute("error", "Lỗi: Giá trẻ em không được phép cao hơn giá người lớn!");
@@ -325,6 +333,22 @@ public class DepartureController {
         if (departure.getReturnDate() != null && departure.getDepartureDate() != null) {
             if (departure.getReturnDate().isBefore(departure.getDepartureDate())) {
                 redirectAttributes.addAttribute("error", "Ngày trở về không thể diễn ra trước ngày khởi hành!");
+                return "redirect:/admin/departures/edit/" + departure.getDepartureId();
+            }
+        }
+
+        // 1.5. Kiểm tra giá tiền không âm và logic giá vé
+        if (departure.getAdultPrice() != null && departure.getAdultPrice().compareTo(java.math.BigDecimal.ZERO) < 0) {
+            redirectAttributes.addAttribute("error", "Lỗi: Giá người lớn không được là số âm!");
+            return "redirect:/admin/departures/edit/" + departure.getDepartureId();
+        }
+        if (departure.getChildPrice() != null && departure.getChildPrice().compareTo(java.math.BigDecimal.ZERO) < 0) {
+            redirectAttributes.addAttribute("error", "Lỗi: Giá trẻ em không được là số âm!");
+            return "redirect:/admin/departures/edit/" + departure.getDepartureId();
+        }
+        if (departure.getAdultPrice() != null && departure.getChildPrice() != null) {
+            if (departure.getChildPrice().compareTo(departure.getAdultPrice()) > 0) {
+                redirectAttributes.addAttribute("error", "Lỗi: Giá trẻ em không được phép cao hơn giá người lớn!");
                 return "redirect:/admin/departures/edit/" + departure.getDepartureId();
             }
         }

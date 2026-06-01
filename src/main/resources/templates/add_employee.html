@@ -182,6 +182,11 @@
 
     </header>
 
+    <div th:if="${error}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-2xl shadow-sm flex items-center max-w-5xl">
+        <span class="material-symbols-outlined mr-2">error</span>
+        <span th:text="${error}"></span>
+    </div>
+
     <!-- FORM -->
     <div class="bg-white rounded-3xl shadow-sm p-8 max-w-5xl">
 

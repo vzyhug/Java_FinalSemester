@@ -330,6 +330,27 @@ public class CustomerController {
                 customerServices.getCustomerById(
                         loggedInCustomer.getCustomerId());
 
+        // 1. Kiểm tra Họ và tên không được trống
+        if (formCustomer.getFullName() == null || formCustomer.getFullName().trim().isEmpty()) {
+            model.addAttribute("customer", customer);
+            model.addAttribute("error", "Lỗi: Họ và tên không được để trống!");
+            return "personal_profile";
+        }
+
+        // 2. Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
+        if (formCustomer.getEmail() == null || formCustomer.getEmail().trim().isEmpty() || !formCustomer.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            model.addAttribute("customer", customer);
+            model.addAttribute("error", "Lỗi: Email không đúng định dạng!");
+            return "personal_profile";
+        }
+
+        // 3. Kiểm tra số điện thoại chỉ chứa các chữ số
+        if (formCustomer.getPhone() == null || formCustomer.getPhone().trim().isEmpty() || !formCustomer.getPhone().matches("^[0-9]+$")) {
+            model.addAttribute("customer", customer);
+            model.addAttribute("error", "Lỗi: Số điện thoại phải là số!");
+            return "personal_profile";
+        }
+
         // chỉ update field được sửa
         if(formCustomer.getFullName() != null)
             customer.setFullName(formCustomer.getFullName());
@@ -404,8 +425,23 @@ public class CustomerController {
 
     @PostMapping("/save")
     public String saveCustomer(@ModelAttribute("customer") Customer customer, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        // 1. Kiểm tra Họ và tên không được trống
+        if (customer.getFullName() == null || customer.getFullName().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Họ và tên không được để trống!");
+            return "redirect:/customer/add";
+        }
+        // 2. Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
+        if (customer.getEmail() == null || customer.getEmail().trim().isEmpty() || !customer.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Email không đúng định dạng!");
+            return "redirect:/customer/add";
+        }
+        // 3. Kiểm tra số điện thoại chỉ được chứa số
+        if (customer.getPhone() == null || customer.getPhone().trim().isEmpty() || !customer.getPhone().matches("^[0-9]+$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Số điện thoại phải là số!");
+            return "redirect:/customer/add";
+        }
         try {
-            // Cấp mật khẩu mặc định cho khách được Admin tạo tay
+            // Cấp mật khẩu mặc định cho khách được Admin tạo tay (phải đủ 5 ký tự để thỏa mãn validation)
             customer.setPasswordHash("123456");
             customer.setIsActive(true);
 
@@ -413,6 +449,7 @@ public class CustomerController {
             redirectAttributes.addFlashAttribute("message", "Thêm khách hàng mới thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Email có thể đã tồn tại trong hệ thống.");
+            return "redirect:/customer/add";
         }
         return "redirect:/customer";
     }
@@ -435,6 +472,21 @@ public class CustomerController {
 
     @PostMapping("/update")
     public String updateCustomer(@ModelAttribute("customer") Customer customer, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        // 1. Kiểm tra Họ và tên không được trống
+        if (customer.getFullName() == null || customer.getFullName().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Họ và tên không được để trống!");
+            return "redirect:/customer/edit/" + customer.getCustomerId();
+        }
+        // 2. Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
+        if (customer.getEmail() == null || customer.getEmail().trim().isEmpty() || !customer.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Email không đúng định dạng!");
+            return "redirect:/customer/edit/" + customer.getCustomerId();
+        }
+        // 3. Kiểm tra số điện thoại chỉ được chứa số
+        if (customer.getPhone() == null || customer.getPhone().trim().isEmpty() || !customer.getPhone().matches("^[0-9]+$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Số điện thoại phải là số!");
+            return "redirect:/customer/edit/" + customer.getCustomerId();
+        }
         try {
             // Rất quan trọng: Lấy dữ liệu cũ để không làm mất mật khẩu và ngày tạo
             Customer oldCustomer = customerServices.getCustomerById(customer.getCustomerId());
@@ -448,6 +500,7 @@ public class CustomerController {
             }
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật: " + e.getMessage());
+            return "redirect:/customer/edit/" + customer.getCustomerId();
         }
         return "redirect:/customer";
     }

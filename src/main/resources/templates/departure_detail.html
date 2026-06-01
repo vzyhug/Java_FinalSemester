@@ -6,6 +6,16 @@
 <body>
 <div id="detail-departure-content" class="p-8">
 
+    <div th:if="${error != null || param.error != null}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm flex items-center">
+        <span class="material-symbols-outlined mr-2">error</span>
+        <span th:text="${error != null ? error : param.error}"></span>
+    </div>
+
+    <div th:if="${success != null || param.success != null || message != null || param.message != null}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg shadow-sm flex items-center">
+        <span class="material-symbols-outlined mr-2">check_circle</span>
+        <span th:text="${success != null ? success : (message != null ? message : (param.success != null ? param.success : param.message))}"></span>
+    </div>
+
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
             <h1 class="text-3xl font-black text-blue-900 mb-2">Chi tiết Chuyến khởi hành</h1>
