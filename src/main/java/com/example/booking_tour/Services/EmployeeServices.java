@@ -20,9 +20,12 @@ public class EmployeeServices {
     public Employee saveEmployee(Employee employee){
         return employeeRepository.save(employee);
     }
-    //xóa nhân viên
     public void deleteEmployee(Integer id) {
-        employeeRepository.deleteById(id);
+        Employee employee = employeeRepository.findById(id).orElse(null);
+        if (employee != null) {
+            employee.setIsActive(false);
+            employeeRepository.save(employee);
+        }
     }
     //tìm theo id
     public Employee getEmployeeById(Integer id) {

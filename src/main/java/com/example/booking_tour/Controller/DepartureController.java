@@ -1,6 +1,7 @@
 package com.example.booking_tour.Controller;
 
 import com.example.booking_tour.Model.Booking;
+import com.example.booking_tour.Model.BookingPassenger;
 import com.example.booking_tour.Model.Employee;
 import com.example.booking_tour.Model.Tour;
 import com.example.booking_tour.Model.TourDeparture;
@@ -32,6 +33,9 @@ public class DepartureController {
 
     @Autowired
     private AdminServices adminService;
+
+    @Autowired
+    private com.example.booking_tour.Services.BookingServices bookingServices;
 
 // ==========================================
     // TRANG QUẢN LÝ CHUYẾN ĐI (TÌM KIẾM + LỌC THÁNG)
@@ -192,6 +196,9 @@ public class DepartureController {
         }
 
         try {
+            // Tự động đồng bộ hóa ghế trống dựa trên số vé booking thực tế để sửa dữ liệu cũ bị lệch
+            bookingServices.updateAvailableSeats(departureId);
+
             TourDeparture departure = departureService.getDepartureById(departureId);
 
             if (departure == null) {
@@ -204,6 +211,20 @@ public class DepartureController {
             // --- Đã đưa lệnh lấy Booking vào đúng vị trí ---
             List<Booking> bookings = departureService.getDepartureBookings(departureId);
             model.addAttribute("bookings", bookings);
+
+            // Lấy danh sách hành khách thực tế của các booking hoạt động
+            List<BookingPassenger> passengers = new java.util.ArrayList<>();
+            if (bookings != null) {
+                for (Booking b : bookings) {
+                    if (!"cancelled".equalsIgnoreCase(b.getStatus())) {
+                        List<BookingPassenger> bps = bookingServices.getPassengerByBookingId(b.getBookingId());
+                        if (bps != null) {
+                            passengers.addAll(bps);
+                        }
+                    }
+                }
+            }
+            model.addAttribute("passengers", passengers);
 
             return "departure_detail";
         } catch (Exception e) {
@@ -425,6 +446,13 @@ public class DepartureController {
             TourDeparture departure = departureService.getDepartureById(departureId);
 
             if (departure != null && "cancelled".equals(departure.getStatus())) {
+                // RÀNG BUỘC PHỤC HỒI: Không cho phép phục hồi nếu đã qua ngày khởi hành
+                java.time.LocalDate today = java.time.LocalDate.now();
+                if (departure.getDepartureDate() != null && departure.getDepartureDate().isBefore(today)) {
+                    redirectAttributes.addFlashAttribute("error", "Lỗi: Chuyến đi này đã qua ngày khởi hành (" + departure.getDepartureDate().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "), không thể phục hồi bán!");
+                    return "redirect:/admin/departures/" + departureId;
+                }
+
                 // Logic thông minh: Kiểm tra xem còn chỗ không để set trạng thái chuẩn
                 if (departure.getAvailableSeats() > 0) {
                     departure.setStatus("open"); // Còn chỗ thì mở bán lại
@@ -433,12 +461,12 @@ public class DepartureController {
                 }
 
                 departureService.saveDeparture(departure); // Lưu xuống DB
-                redirectAttributes.addAttribute("success", "Đã phục hồi chuyến đi thành công!");
+                redirectAttributes.addFlashAttribute("success", "Đã phục hồi chuyến đi thành công!");
             }
             return "redirect:/admin/departures/" + departureId;
 
         } catch (Exception e) {
-            redirectAttributes.addAttribute("error", "Lỗi phục hồi: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Lỗi phục hồi: " + e.getMessage());
             return "redirect:/admin/departures/" + departureId;
         }
     }

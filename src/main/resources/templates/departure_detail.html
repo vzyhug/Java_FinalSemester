@@ -35,11 +35,20 @@
                class="bg-red-50 text-red-600 px-4 py-2 rounded-lg font-bold hover:bg-red-100 transition flex items-center">
                 <span class="material-symbols-outlined text-sm mr-1">block</span> Hủy chuyến
             </a>
-            <a th:if="${dep.status == 'cancelled'}" th:href="@{/admin/departures/restore/{id}(id=${dep.departureId})}"
+            <!-- Nút Phục hồi nếu còn trong tương lai/ngày hôm nay -->
+            <a th:if="${dep.status == 'cancelled' && (dep.departureDate == null || !dep.departureDate.isBefore(T(java.time.LocalDate).now()))}"
+               th:href="@{/admin/departures/restore/{id}(id=${dep.departureId})}"
                onclick="return confirm('Bạn có chắc chắn muốn mở bán lại chuyến đi này?')"
                class="bg-green-50 text-green-700 px-4 py-2 rounded-lg font-bold hover:bg-green-100 transition flex items-center">
                 <span class="material-symbols-outlined text-sm mr-1">restore_from_trash</span> Phục hồi
             </a>
+
+            <!-- Phiên bản Vô hiệu hóa (Đã qua ngày khởi hành) -->
+            <span th:if="${dep.status == 'cancelled' && dep.departureDate != null && dep.departureDate.isBefore(T(java.time.LocalDate).now())}"
+                  class="bg-slate-100 text-slate-400 px-4 py-2 rounded-lg font-bold flex items-center cursor-not-allowed border border-slate-200"
+                  title="Chuyến đi đã qua ngày khởi hành, không thể phục hồi bán">
+                <span class="material-symbols-outlined text-sm mr-1">history</span> Quá hạn phục hồi
+            </span>
             <a th:href="@{/admin/departures}" class="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg font-bold hover:bg-slate-300 transition flex items-center">
                 <span class="material-symbols-outlined text-sm mr-1">arrow_back</span> Trở về
             </a>
@@ -101,18 +110,39 @@
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                <span class="material-symbols-outlined text-blue-900">group</span> Danh sách khách hàng đã đặt
-            </h2>
+        <!-- Modern Tab Header -->
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex flex-wrap items-center gap-4">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-blue-900">group</span> Danh sách khách hàng
+                </h2>
+                <!-- Sleek Tab Switcher -->
+                <div class="flex bg-slate-200/60 p-1 rounded-xl text-sm font-semibold border border-slate-200">
+                    <button id="btn-tab-bookings" type="button" onclick="switchTab('bookings')" class="px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 bg-white text-blue-955 shadow-sm border border-slate-100/50">
+                        <span class="material-symbols-outlined text-base">receipt_long</span>
+                        Đơn đặt tour
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-bold" th:text="${bookings != null ? #lists.size(bookings) : 0}">0</span>
+                    </button>
+                    <button id="btn-tab-passengers" type="button" onclick="switchTab('passengers')" class="px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
+                        <span class="material-symbols-outlined text-base">person</span>
+                        Hành khách thực tế
+                        <span class="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-bold animate-pulse" th:text="${passengers != null ? #lists.size(passengers) : 0}">0</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-xs text-slate-500 font-medium">
+                * Tổng cộng <span class="font-bold text-blue-600" th:text="${passengers != null ? #lists.size(passengers) : 0}">0</span> vé từ <span class="font-bold text-blue-600" th:text="${bookings != null ? #lists.size(bookings) : 0}">0</span> lượt đặt.
+            </div>
         </div>
 
-        <div class="overflow-x-auto">
+        <!-- Tab Content 1: Bookings List -->
+        <div id="tab-bookings-content" class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
                 <tr class="bg-white text-slate-500 text-sm border-b">
                     <th class="py-4 px-6 font-bold">Mã Đặt</th>
-                    <th class="py-4 px-6 font-bold">Khách hàng</th>
+                    <th class="py-4 px-6 font-bold">Khách hàng liên hệ</th>
                     <th class="py-4 px-6 font-bold">Số điện thoại</th>
                     <th class="py-4 px-6 font-bold text-center">Số vé (NL/TE)</th>
                     <th class="py-4 px-6 font-bold text-right">Tổng tiền</th>
@@ -149,7 +179,72 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Tab Content 2: Passengers List -->
+        <div id="tab-passengers-content" class="overflow-x-auto hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-white text-slate-500 text-sm border-b">
+                    <th class="py-4 px-6 font-bold">STT</th>
+                    <th class="py-4 px-6 font-bold">Tên Hành Khách</th>
+                    <th class="py-4 px-6 font-bold">Loại Vé</th>
+                    <th class="py-4 px-6 font-bold">Số CMND/CCCD</th>
+                    <th class="py-4 px-6 font-bold">Ngày sinh</th>
+                    <th class="py-4 px-6 font-bold">Đơn đặt liên kết</th>
+                    <th class="py-4 px-6 font-bold">Người đặt liên hệ</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${passengers != null}" th:each="p, iter : ${passengers}" class="border-b border-slate-50 hover:bg-slate-50 transition">
+                    <td class="py-3 px-6 text-slate-500 font-medium" th:text="${iter.count}">1</td>
+                    <td class="py-3 px-6 font-bold text-slate-800" th:text="${p.fullName}">Tên hành khách</td>
+                    <td class="py-3 px-6">
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold"
+                              th:classappend="${p.passengerType != null && p.passengerType.name() == 'adult' ? 'bg-indigo-100 text-indigo-700' : 'bg-teal-100 text-teal-700'}"
+                              th:text="${p.passengerType != null && p.passengerType.name() == 'adult' ? 'Người lớn' : 'Trẻ em'}">
+                            Người lớn
+                        </span>
+                    </td>
+                    <td class="py-3 px-6 text-slate-600 font-mono" th:text="${p.idCard != null && p.idCard != '' ? p.idCard : '--'}">--</td>
+                    <td class="py-3 px-6 text-slate-600" th:text="${p.dateOfBirth != null ? #temporals.format(p.dateOfBirth, 'dd/MM/yyyy') : '--'}">--</td>
+                    <td class="py-3 px-6 font-semibold text-blue-900" th:text="${p.booking != null ? '#BKG' + p.booking.bookingId : '--'}">#BKG0</td>
+                    <td class="py-3 px-6 text-slate-600 font-medium" th:text="${p.booking != null && p.booking.customer != null ? p.booking.customer.fullName : 'Khách vãng lai'}">Liên hệ</td>
+                </tr>
+
+                <tr th:if="${passengers == null or #lists.isEmpty(passengers)}">
+                    <td colspan="7" class="text-center py-10">
+                        <span class="material-symbols-outlined text-4xl text-slate-300 block mb-2">person_off</span>
+                        <p class="text-slate-500 font-medium">Chưa có hành khách nào đăng ký cho chuyến đi này.</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <!-- Client-side Tab Switching Script -->
+    <script>
+        function switchTab(tab) {
+            const btnBookings = document.getElementById('btn-tab-bookings');
+            const btnPassengers = document.getElementById('btn-tab-passengers');
+            const contentBookings = document.getElementById('tab-bookings-content');
+            const contentPassengers = document.getElementById('tab-passengers-content');
+
+            if (tab === 'bookings') {
+                btnBookings.className = "px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 bg-white text-blue-950 shadow-sm border border-slate-100/50 font-semibold";
+                btnPassengers.className = "px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 text-slate-600 hover:text-slate-900 font-semibold";
+                
+                contentBookings.classList.remove('hidden');
+                contentPassengers.classList.add('hidden');
+            } else {
+                btnBookings.className = "px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 text-slate-600 hover:text-slate-900 font-semibold";
+                btnPassengers.className = "px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 bg-white text-blue-955 shadow-sm border border-slate-100/50 font-semibold";
+                
+                contentBookings.classList.add('hidden');
+                contentPassengers.classList.remove('hidden');
+            }
+        }
+    </script>
 
 </div>
 </body>
