@@ -106,7 +106,10 @@ public class LocationManagementController {
 //        return "admin_location_management";
 //    }
 
-    @GetMapping("/location_management")
+    // =========================================================================
+    // QUẢN LÝ ĐỊA ĐIỂM & DANH SÁCH TỈNH THÀNH (Location & Province Management)
+    // =========================================================================
+    @GetMapping({"/location_management", "/province_list"})
     public String locationManagement(
             Model model,
             @RequestParam(defaultValue = "") String keyword,
