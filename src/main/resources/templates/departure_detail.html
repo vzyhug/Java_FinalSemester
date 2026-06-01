@@ -133,8 +133,8 @@
                     <td class="py-3 px-6">
                             <span class="px-2 py-1 rounded-md text-xs font-bold"
                                   th:if="${b.status != null}"
-                                  th:classappend="${b.status == 'paid' ? 'bg-green-100 text-green-700' : (b.status == 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700')}"
-                                  th:text="${b.status == 'paid' ? 'Đã thu tiền' : (b.status == 'pending' ? 'Chờ thanh toán' : 'Đã hủy')}">
+                                  th:classappend="${b.status == 'confirmed' || b.status == 'paid' || b.status == 'completed' ? 'bg-green-100 text-green-700' : (b.status == 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700')}"
+                                  th:text="${b.status == 'confirmed' || b.status == 'paid' ? 'Đã thu tiền' : (b.status == 'completed' ? 'Hoàn thành' : (b.status == 'pending' ? 'Chờ thanh toán' : 'Đã hủy'))}">
                             </span>
                         <span th:if="${b.status == null}" class="text-slate-400 italic text-xs">Chưa có DL</span>
                     </td>

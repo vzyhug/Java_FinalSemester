@@ -223,49 +223,6 @@
 
       </div>
 
-      <!-- FILTER & ACTIONS BAR -->
-      <div class="px-8 pb-6 flex flex-wrap items-center gap-4 border-b border-slate-100">
-        
-        <!-- Tab Group Lọc trạng thái -->
-        <div class="flex flex-wrap items-center gap-2">
-          <!-- Lọc Tất cả -->
-          <a th:href="@{/payment_management(keyword=${keyword})}"
-             th:classappend="${status == null || status == '' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}"
-             class="px-5 py-2.5 rounded-full text-xs font-bold transition duration-200 flex items-center gap-2 shadow-sm">
-            <span class="material-symbols-outlined text-base">payments</span>
-            <span>Tất cả giao dịch</span>
-          </a>
-
-          <!-- Lọc Chờ thanh toán -->
-          <a th:href="@{/payment_management(status='pending', keyword=${keyword})}"
-             th:classappend="${status == 'pending' ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}"
-             class="px-5 py-2.5 rounded-full text-xs font-bold transition duration-200 flex items-center gap-2 shadow-sm">
-            <span class="material-symbols-outlined text-base">pending_actions</span>
-            <span>Chờ thanh toán</span>
-            <span class="bg-white/20 text-[10px] px-2 py-0.5 rounded-full font-extrabold" th:text="${pendingCount}">0</span>
-          </a>
-
-          <!-- Lọc Đã thanh toán -->
-          <a th:href="@{/payment_management(status='paid', keyword=${keyword})}"
-             th:classappend="${status == 'paid' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}"
-             class="px-5 py-2.5 rounded-full text-xs font-bold transition duration-200 flex items-center gap-2 shadow-sm">
-            <span class="material-symbols-outlined text-base">verified</span>
-            <span>Đã thanh toán</span>
-            <span class="bg-white/20 text-[10px] px-2 py-0.5 rounded-full font-extrabold" th:text="${paidCount}">0</span>
-          </a>
-
-          <!-- Lọc Đã hủy -->
-          <a th:href="@{/payment_management(status='cancelled', keyword=${keyword})}"
-             th:classappend="${status == 'cancelled' ? 'bg-red-500 text-white shadow-md shadow-red-500/20' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}"
-             class="px-5 py-2.5 rounded-full text-xs font-bold transition duration-200 flex items-center gap-2 shadow-sm">
-            <span class="material-symbols-outlined text-base">cancel</span>
-            <span>Đã hủy</span>
-            <span class="bg-white/20 text-[10px] px-2 py-0.5 rounded-full font-extrabold" th:text="${cancelCount}">0</span>
-          </a>
-        </div>
-
-      </div>
-
       <!-- TABLE -->
       <div class="overflow-x-auto">
 
