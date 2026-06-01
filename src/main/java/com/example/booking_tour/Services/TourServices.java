@@ -131,7 +131,7 @@ public class TourServices
         {
             durationDay=30;
         }
-        if(categoriesId.size()!=0 && categoriesId!=null)
+        if(categoriesId!=null && categoriesId.size()!=0 )
         {
             listTourFilter=repo.findByCategory_CategoryIdIn(categoriesId);
 
