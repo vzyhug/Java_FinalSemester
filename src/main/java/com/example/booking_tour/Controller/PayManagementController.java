@@ -30,92 +30,119 @@ public class PayManagementController {
     private EmployeeServices employeeService;
 
 
+    // =========================================================================
+    // QUẢN LÝ GIAO DỊCH & HÓA ĐƠN (Payment/Transaction Management)
+    // - Hỗ trợ lọc danh sách hóa đơn theo trạng thái: đã thanh toán (paid), chờ thanh toán (pending), đã hủy (cancelled).
+    // - Hỗ trợ tìm kiếm theo Mã hóa đơn (billNumber).
+    // - Thống kê động tổng doanh thu thực tế và tổng số lượng theo từng trạng thái.
+    // - Thực hiện lọc và phân trang trong bộ nhớ (In-memory filtering & pagination) để đảm bảo đếm số lượng chính xác 100%.
+    // =========================================================================
     @GetMapping("/payment_management")
     public String paymentManagement(
             Model model,
             @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(defaultValue = "0") int page
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(value = "status", required = false) String status
     ) {
 
         model.addAttribute("admin", employeeService.getCurrentAdmin());
-        Pageable pageable = PageRequest.of(page, 10);
 
-        Page<Bill> billPage = keyword.isEmpty()
-                ? billRepository.findAll(pageable)
-                : billRepository.findByBillNumberContainingIgnoreCase(keyword, pageable);
+        // Sắp xếp các hóa đơn mới nhất lên đầu tiên
+        org.springframework.data.domain.Sort sort = org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "billDate");
+        
+        // 1. Lấy toàn bộ danh sách hóa đơn khớp với từ khóa tìm kiếm (chưa phân trang để đếm trạng thái chính xác)
+        java.util.List<Bill> allBills = keyword.isEmpty()
+                ? billRepository.findAll(sort)
+                : billRepository.findByBillNumberContainingIgnoreCase(keyword, sort);
 
-        // =========================
-        // CHECK PAYMENT STATUS
-        // =========================
+        // Map lưu trạng thái hiển thị của từng Bill ID
         Map<Integer, String> paymentStatus = new HashMap<>();
 
+        // Các biến đếm số lượng theo trạng thái trên toàn bộ dữ liệu khớp từ khóa
         int paidCount = 0;
         int pendingCount = 0;
         int cancelCount = 0;
         int completedCount = 0;
 
-        for (Bill bill : billPage.getContent()) {
+        // Danh sách sau khi đã lọc theo Trạng thái chọn
+        java.util.List<Bill> filteredBills = new java.util.ArrayList<>();
 
-            String status = "pending";
+        // 2. Duyệt qua toàn bộ hóa đơn để xác định trạng thái và đếm số lượng thống kê
+        for (Bill bill : allBills) {
+            String billStatus = "pending";
 
             if (bill.getBooking() != null) {
+                String bookingStatus = bill.getBooking().getStatus();
 
-                String bookingStatus =
-                        bill.getBooking().getStatus();
-
-                // Đã hủy
+                // Trạng thái Đã hủy
                 if ("cancelled".equalsIgnoreCase(bookingStatus)) {
-
-                    status = "cancelled";
+                    billStatus = "cancelled";
                     cancelCount++;
                 }
-
-                // Hoàn thành
+                // Trạng thái Hoàn thành
                 else if ("completed".equalsIgnoreCase(bookingStatus)) {
-
-                    status = "completed";
+                    billStatus = "completed";
                     completedCount++;
                 }
-
-                // Có payment => đã thanh toán
+                // Đã thanh toán (nếu có thông tin payment trong DB)
                 else {
-
-                    boolean paid =
-                            paymentRepository.existsByBooking_BookingId(
-                                    bill.getBooking().getBookingId()
-                            );
-
+                    boolean paid = paymentRepository.existsByBooking_BookingId(
+                            bill.getBooking().getBookingId()
+                    );
                     if (paid) {
-
-                        status = "paid";
+                        billStatus = "paid";
                         paidCount++;
-
                     } else {
-
                         pendingCount++;
                     }
                 }
-
             } else {
-
                 pendingCount++;
             }
 
-            paymentStatus.put(
-                    bill.getBillId(),
-                    status
-            );
+            paymentStatus.put(bill.getBillId(), billStatus);
+
+            // Thực hiện lọc theo trạng thái nếu người dùng yêu cầu lọc cụ thể
+            if (status == null || status.trim().isEmpty() || status.equalsIgnoreCase(billStatus)) {
+                filteredBills.add(bill);
+            }
         }
 
-        // Tổng doanh thu
+        // 3. Thực hiện phân trang trong bộ nhớ trên danh sách đã lọc
+        int pageSize = 10;
+        int totalBills = filteredBills.size();
+        int totalPages = (int) Math.ceil((double) totalBills / pageSize);
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
+
+        // Kiểm tra giới hạn chỉ số trang
+        if (page < 0) {
+            page = 0;
+        }
+        if (page >= totalPages) {
+            page = totalPages - 1;
+        }
+
+        int start = page * pageSize;
+        int end = Math.min(start + pageSize, totalBills);
+
+        java.util.List<Bill> paginatedBills = new java.util.ArrayList<>();
+        if (start < totalBills) {
+            paginatedBills = filteredBills.subList(start, end);
+        }
+
+        // 4. Lấy tổng doanh thu thực tế
         BigDecimal totalRevenue = billRepository.getTotalRevenue();
 
+        // 5. Đổ toàn bộ dữ liệu ra Model sang phía giao diện HTML
         model.addAttribute("paymentStatus", paymentStatus);
         model.addAttribute("totalRevenue", totalRevenue);
-        model.addAttribute("billList", billPage.getContent());
+        model.addAttribute("billList", paginatedBills);
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", billPage.getTotalPages());
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("status", status); // Truyền trạng thái lọc hiện tại để giữ trạng thái giao diện
 
         model.addAttribute("paidCount", paidCount);
         model.addAttribute("pendingCount", pendingCount);
