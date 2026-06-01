@@ -31,9 +31,50 @@ public class BookingServices {
     @Autowired
     TourDepartureServices tdServices;
 
+    @Autowired
+    private com.example.booking_tour.Repository.TourDepartureRepository tourDepartureRepository;
+
+    // =========================================================================
+    // CẬP NHẬT SỐ CHỖ DYNAMIC (Recalculate available seats based on active bookings)
+    // =========================================================================
+    public void updateAvailableSeats(Integer departureId) {
+        if (departureId == null) return;
+        TourDeparture departure = tdServices.getTourDepartureById(departureId);
+        if (departure != null) {
+            List<Booking> bookings = repo.findByDeparture_DepartureId(departureId);
+            int bookedSeats = 0;
+            if (bookings != null) {
+                for (Booking b : bookings) {
+                    if (!"cancelled".equalsIgnoreCase(b.getStatus())) {
+                        int adults = b.getTotalAdults() != null ? b.getTotalAdults() : 0;
+                        int children = b.getTotalChildren() != null ? b.getTotalChildren() : 0;
+                        bookedSeats += (adults + children);
+                    }
+                }
+            }
+            int available = departure.getMaxSeats() - bookedSeats;
+            if (available < 0) {
+                available = 0;
+            }
+            departure.setAvailableSeats(available);
+
+            // Cập nhật trạng thái thông minh cho Chuyến khởi hành
+            if (available <= 0) {
+                departure.setStatus("full");
+            } else if ("full".equals(departure.getStatus())) {
+                departure.setStatus("open");
+            }
+
+            tourDepartureRepository.save(departure);
+        }
+    }
+
     //them booking vao danh sach
     public void addBooking(Booking booking){
         repo.save(booking);
+        if (booking.getDeparture() != null) {
+            updateAvailableSeats(booking.getDeparture().getDepartureId());
+        }
     }
 
     //them danh sach hanh khach
@@ -70,10 +111,13 @@ public class BookingServices {
     public int cancelBooking(Integer bookingId)
     {
         Booking booking=repo.findById(bookingId).orElse(null);
-        if(booking!=null && booking.getStatus().equals("Pending"))
+        if(booking!=null && "Pending".equalsIgnoreCase(booking.getStatus()))
         {
             booking.setStatus("cancelled");
             repo.save(booking);
+            if (booking.getDeparture() != null) {
+                updateAvailableSeats(booking.getDeparture().getDepartureId());
+            }
             return 1;
         }
         return 0;
@@ -95,6 +139,11 @@ public class BookingServices {
         booking.setTotalAmount((BigDecimal) stage1.get("totalAll"));
         booking.setStatus("confirmed");
         repo.save(booking);
+
+        // Cập nhật số chỗ sau khi booking được tạo thành công
+        if (departure != null) {
+            updateAvailableSeats(departure.getDepartureId());
+        }
 
         // 2. Save Passengers
         for (BookingPassenger p : passengers) {

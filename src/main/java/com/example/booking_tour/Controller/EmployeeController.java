@@ -188,9 +188,22 @@ public class EmployeeController {
 
     // ================= DELETE =================
     @GetMapping("/delete/{id}")
-    public String deleteEmployee(@PathVariable Integer id) {
+    public String deleteEmployee(
+            @PathVariable Integer id,
+            RedirectAttributes redirectAttributes) {
 
-        employeeService.deleteEmployee(id);
+        try {
+            // Không được tự ý vô hiệu hóa tài khoản Quản trị viên hệ thống gốc
+            if (id == 1) {
+                redirectAttributes.addFlashAttribute("error", "Lỗi: Không thể vô hiệu hóa tài khoản Quản trị viên hệ thống gốc!");
+                return "redirect:/employees";
+            }
+
+            employeeService.deleteEmployee(id);
+            redirectAttributes.addFlashAttribute("success", "Vô hiệu hóa hoạt động của nhân viên thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi thực hiện xóa nhân viên: " + e.getMessage());
+        }
 
         return "redirect:/employees";
     }
