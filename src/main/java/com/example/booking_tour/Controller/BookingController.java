@@ -125,7 +125,8 @@ public class BookingController {
                              @RequestParam("passengerBirthdays") List<String> birthdays,
                              @RequestParam("passengerIds") List<String> idCards,
                              @RequestParam("passengerTypes") List<String> types,
-                             HttpSession session) {
+                             HttpSession session,
+                             Model model) {
 
         List<BookingPassenger> passengerList = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
@@ -139,6 +140,23 @@ public class BookingController {
             passengerList.add(passenger);
         }
         session.setAttribute("bookingPassengers", passengerList);
+        Map<String, Object> bookingStage1 = (Map<String, Object>) session.getAttribute("bookingStage1");
+
+        if (bookingStage1 == null) {
+            return "redirect:/";
+        }
+        Integer departureId = (Integer) bookingStage1.get("departureId");
+        TourDeparture departure = TDServices.getTourDepartureById(departureId);
+        Tour tour = departure.getTour();
+
+        model.addAttribute("departure", departure);
+        model.addAttribute("tour", tour);
+        model.addAttribute("adultCount", bookingStage1.get("adultCount"));
+        model.addAttribute("childCount", bookingStage1.get("childCount"));
+        model.addAttribute("adultTotal", bookingStage1.get("adultTotal"));
+        model.addAttribute("childTotal", bookingStage1.get("childTotal"));
+        model.addAttribute("totalAll", bookingStage1.get("totalAll"));
+
         return "payments_invoices";
     }
 }

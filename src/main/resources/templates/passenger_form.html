@@ -120,11 +120,11 @@
                         <div class="border-t border-surface-container pt-4 space-y-2 text-xs">
                             <div class="flex justify-between">
                                 <span class="text-on-surface-variant" th:text="|Người lớn (x${adultCount})|"></span>
-                                <span class="font-semibold" th:text="${#numbers.formatDecimal(adultTotal, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                                <span class="font-semibold" th:text="|${#numbers.formatDecimal(adultTotal, 0, 'COMMA', 0, 'POINT')} VNĐ|"></span>
                             </div>
                             <div class="flex justify-between" th:if="${childCount > 0}">
                                 <span class="text-on-surface-variant" th:text="|Trẻ em (x${childCount})|"></span>
-                                <span class="font-semibold" th:text="${#numbers.formatDecimal(childTotal, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                                <span class="font-semibold" th:text="|${#numbers.formatDecimal(childTotal, 0, 'COMMA', 0, 'POINT')} VNĐ|"></span>
                             </div>
                             <div class="flex justify-between items-end border-t border-surface-container pt-3 mt-2">
                                 <span class="font-bold text-sm text-on-surface">Tổng cộng</span>
