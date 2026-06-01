@@ -78,7 +78,7 @@ public class CustomerController {
     @GetMapping("logout")
     public String logout(HttpSession session) {
         session.removeAttribute("loggedInCustomer");
-        return "redirect:/home";
+        return "redirect:/";
     }
 
     // Hiển thị trang đăng ký cho khách hàng

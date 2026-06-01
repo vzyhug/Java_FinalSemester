@@ -99,14 +99,14 @@
 <!-- Top Navigation Bar -->
 <nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm dark:shadow-none">
     <div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
-        <a href="/" class="text-2xl font-black text-blue-900 dark:text-white italic font-['Be_Vietnam_Pro'] tracking-tight hover:opacity-80 transition-opacity decoration-transparent">
+        <a th:href="@{/}" class="text-2xl font-black text-blue-900 dark:text-white italic font-['Be_Vietnam_Pro'] tracking-tight hover:opacity-80 transition-opacity decoration-transparent">
             Vietnam Expeditions
         </a>
         <div class="hidden md:flex items-center gap-8">
-            <a class="text-blue-800 dark:text-blue-300 border-b-2 border-orange-700 dark:border-orange-500 pb-1 font-['Be_Vietnam_Pro'] font-bold tracking-tight" href="/home">Điểm đến</a>
-            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" href="/tour">Tour</a>
-            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" href="@{/offer}">Ưu đãi</a>
-            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" href="@{/introduce}">Giới thiệu</a>
+            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" th:href="@{/}">Điểm đến</a>
+            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" th:href="@{/tour}">Tour</a>
+            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" href="#">Ưu đãi</a>
+            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" href="#">Giới thiệu</a>
         </div>
         <div class="flex items-center gap-4">
             <th:block th:if="${session.loggedInCustomer != null}">

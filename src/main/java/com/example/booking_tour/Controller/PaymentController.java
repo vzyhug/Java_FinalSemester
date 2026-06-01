@@ -72,7 +72,7 @@ public class PaymentController {
                 session.removeAttribute("TEMP_BOOKING");
                 
                 model.addAttribute("message", "Thanh toán thành công! Chuyến đi của bạn đã được xác nhận.");
-                return "redirect:/home"; // Tạm thời redirect về trang chủ, bạn có thể tạo view riêng
+                return "redirect:/"; // Tạm thời redirect về trang chủ, bạn có thể tạo view riêng
             } else {
                 model.addAttribute("error", "Không tìm thấy thông tin đặt tour trong phiên giao dịch.");
             }
@@ -81,6 +81,6 @@ public class PaymentController {
             model.addAttribute("error", "Thanh toán thất bại hoặc đã bị hủy.");
         }
         
-        return "redirect:/home"; // Có thể trả về trang báo lỗi riêng
+        return "redirect:/"; // Có thể trả về trang báo lỗi riêng
     }
 }
