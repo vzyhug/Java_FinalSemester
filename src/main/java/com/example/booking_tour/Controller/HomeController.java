@@ -12,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import com.example.booking_tour.Model.Employee;
+import com.example.booking_tour.Model.Customer;
+import com.example.booking_tour.Repository.EmployeeRepository;
+import com.example.booking_tour.Services.CustomerServices;
+import jakarta.servlet.http.HttpSession;
 
 
 import java.time.LocalDate;
@@ -37,12 +40,51 @@ public class HomeController {
     @Autowired
     BookingServices BService;
 
+    @Autowired
+    EmployeeRepository employeeRepository;
+
+    @Autowired
+    CustomerServices customerServices;
+
     @GetMapping("")
     public String home(Model model)
     {
         List<Tour> listTour=TService.get4Tours();
         model.addAttribute("listTours",listTour);
         return "home";
+    }
+
+    @GetMapping("/login")
+    public String loginForm(Model model) {
+        return "login_form";
+    }
+
+    @PostMapping("/login")
+    public String handleLogin(@RequestParam("usernameOrEmail") String usernameOrEmail,
+                               @RequestParam("password") String password,
+                               HttpSession session,
+                               Model model) {
+        // 1. Thử đăng nhập Nhân viên / Admin trước
+        Employee employee = employeeRepository.findByUsername(usernameOrEmail);
+        if (employee != null && employee.getPasswordHash().equals(password) && employee.getIsActive()) {
+            session.setAttribute("loggedInAdmin", employee);
+            if (employee.getRole().getRoleName().equalsIgnoreCase("Admin")) {
+                return "redirect:/admin/dashboard";
+            } else {
+                return "redirect:/";
+            }
+        }
+
+        // 2. Thử đăng nhập Khách hàng
+        Customer customer = customerServices.login(usernameOrEmail, password);
+        if (customer != null) {
+            session.setAttribute("loggedInCustomer", customer);
+            return "redirect:/";
+        }
+
+        // 3. Nếu sai tài khoản/mật khẩu
+        model.addAttribute("error", "Sai tài khoản hoặc mật khẩu!");
+        return "login_form";
     }
 
 

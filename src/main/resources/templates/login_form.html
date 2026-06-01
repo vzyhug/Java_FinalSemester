@@ -44,6 +44,17 @@
             border-color: #2D318C;
             box-shadow: 0 0 0 0.25rem rgba(45, 49, 140, 0.1);
         }
+        .nav-pills .nav-link {
+            color: #6c757d;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #2D318C !important;
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body>
@@ -56,22 +67,21 @@
                     <a th:href="@{/}" style="text-decoration: none;"><h2 style="color: #2D318C; font-weight: 700;">Vietnam Expeditions</h2></a>
                     <p class="text-muted">Chào mừng bạn trở lại!</p>
                 </div>
-                <form th:action="${isAdmin == true} ? @{/auth/login} : @{/customer/login}" method="post">
+
+                <form th:action="@{/login}" method="post">
 
                     <div th:if="${error}" class="alert alert-danger text-center small p-2 mb-3">
                         <span th:text="${error}"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label small fw-bold" th:text="${isAdmin == true} ? 'Tên đăng nhập Nhân viên' : 'Email Khách hàng'">Email hoặc Tên đăng nhập</label>
+                        <label class="form-label small fw-bold">Tên đăng nhập hoặc Email</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
-
                             <input type="text"
-
-                                   th:name="${isAdmin == true} ? 'username' : 'email'"
+                                   name="usernameOrEmail"
                                    class="form-control"
-                                   th:placeholder="${isAdmin == true} ? 'Nhập tài khoản admin...' : 'Nhập email của bạn'"
+                                   placeholder="Nhập email hoặc tài khoản..."
                                    required>
                         </div>
                     </div>
@@ -93,8 +103,7 @@
 
                     <button type="submit" class="btn btn-primary-custom w-100 text-white mb-3">Đăng nhập</button>
 
-
-                    <div class="text-center" th:if="${isAdmin != true}">
+                    <div class="text-center" id="registerBlock">
                         <p class="small mb-0">Bạn chưa có tài khoản?
                             <a th:href="@{/customer/registerForm}" class="fw-bold text-decoration-none" style="color: #2D318C;">Đăng ký ngay</a>
                         </p>
@@ -110,48 +119,7 @@
      ============================================== -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Kiểm tra xem đã đăng nhập chưa, nếu có thì ẩn form
         checkSession();
-
-        const form = document.querySelector('form');
-        if (form) {
-            form.addEventListener('submit', async (e) => {
-                // Nếu là Khách hàng thì dùng API mới, nếu là Admin thì giữ nguyên
-                const actionUrl = form.getAttribute('action');
-                if (actionUrl.includes('/customer/login')) {
-                    e.preventDefault(); // Ngừng load trang để dùng Ajax
-                    const usernameVal = document.querySelector('input[type="text"]').value;
-                    const passVal = document.querySelector('input[name="password"]').value;
-
-                    try {
-                        const response = await fetch('/api/auth/login', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ username: usernameVal, password: passVal })
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json(); 
-                            
-                            // 1. Lưu JWT
-                            localStorage.setItem('jwtToken', data.token);
-                            
-                            // 2. Tính thời hạn: Hiện tại + 20 phút (20 * 60 * 1000 = 1200000 ms)
-                            const expiresIn20Mins = new Date().getTime() + 1200000;
-                            localStorage.setItem('tokenExpiration', expiresIn20Mins);
-                            
-                            alert('Đăng nhập thành công!');
-                            window.location.href = '/'; // Chuyển về trang chủ
-                        } else {
-                            alert('Sai tài khoản hoặc mật khẩu!');
-                        }
-                    } catch (err) {
-                        console.error(err);
-                        form.submit(); // Lỗi API thì submit truyền thống
-                    }
-                }
-            });
-        }
     });
 
     // Hàm tự động check hạn 20 phút mỗi khi vào trang web (có thể bỏ vào thẻ <head> của file layout chung)

@@ -19,8 +19,7 @@ public class AuthenticationController {
 
     @GetMapping("/loginForm")
     public String loginForm(Model model) {
-        model.addAttribute("isAdmin", true);
-        return "login_form";
+        return "redirect:/login?admin=true";
     }
 
     @PostMapping("/login")

@@ -174,7 +174,7 @@
                 // Token CÒN HẠN!
                 // Kiểm tra xem Server có lỡ quên mình chưa (do tắt app chạy lại)
                 // Bằng cách tìm xem giao diện có đang hiện nút "Đăng nhập" không
-                const loginBtn = document.querySelector('a[href*="/customer/loginForm"]');
+                const loginBtn = document.querySelector('a[href*="/login"]');
                 if (loginBtn) {
                     console.log("Server mất Session, đang dùng JWT để phục hồi...");
                     try {
