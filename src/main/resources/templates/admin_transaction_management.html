@@ -21,15 +21,8 @@
       </p>
     </div>
 
-    <!-- SEARCH & EXPLORE -->
+    <!-- SEARCH -->
     <div class="flex items-center gap-4">
-
-      <!-- Nút mở Bản đồ Giao diện -->
-      <button onclick="openSitemapModal()"
-              class="bg-gradient-to-r from-blue-900 to-indigo-900 hover:from-blue-800 hover:to-indigo-800 text-white font-black px-5 py-3 rounded-full text-xs transition duration-200 flex items-center gap-2 shadow-md shadow-blue-900/10">
-        <span class="material-symbols-outlined text-base">explore</span>
-        <span>Khám phá Giao diện (Sitemap)</span>
-      </button>
 
       <form th:action="@{/payment_management}"
             method="get"
@@ -231,7 +224,7 @@
       </div>
 
       <!-- FILTER & ACTIONS BAR -->
-      <div class="px-8 pb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100">
+      <div class="px-8 pb-6 flex flex-wrap items-center gap-4 border-b border-slate-100">
         
         <!-- Tab Group Lọc trạng thái -->
         <div class="flex flex-wrap items-center gap-2">
@@ -270,13 +263,6 @@
             <span class="bg-white/20 text-[10px] px-2 py-0.5 rounded-full font-extrabold" th:text="${cancelCount}">0</span>
           </a>
         </div>
-
-        <!-- Nút mở Bản đồ Giao diện -->
-        <button onclick="openSitemapModal()"
-                class="bg-blue-900 hover:bg-blue-800 text-white font-black px-6 py-2.5 rounded-full text-xs transition duration-200 flex items-center gap-2 shadow-md shadow-blue-900/10">
-          <span class="material-symbols-outlined text-base">explore</span>
-          <span>Khám phá Giao diện (Sitemap)</span>
-        </button>
 
       </div>
 
@@ -556,202 +542,6 @@
     </div>
 
   </section>
-
-  <!-- SITEMAP MODAL (BẢN ĐỒ GIAO DIỆN) -->
-  <div id="sitemapModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300">
-    <div class="bg-white rounded-[2.5rem] w-full max-w-4xl max-h-[85vh] overflow-hidden shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" id="sitemapModalContent">
-      
-      <!-- Modal Header -->
-      <div class="p-8 border-b flex justify-between items-center bg-gradient-to-r from-blue-900 to-indigo-900 text-white">
-        <div>
-          <h3 class="text-2xl font-black flex items-center gap-3">
-            <span class="material-symbols-outlined text-3xl">explore</span>
-            BẢN ĐỒ HỆ THỐNG GIAO DIỆN
-          </h3>
-          <p class="text-blue-100 text-xs mt-1">Truy cập nhanh tất cả các trang, chức năng quản trị và khách hàng</p>
-        </div>
-        <button onclick="closeSitemapModal()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition">
-          <span class="material-symbols-outlined">close</span>
-        </button>
-      </div>
-
-      <!-- Modal Body (Grid of Interfaces) -->
-      <div class="p-8 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 flex-1">
-        
-        <!-- Nhóm Admin -->
-        <div class="space-y-4 md:col-span-2">
-          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
-            Phân hệ Quản trị (Admin Portal)
-          </h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
-            <a th:href="@{/admin/dashboard}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center group-hover:bg-blue-900 group-hover:text-white transition">
-                <span class="material-symbols-outlined">dashboard</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-blue-900 transition">Bảng điều khiển (Dashboard)</p>
-                <p class="text-xs text-slate-500 mt-0.5">Xem thống kê doanh thu, khách hàng, số lượng tour và biểu đồ phân tích.</p>
-              </div>
-            </a>
-
-            <a th:href="@{/tour/manager}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
-                <span class="material-symbols-outlined">confirmation_number</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-emerald-700 transition">Quản lý Tour</p>
-                <p class="text-xs text-slate-500 mt-0.5">Danh sách tour du lịch, thêm tour mới, sửa thông tin chi tiết và xóa tour.</p>
-              </div>
-            </a>
-
-            <a th:href="@{/customer}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition">
-                <span class="material-symbols-outlined">group</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-purple-700 transition">Quản lý Khách hàng</p>
-                <p class="text-xs text-slate-500 mt-0.5">Xem hồ sơ khách hàng, thông tin liên hệ, lịch sử đặt tour và điểm thưởng tích lũy.</p>
-              </div>
-            </a>
-
-            <a th:href="@{/admin/departures}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-orange-600 group-hover:text-white transition">
-                <span class="material-symbols-outlined">map</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-orange-700 transition">Quản lý Chuyến đi</p>
-                <p class="text-xs text-slate-500 mt-0.5">Quản lý các đợt khởi hành của tour, cài đặt giá (người lớn/trẻ em), phân công Hướng dẫn viên.</p>
-              </div>
-            </a>
-
-            <a th:href="@{/location_management}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:bg-cyan-600 group-hover:text-white transition">
-                <span class="material-symbols-outlined">location_on</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-cyan-700 transition">Quản lý Địa điểm</p>
-                <p class="text-xs text-slate-500 mt-0.5">Thêm/sửa các tỉnh thành, điểm đến hấp dẫn du lịch tại Việt Nam.</p>
-              </div>
-            </a>
-
-            <a th:href="@{/payment_management}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition">
-                <span class="material-symbols-outlined">payments</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-indigo-700 transition">Quản lý Giao dịch</p>
-                <p class="text-xs text-slate-500 mt-0.5">Quản lý hóa đơn đặt tour, trạng thái thanh toán, thống kê doanh thu thực tế.</p>
-              </div>
-            </a>
-
-            <a th:href="@{/employees}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:bg-rose-600 group-hover:text-white transition">
-                <span class="material-symbols-outlined">badge</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-rose-700 transition">Quản lý Nhân Viên</p>
-                <p class="text-xs text-slate-500 mt-0.5">Danh sách tài khoản nhân viên, phân công vai trò, quản lý thông tin nhân sự.</p>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <!-- Nhóm Khách hàng -->
-        <div class="space-y-4 md:col-span-2 pt-4 border-t border-slate-200">
-          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm">public</span>
-            Phân hệ Khách hàng (User/Public Portal)
-          </h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
-            <a th:href="@{/home}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition">
-                <span class="material-symbols-outlined">home</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-teal-700 transition">Trang chủ (Home Page)</p>
-                <p class="text-xs text-slate-500 mt-0.5">Trang chủ tìm kiếm tour, xem danh sách địa điểm nổi bật và banner quảng bá.</p>
-              </div>
-            </a>
-
-            <a th:href="@{/customer/profile}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition">
-                <span class="material-symbols-outlined">person</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-sky-700 transition">Hồ sơ cá nhân (Profile)</p>
-                <p class="text-xs text-slate-500 mt-0.5">Xem và cập nhật thông tin cá nhân của tài khoản khách hàng.</p>
-              </div>
-            </a>
-
-            <a th:href="@{/customer/payment-history}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition">
-                <span class="material-symbols-outlined">history</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-amber-700 transition">Lịch sử giao dịch</p>
-                <p class="text-xs text-slate-500 mt-0.5">Danh sách hóa đơn và lịch sử đặt tour, trạng thái thanh toán của khách hàng.</p>
-              </div>
-            </a>
-
-            <a th:href="@{/customer/booking}" class="bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-300 hover:shadow-md transition duration-200 flex items-start gap-4 group">
-              <div class="w-10 h-10 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center group-hover:bg-pink-600 group-hover:text-white transition">
-                <span class="material-symbols-outlined">calendar_month</span>
-              </div>
-              <div>
-                <p class="font-bold text-slate-800 text-sm group-hover:text-pink-700 transition">Tour của tôi</p>
-                <p class="text-xs text-slate-500 mt-0.5">Quản lý các chuyến đi đã đặt, thực hiện thanh toán online hoặc viết nhận xét đánh giá.</p>
-              </div>
-            </a>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="p-6 border-t bg-slate-100 flex justify-between items-center text-xs text-slate-500">
-        <p>Vietnam Expedition Management System • Bản phát triển học kỳ cuối</p>
-        <button onclick="closeSitemapModal()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-2 rounded-full transition">Đóng</button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Javascript cho Modal Sitemap -->
-  <script>
-    function openSitemapModal() {
-      const modal = document.getElementById('sitemapModal');
-      const content = document.getElementById('sitemapModalContent');
-      modal.classList.remove('hidden');
-      setTimeout(() => {
-        modal.classList.remove('opacity-0');
-        modal.classList.add('opacity-100');
-        content.classList.remove('scale-95');
-        content.classList.add('scale-100');
-      }, 10);
-    }
-
-    function closeSitemapModal() {
-      const modal = document.getElementById('sitemapModal');
-      const content = document.getElementById('sitemapModalContent');
-      content.classList.remove('scale-100');
-      content.classList.add('scale-95');
-      modal.classList.remove('opacity-100');
-      modal.classList.add('opacity-0');
-      setTimeout(() => {
-        modal.classList.add('hidden');
-      }, 300);
-    }
-
-    // Đóng khi click bên ngoài modal content
-    document.getElementById('sitemapModal').addEventListener('click', function(event) {
-      if (event.target === this) {
-        closeSitemapModal();
-      }
-    });
-  </script>
 
 </div>
 
