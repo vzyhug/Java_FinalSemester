@@ -53,8 +53,10 @@
     <!-- STATS -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-      <!-- TOTAL -->
-      <div class="bg-white rounded-3xl p-6 shadow-sm">
+      <!-- TOTAL (ALL) -->
+      <a th:href="@{/payment_management(keyword=${keyword})}"
+         th:classappend="${status == null || status == '' ? 'ring-2 ring-primary bg-blue-50/20' : 'bg-white hover:bg-blue-50/10'}"
+         class="rounded-3xl p-6 shadow-sm block transition duration-200">
 
         <div class="flex justify-between items-start mb-4">
 
@@ -68,8 +70,8 @@
 
           </div>
 
-          <span class="text-green-600 text-sm font-bold">
-                        +12.5%
+          <span class="text-primary text-xs font-bold bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                        All
                     </span>
 
         </div>
@@ -91,10 +93,12 @@
 
         </h3>
 
-      </div>
+      </a>
 
-      <!-- WAIT -->
-      <div class="bg-white rounded-3xl p-6 shadow-sm">
+      <!-- WAIT (PENDING) -->
+      <a th:href="@{/payment_management(status='pending', keyword=${keyword})}"
+         th:classappend="${status == 'pending' ? 'ring-2 ring-orange-500 bg-orange-50/50' : 'bg-white hover:bg-orange-50/20'}"
+         class="rounded-3xl p-6 shadow-sm block transition duration-200">
 
         <div class="flex justify-between items-start mb-4">
 
@@ -107,7 +111,7 @@
                         </span>
           </div>
 
-          <span class="text-orange-600 text-sm font-bold">
+          <span class="text-orange-600 text-xs font-bold bg-orange-100 px-2.5 py-1 rounded-full uppercase tracking-wider">
                         Pending
           </span>
         </div>
@@ -122,10 +126,12 @@
 
         </h3>
 
-      </div>
+      </a>
 
-      <!-- SUCCESS -->
-      <div class="bg-white rounded-3xl p-6 shadow-sm">
+      <!-- SUCCESS (PAID) -->
+      <a th:href="@{/payment_management(status='paid', keyword=${keyword})}"
+         th:classappend="${status == 'paid' ? 'ring-2 ring-emerald-500 bg-emerald-50/50' : 'bg-white hover:bg-emerald-50/20'}"
+         class="rounded-3xl p-6 shadow-sm block transition duration-200">
 
         <div class="flex justify-between items-start mb-4">
 
@@ -139,7 +145,7 @@
 
           </div>
 
-          <span class="text-emerald-600 text-sm font-bold">
+          <span class="text-emerald-600 text-xs font-bold bg-emerald-100 px-2.5 py-1 rounded-full uppercase tracking-wider">
                         Success
                     </span>
 
@@ -155,10 +161,12 @@
 
         </h3>
 
-      </div>
+      </a>
 
-      <!-- CANCEL -->
-      <div class="bg-white rounded-3xl p-6 shadow-sm">
+      <!-- CANCEL (CANCELLED) -->
+      <a th:href="@{/payment_management(status='cancelled', keyword=${keyword})}"
+         th:classappend="${status == 'cancelled' ? 'ring-2 ring-red-500 bg-red-50/50' : 'bg-white hover:bg-red-50/20'}"
+         class="rounded-3xl p-6 shadow-sm block transition duration-200">
 
         <div class="flex justify-between items-start mb-4">
 
@@ -172,7 +180,7 @@
 
           </div>
 
-          <span class="text-red-600 text-sm font-bold">
+          <span class="text-red-600 text-xs font-bold bg-red-100 px-2.5 py-1 rounded-full uppercase tracking-wider">
                         Cancel
                     </span>
 
@@ -188,7 +196,7 @@
 
         </h3>
 
-      </div>
+      </a>
 
     </div>
 
@@ -198,9 +206,20 @@
       <!-- TITLE -->
       <div class="flex justify-between items-center p-8 pb-4">
 
-        <h3 class="text-2xl font-black">
-          Danh sách giao dịch gần đây
-        </h3>
+        <div class="flex items-center gap-4">
+          <h3 class="text-2xl font-black">
+            Danh sách giao dịch gần đây
+          </h3>
+          <span th:if="${status != null && status != ''}" class="bg-primary/10 text-primary text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"
+                th:text="'Đang lọc: ' + (status == 'paid' ? 'Đã thanh toán' : (status == 'pending' ? 'Chờ thanh toán' : (status == 'cancelled' ? 'Đã hủy' : status)))">
+          </span>
+        </div>
+
+        <a th:href="@{/payment_management(keyword=${keyword})}"
+           class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-2.5 rounded-full text-sm transition duration-200 flex items-center gap-2 shadow-sm">
+          <span class="material-symbols-outlined text-lg">restart_alt</span>
+          Hiển thị tất cả
+        </a>
 
       </div>
 
@@ -424,12 +443,13 @@
           <a th:if="${currentPage > 0}"
              th:href="@{/payment_management(
                        page=${currentPage - 1},
-                       keyword=${keyword}
-                   )}"
+                       keyword=${keyword},
+                       status=${status}
+                    )}"
 
              class="w-10 h-10 rounded-lg
-                              bg-white border
-                              flex items-center justify-center">
+                               bg-white border
+                               flex items-center justify-center">
 
             <
 
@@ -440,8 +460,9 @@
 
              th:href="@{/payment_management(
                        page=${i},
-                       keyword=${keyword}
-                   )}"
+                       keyword=${keyword},
+                       status=${status}
+                    )}"
 
              th:text="${i + 1}"
 
@@ -450,8 +471,8 @@
                        : 'bg-white text-slate-700 border'"
 
              class="w-10 h-10 rounded-lg
-                              flex items-center justify-center
-                              font-bold">
+                               flex items-center justify-center
+                               font-bold">
           </a>
 
           <!-- NEXT -->
@@ -459,12 +480,13 @@
 
              th:href="@{/payment_management(
                        page=${currentPage + 1},
-                       keyword=${keyword}
-                   )}"
+                       keyword=${keyword},
+                       status=${status}
+                    )}"
 
              class="w-10 h-10 rounded-lg
-                              bg-white border
-                              flex items-center justify-center">
+                               bg-white border
+                               flex items-center justify-center">
 
             >
 

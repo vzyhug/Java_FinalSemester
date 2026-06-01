@@ -17,6 +17,11 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
             Pageable pageable
     );
 
+    List<Bill> findByBillNumberContainingIgnoreCase(
+            String keyword,
+            org.springframework.data.domain.Sort sort
+    );
+
     @Query("""
         SELECT COALESCE(SUM(b.finalAmount), 0)
         FROM Bill b

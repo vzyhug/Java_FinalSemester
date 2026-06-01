@@ -35,6 +35,16 @@
               Chỉnh sửa
             </button>
           </div>
+
+          <div th:if="${error}" class="bg-red-100 text-red-700 p-4 mb-6 rounded-xl text-sm flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">error</span>
+            <span th:text="${error}"></span>
+          </div>
+          <div th:if="${message}" class="bg-green-100 text-green-700 p-4 mb-6 rounded-xl text-sm flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">check_circle</span>
+            <span th:text="${message}"></span>
+          </div>
+
           <form th:action="@{/customer/profile/update}" method="post"
                 class="grid grid-cols-1 md:grid-cols-2 gap-6">
 

@@ -118,8 +118,8 @@
                             <td class="py-4 px-6 text-right font-bold text-green-600" th:text="${b.totalAmount != null ? #numbers.formatDecimal(b.totalAmount, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}">0 đ</td>
                             <td class="py-4 px-6 text-center">
                                     <span class="px-2 py-1 rounded-md text-xs font-bold"
-                                          th:classappend="${b.status == 'paid' ? 'bg-green-100 text-green-700' : (b.status == 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700')}"
-                                          th:text="${b.status == 'paid' ? 'Đã thanh toán' : (b.status == 'pending' ? 'Chờ TT' : 'Đã hủy')}">
+                                          th:classappend="${b.status == 'confirmed' || b.status == 'paid' || b.status == 'completed' ? 'bg-green-100 text-green-700' : (b.status == 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700')}"
+                                          th:text="${b.status == 'confirmed' || b.status == 'paid' ? 'Đã thanh toán' : (b.status == 'completed' ? 'Hoàn thành' : (b.status == 'pending' ? 'Chờ TT' : 'Đã hủy'))}">
                                     </span>
                             </td>
                         </tr>
