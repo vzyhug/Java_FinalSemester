@@ -1,3 +1,508 @@
+<!--<!DOCTYPE html>-->
+
+
+<!--<html class="light" lang="vi"-->
+<!--      xmlns:th="http://www.thymeleaf.org"-->
+<!--      th:replace="~{fragments/admin_layout :: layout(~{:: #transaction-content})}">-->
+
+<!--<div id="transaction-content">-->
+
+<!--  &lt;!&ndash; HEADER &ndash;&gt;-->
+<!--  <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-40-->
+<!--                   px-8 py-5 flex justify-between items-center border-b">-->
+
+<!--    <div>-->
+<!--      <h2 class="text-3xl font-black text-primary uppercase tracking-tight">-->
+<!--        Quản lý Giao dịch-->
+<!--      </h2>-->
+
+<!--      <p class="text-sm text-slate-500 mt-1">-->
+<!--        Theo dõi toàn bộ hóa đơn và thanh toán-->
+<!--      </p>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; SEARCH &ndash;&gt;-->
+<!--    <div class="flex items-center gap-4">-->
+
+<!--      <form th:action="@{/payment_management}"-->
+<!--            method="get"-->
+<!--            class="relative">-->
+
+<!--                <span class="material-symbols-outlined-->
+<!--                             absolute left-4 top-1/2 -translate-y-1/2-->
+<!--                             text-slate-400">-->
+<!--                    search-->
+<!--                </span>-->
+
+<!--        <input type="text"-->
+<!--               name="keyword"-->
+<!--               th:value="${keyword}"-->
+<!--               placeholder="Tìm kiếm hóa đơn..."-->
+<!--               class="w-72 pl-12 pr-4 py-3 rounded-full-->
+<!--                              bg-surface-container-high border-none-->
+<!--                              focus:ring-2 focus:ring-primary"/>-->
+<!--      </form>-->
+
+<!--    </div>-->
+
+<!--  </header>-->
+
+<!--  &lt;!&ndash; BODY &ndash;&gt;-->
+<!--  <section class="p-8 space-y-8">-->
+
+<!--    &lt;!&ndash; STATS &ndash;&gt;-->
+<!--    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">-->
+
+<!--      &lt;!&ndash; TOTAL (ALL) &ndash;&gt;-->
+<!--      <a th:href="@{/payment_management(keyword=${keyword})}"-->
+<!--         th:classappend="${status == null || status == '' ? 'ring-2 ring-primary bg-blue-50/20' : 'bg-white hover:bg-blue-50/10'}"-->
+<!--         class="rounded-3xl p-6 shadow-sm block transition duration-200">-->
+
+<!--        <div class="flex justify-between items-start mb-4">-->
+
+<!--          <div class="w-12 h-12 rounded-2xl-->
+<!--                                bg-primary/10 text-primary-->
+<!--                                flex items-center justify-center">-->
+
+<!--                        <span class="material-symbols-outlined">-->
+<!--                            payments-->
+<!--                        </span>-->
+
+<!--          </div>-->
+
+<!--          <span class="text-primary text-xs font-bold bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-wider">-->
+<!--                        All-->
+<!--                    </span>-->
+
+<!--        </div>-->
+
+<!--        <p class="text-slate-500 text-sm mb-2">-->
+<!--          Tổng doanh thu-->
+<!--        </p>-->
+
+<!--        <h3 class="text-3xl font-black text-primary">-->
+
+<!--                    <span th:text="${#numbers.formatDecimal(-->
+<!--                        totalRevenue,-->
+<!--                        0,-->
+<!--                        'COMMA',-->
+<!--                        0,-->
+<!--                        'POINT'-->
+<!--                    )}">-->
+<!--                    </span>₫-->
+
+<!--        </h3>-->
+
+<!--      </a>-->
+
+<!--      &lt;!&ndash; WAIT (PENDING) &ndash;&gt;-->
+<!--      <a th:href="@{/payment_management(status='pending', keyword=${keyword})}"-->
+<!--         th:classappend="${status == 'pending' ? 'ring-2 ring-orange-500 bg-orange-50/50' : 'bg-white hover:bg-orange-50/20'}"-->
+<!--         class="rounded-3xl p-6 shadow-sm block transition duration-200">-->
+
+<!--        <div class="flex justify-between items-start mb-4">-->
+
+<!--          <div class="w-12 h-12 rounded-2xl-->
+<!--                                bg-orange-100 text-orange-600-->
+<!--                                flex items-center justify-center">-->
+
+<!--                        <span class="material-symbols-outlined">-->
+<!--                            pending_actions-->
+<!--                        </span>-->
+<!--          </div>-->
+
+<!--          <span class="text-orange-600 text-xs font-bold bg-orange-100 px-2.5 py-1 rounded-full uppercase tracking-wider">-->
+<!--                        Pending-->
+<!--          </span>-->
+<!--        </div>-->
+
+<!--        <p class="text-slate-500 text-sm mb-2">-->
+<!--          Chờ thanh toán-->
+<!--        </p>-->
+
+<!--        <h3 class="text-3xl font-black text-orange-600">-->
+
+<!--          <span th:text="${pendingCount}"></span>-->
+
+<!--        </h3>-->
+
+<!--      </a>-->
+
+<!--      &lt;!&ndash; SUCCESS (PAID) &ndash;&gt;-->
+<!--      <a th:href="@{/payment_management(status='paid', keyword=${keyword})}"-->
+<!--         th:classappend="${status == 'paid' ? 'ring-2 ring-emerald-500 bg-emerald-50/50' : 'bg-white hover:bg-emerald-50/20'}"-->
+<!--         class="rounded-3xl p-6 shadow-sm block transition duration-200">-->
+
+<!--        <div class="flex justify-between items-start mb-4">-->
+
+<!--          <div class="w-12 h-12 rounded-2xl-->
+<!--                                bg-emerald-100 text-emerald-600-->
+<!--                                flex items-center justify-center">-->
+
+<!--                        <span class="material-symbols-outlined">-->
+<!--                            verified-->
+<!--                        </span>-->
+
+<!--          </div>-->
+
+<!--          <span class="text-emerald-600 text-xs font-bold bg-emerald-100 px-2.5 py-1 rounded-full uppercase tracking-wider">-->
+<!--                        Success-->
+<!--                    </span>-->
+
+<!--        </div>-->
+
+<!--        <p class="text-slate-500 text-sm mb-2">-->
+<!--          Đã thanh toán-->
+<!--        </p>-->
+
+<!--        <h3 class="text-3xl font-black text-emerald-600">-->
+
+<!--          <span th:text="${paidCount}"></span>-->
+
+<!--        </h3>-->
+
+<!--      </a>-->
+
+<!--      &lt;!&ndash; CANCEL (CANCELLED) &ndash;&gt;-->
+<!--      <a th:href="@{/payment_management(status='cancelled', keyword=${keyword})}"-->
+<!--         th:classappend="${status == 'cancelled' ? 'ring-2 ring-red-500 bg-red-50/50' : 'bg-white hover:bg-red-50/20'}"-->
+<!--         class="rounded-3xl p-6 shadow-sm block transition duration-200">-->
+
+<!--        <div class="flex justify-between items-start mb-4">-->
+
+<!--          <div class="w-12 h-12 rounded-2xl-->
+<!--                                bg-red-100 text-red-600-->
+<!--                                flex items-center justify-center">-->
+
+<!--                        <span class="material-symbols-outlined">-->
+<!--                            cancel-->
+<!--                        </span>-->
+
+<!--          </div>-->
+
+<!--          <span class="text-red-600 text-xs font-bold bg-red-100 px-2.5 py-1 rounded-full uppercase tracking-wider">-->
+<!--                        Cancel-->
+<!--                    </span>-->
+
+<!--        </div>-->
+
+<!--        <p class="text-slate-500 text-sm mb-2">-->
+<!--          Đã hủy-->
+<!--        </p>-->
+
+<!--        <h3 class="text-3xl font-black text-red-600">-->
+
+<!--          <span th:text="${cancelCount}"></span>-->
+
+<!--        </h3>-->
+
+<!--      </a>-->
+
+<!--    </div>-->
+
+<!--    &lt;!&ndash; TABLE &ndash;&gt;-->
+<!--    <div class="bg-white rounded-3xl shadow-sm overflow-hidden">-->
+
+<!--      &lt;!&ndash; TITLE &ndash;&gt;-->
+<!--      <div class="flex justify-between items-center p-8 pb-4">-->
+
+<!--        <div class="flex items-center gap-4">-->
+<!--          <h3 class="text-2xl font-black">-->
+<!--            Danh sách giao dịch gần đây-->
+<!--          </h3>-->
+<!--          <span th:if="${status != null && status != ''}" class="bg-primary/10 text-primary text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"-->
+<!--                th:text="'Đang lọc: ' + (status == 'paid' ? 'Đã thanh toán' : (status == 'pending' ? 'Chờ thanh toán' : (status == 'cancelled' ? 'Đã hủy' : status)))">-->
+<!--          </span>-->
+<!--        </div>-->
+
+<!--        <a th:href="@{/payment_management(keyword=${keyword})}"-->
+<!--           class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-2.5 rounded-full text-sm transition duration-200 flex items-center gap-2 shadow-sm">-->
+<!--          <span class="material-symbols-outlined text-lg">restart_alt</span>-->
+<!--          Hiển thị tất cả-->
+<!--        </a>-->
+
+<!--      </div>-->
+
+<!--      &lt;!&ndash; TABLE &ndash;&gt;-->
+<!--      <div class="overflow-x-auto">-->
+
+<!--        <table class="w-full">-->
+
+<!--          <thead class="bg-slate-50">-->
+
+<!--          <tr>-->
+
+<!--            <th class="px-8 py-5 text-left text-xs uppercase text-slate-400">-->
+<!--              Hóa đơn-->
+<!--            </th>-->
+
+<!--            <th class="px-6 py-5 text-left text-xs uppercase text-slate-400">-->
+<!--              Khách hàng-->
+<!--            </th>-->
+
+<!--            <th class="px-6 py-5 text-left text-xs uppercase text-slate-400">-->
+<!--              Tour-->
+<!--            </th>-->
+
+<!--            <th class="px-6 py-5 text-left text-xs uppercase text-slate-400">-->
+<!--              Thời gian-->
+<!--            </th>-->
+
+<!--            <th class="px-6 py-5 text-right text-xs uppercase text-slate-400">-->
+<!--              Số tiền-->
+<!--            </th>-->
+
+<!--            <th class="px-6 py-5 text-center text-xs uppercase text-slate-400">-->
+<!--              Trạng thái-->
+<!--            </th>-->
+
+<!--          </tr>-->
+
+<!--          </thead>-->
+
+<!--          <tbody class="divide-y">-->
+
+<!--          <tr th:each="bill : ${billList}"-->
+<!--              class="hover:bg-slate-50 transition">-->
+
+<!--            &lt;!&ndash; BILL &ndash;&gt;-->
+<!--            <td class="px-8 py-5">-->
+
+<!--              <div class="space-y-1">-->
+
+<!--                <p class="font-black text-primary text-lg"-->
+<!--                   th:text="${bill.billNumber}">-->
+<!--                </p>-->
+
+<!--                <p class="text-xs text-slate-400 uppercase"-->
+
+<!--                   th:if="${bill.booking != null-->
+<!--                                   and bill.booking.departure != null-->
+<!--                                   and bill.booking.departure.tour != null}"-->
+
+<!--                   th:text="${bill.booking.departure.tour.title}">-->
+<!--                </p>-->
+
+<!--                <p class="text-xs text-slate-400"-->
+
+<!--                   th:if="${bill.booking == null-->
+<!--                                   or bill.booking.departure == null-->
+<!--                                   or bill.booking.departure.tour == null}">-->
+
+<!--                  Không có tour-->
+
+<!--                </p>-->
+
+<!--              </div>-->
+
+<!--            </td>-->
+
+<!--            &lt;!&ndash; CUSTOMER &ndash;&gt;-->
+<!--            <td class="px-6 py-5">-->
+
+<!--              <div class="flex items-center gap-3">-->
+
+<!--                <div class="w-10 h-10 rounded-full-->
+<!--                                            bg-primary/10 text-primary-->
+<!--                                            flex items-center justify-center-->
+<!--                                            font-bold text-xs">-->
+
+<!--                  KH-->
+
+<!--                </div>-->
+
+<!--                <div>-->
+
+<!--                  <p class="font-bold"-->
+
+<!--                     th:if="${bill.booking != null-->
+<!--                                       and bill.booking.customer != null}"-->
+
+<!--                     th:text="${bill.booking.customer.fullName}">-->
+<!--                  </p>-->
+
+<!--                  <p class="font-bold"-->
+
+<!--                     th:if="${bill.booking == null-->
+<!--                                       or bill.booking.customer == null}">-->
+
+<!--                    Không có khách-->
+
+<!--                  </p>-->
+
+<!--                </div>-->
+
+<!--              </div>-->
+
+<!--            </td>-->
+
+<!--            &lt;!&ndash; TOUR &ndash;&gt;-->
+<!--            <td class="px-6 py-5">-->
+
+<!--                            <span class="px-3 py-1 rounded-full-->
+<!--                                         bg-primary/10 text-primary-->
+<!--                                         text-xs font-bold"-->
+
+<!--                                  th:if="${bill.booking != null-->
+<!--                                  and bill.booking.departure != null-->
+<!--                                  and bill.booking.departure.tour != null}"-->
+
+<!--                                  th:text="${bill.booking.departure.tour.category.categoryName}">-->
+<!--                            </span>-->
+
+<!--            </td>-->
+
+<!--            &lt;!&ndash; DATE &ndash;&gt;-->
+<!--            <td class="px-6 py-5 text-sm text-slate-500">-->
+
+<!--                            <span th:if="${bill.billDate != null}"-->
+
+<!--                                  th:text="${#temporals.format(-->
+<!--                                  bill.billDate,-->
+<!--                                  'HH:mm - dd/MM/yyyy'-->
+<!--                              )}">-->
+<!--                            </span>-->
+
+<!--              <span th:if="${bill.billDate == null}">-->
+<!--                                Không có ngày-->
+<!--                            </span>-->
+
+<!--            </td>-->
+
+<!--            &lt;!&ndash; MONEY &ndash;&gt;-->
+<!--            <td class="px-6 py-5 text-right">-->
+
+<!--              <p class="text-2xl font-black text-primary"-->
+
+<!--                 th:text="${#numbers.formatDecimal(-->
+<!--                                    bill.finalAmount,-->
+<!--                                    0,-->
+<!--                                    'COMMA',-->
+<!--                                    0,-->
+<!--                                    'POINT'-->
+<!--                                ) + '₫'}">-->
+<!--              </p>-->
+
+<!--            </td>-->
+<!--            <td class="px-6 py-5 text-center">-->
+<!--              <span-->
+<!--                        th:text="${-->
+<!--                    paymentStatus[bill.billId] == 'paid'-->
+<!--                    ? 'Đã thanh toán'-->
+
+<!--                    : paymentStatus[bill.billId] == 'cancelled'-->
+<!--                    ? 'Đã hủy'-->
+
+<!--                    : paymentStatus[bill.billId] == 'completed'-->
+<!--                    ? 'Hoàn thành'-->
+
+<!--                    : 'Chờ thanh toán'-->
+<!--                    }"-->
+
+<!--                        th:classappend="${-->
+<!--                    paymentStatus[bill.billId] == 'paid'-->
+<!--                    ? 'bg-emerald-50 text-emerald-600 border-emerald-200'-->
+
+<!--                    : paymentStatus[bill.billId] == 'cancelled'-->
+<!--                    ? 'bg-red-50 text-red-600 border-red-200'-->
+
+<!--                    : paymentStatus[bill.billId] == 'completed'-->
+<!--                    ? 'bg-blue-50 text-blue-600 border-blue-200'-->
+
+<!--                    : 'bg-orange-50 text-orange-600 border-orange-200'-->
+<!--                    }"-->
+
+<!--                        class="px-4 py-2 rounded-full-->
+<!--                           text-xs font-bold border">-->
+<!--              </span>-->
+<!--            </td>-->
+
+<!--          </tr>-->
+
+<!--          </tbody>-->
+
+<!--        </table>-->
+
+<!--      </div>-->
+
+<!--      &lt;!&ndash; PAGINATION &ndash;&gt;-->
+<!--      <div class="flex justify-between items-center-->
+<!--                        px-8 py-6 bg-slate-50">-->
+
+<!--        <p class="text-sm text-slate-500">-->
+
+<!--          Hiển thị-->
+<!--          <span th:text="${billList.size()}"></span>-->
+<!--          giao dịch-->
+
+<!--        </p>-->
+
+<!--        <div class="flex items-center gap-2">-->
+
+<!--          &lt;!&ndash; PREV &ndash;&gt;-->
+<!--          <a th:if="${currentPage > 0}"-->
+<!--             th:href="@{/payment_management(-->
+<!--                       page=${currentPage - 1},-->
+<!--                       keyword=${keyword},-->
+<!--                       status=${status}-->
+<!--                    )}"-->
+
+<!--             class="w-10 h-10 rounded-lg-->
+<!--                               bg-white border-->
+<!--                               flex items-center justify-center">-->
+
+<!--            <-->
+
+<!--          </a>-->
+
+<!--          &lt;!&ndash; PAGE &ndash;&gt;-->
+<!--          <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"-->
+
+<!--             th:href="@{/payment_management(-->
+<!--                       page=${i},-->
+<!--                       keyword=${keyword},-->
+<!--                       status=${status}-->
+<!--                    )}"-->
+
+<!--             th:text="${i + 1}"-->
+
+<!--             th:classappend="${i == currentPage}-->
+<!--                       ? 'bg-primary text-white'-->
+<!--                       : 'bg-white text-slate-700 border'"-->
+
+<!--             class="w-10 h-10 rounded-lg-->
+<!--                               flex items-center justify-center-->
+<!--                               font-bold">-->
+<!--          </a>-->
+
+<!--          &lt;!&ndash; NEXT &ndash;&gt;-->
+<!--          <a th:if="${currentPage < totalPages - 1}"-->
+
+<!--             th:href="@{/payment_management(-->
+<!--                       page=${currentPage + 1},-->
+<!--                       keyword=${keyword},-->
+<!--                       status=${status}-->
+<!--                    )}"-->
+
+<!--             class="w-10 h-10 rounded-lg-->
+<!--                               bg-white border-->
+<!--                               flex items-center justify-center">-->
+
+<!--            >-->
+
+<!--          </a>-->
+
+<!--        </div>-->
+
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--  </section>-->
+
+<!--</div>-->
+
+<!--</html>-->
 <!DOCTYPE html>
 
 
@@ -53,10 +558,8 @@
     <!-- STATS -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-      <!-- TOTAL (ALL) -->
-      <a th:href="@{/payment_management(keyword=${keyword})}"
-         th:classappend="${status == null || status == '' ? 'ring-2 ring-primary bg-blue-50/20' : 'bg-white hover:bg-blue-50/10'}"
-         class="rounded-3xl p-6 shadow-sm block transition duration-200">
+      <!-- TOTAL -->
+      <div class="bg-white rounded-3xl p-6 shadow-sm">
 
         <div class="flex justify-between items-start mb-4">
 
@@ -70,8 +573,8 @@
 
           </div>
 
-          <span class="text-primary text-xs font-bold bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-wider">
-                        All
+          <span class="text-green-600 text-sm font-bold">
+                        +12.5%
                     </span>
 
         </div>
@@ -93,45 +596,11 @@
 
         </h3>
 
-      </a>
+      </div>
 
-      <!-- WAIT (PENDING) -->
-      <a th:href="@{/payment_management(status='pending', keyword=${keyword})}"
-         th:classappend="${status == 'pending' ? 'ring-2 ring-orange-500 bg-orange-50/50' : 'bg-white hover:bg-orange-50/20'}"
-         class="rounded-3xl p-6 shadow-sm block transition duration-200">
-
-        <div class="flex justify-between items-start mb-4">
-
-          <div class="w-12 h-12 rounded-2xl
-                                bg-orange-100 text-orange-600
-                                flex items-center justify-center">
-
-                        <span class="material-symbols-outlined">
-                            pending_actions
-                        </span>
-          </div>
-
-          <span class="text-orange-600 text-xs font-bold bg-orange-100 px-2.5 py-1 rounded-full uppercase tracking-wider">
-                        Pending
-          </span>
-        </div>
-
-        <p class="text-slate-500 text-sm mb-2">
-          Chờ thanh toán
-        </p>
-
-        <h3 class="text-3xl font-black text-orange-600">
-
-          <span th:text="${pendingCount}"></span>
-
-        </h3>
-
-      </a>
-
-      <!-- SUCCESS (PAID) -->
-      <a th:href="@{/payment_management(status='paid', keyword=${keyword})}"
-         th:classappend="${status == 'paid' ? 'ring-2 ring-emerald-500 bg-emerald-50/50' : 'bg-white hover:bg-emerald-50/20'}"
-         class="rounded-3xl p-6 shadow-sm block transition duration-200">
+      <!-- WAIT -->
+      <!-- SUCCESS -->
+      <div class="bg-white rounded-3xl p-6 shadow-sm">
 
         <div class="flex justify-between items-start mb-4">
 
@@ -140,12 +609,11 @@
                                 flex items-center justify-center">
 
                         <span class="material-symbols-outlined">
-                            verified
-                        </span>
+                            verified</span>
 
           </div>
 
-          <span class="text-emerald-600 text-xs font-bold bg-emerald-100 px-2.5 py-1 rounded-full uppercase tracking-wider">
+          <span class="text-emerald-600 text-sm font-bold">
                         Success
                     </span>
 
@@ -161,43 +629,9 @@
 
         </h3>
 
-      </a>
+      </div>
 
-      <!-- CANCEL (CANCELLED) -->
-      <a th:href="@{/payment_management(status='cancelled', keyword=${keyword})}"
-         th:classappend="${status == 'cancelled' ? 'ring-2 ring-red-500 bg-red-50/50' : 'bg-white hover:bg-red-50/20'}"
-         class="rounded-3xl p-6 shadow-sm block transition duration-200">
-
-        <div class="flex justify-between items-start mb-4">
-
-          <div class="w-12 h-12 rounded-2xl
-                                bg-red-100 text-red-600
-                                flex items-center justify-center">
-
-                        <span class="material-symbols-outlined">
-                            cancel
-                        </span>
-
-          </div>
-
-          <span class="text-red-600 text-xs font-bold bg-red-100 px-2.5 py-1 rounded-full uppercase tracking-wider">
-                        Cancel
-                    </span>
-
-        </div>
-
-        <p class="text-slate-500 text-sm mb-2">
-          Đã hủy
-        </p>
-
-        <h3 class="text-3xl font-black text-red-600">
-
-          <span th:text="${cancelCount}"></span>
-
-        </h3>
-
-      </a>
-
+      <!-- CANCEL -->
     </div>
 
     <!-- TABLE -->
@@ -206,20 +640,9 @@
       <!-- TITLE -->
       <div class="flex justify-between items-center p-8 pb-4">
 
-        <div class="flex items-center gap-4">
-          <h3 class="text-2xl font-black">
-            Danh sách giao dịch gần đây
-          </h3>
-          <span th:if="${status != null && status != ''}" class="bg-primary/10 text-primary text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider"
-                th:text="'Đang lọc: ' + (status == 'paid' ? 'Đã thanh toán' : (status == 'pending' ? 'Chờ thanh toán' : (status == 'cancelled' ? 'Đã hủy' : status)))">
-          </span>
-        </div>
-
-        <a th:href="@{/payment_management(keyword=${keyword})}"
-           class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-2.5 rounded-full text-sm transition duration-200 flex items-center gap-2 shadow-sm">
-          <span class="material-symbols-outlined text-lg">restart_alt</span>
-          Hiển thị tất cả
-        </a>
+        <h3 class="text-2xl font-black">
+          Danh sách giao dịch gần đây
+        </h3>
 
       </div>
 
@@ -253,7 +676,7 @@
             </th>
 
             <th class="px-6 py-5 text-center text-xs uppercase text-slate-400">
-              Trạng thái
+              Phương thức
             </th>
 
           </tr>
@@ -262,7 +685,7 @@
 
           <tbody class="divide-y">
 
-          <tr th:each="bill : ${billList}"
+          <tr th:each="payment : ${paymentList}"
               class="hover:bg-slate-50 transition">
 
             <!-- BILL -->
@@ -271,23 +694,23 @@
               <div class="space-y-1">
 
                 <p class="font-black text-primary text-lg"
-                   th:text="${bill.billNumber}">
+                   th:text="'PAY-' + ${payment.paymentId}">
                 </p>
 
                 <p class="text-xs text-slate-400 uppercase"
 
-                   th:if="${bill.booking != null
-                                   and bill.booking.departure != null
-                                   and bill.booking.departure.tour != null}"
+                   th:if="${payment.booking != null
+           and payment.booking.departure != null
+           and payment.booking.departure.tour != null}"
 
-                   th:text="${bill.booking.departure.tour.title}">
+                   th:text="${payment.booking.departure.tour.title}">
                 </p>
 
                 <p class="text-xs text-slate-400"
 
-                   th:if="${bill.booking == null
-                                   or bill.booking.departure == null
-                                   or bill.booking.departure.tour == null}">
+                   th:if="${payment.booking == null
+      or payment.booking.departure == null
+      or payment.booking.departure.tour == null}">
 
                   Không có tour
 
@@ -305,9 +728,7 @@
                 <div class="w-10 h-10 rounded-full
                                             bg-primary/10 text-primary
                                             flex items-center justify-center
-                                            font-bold text-xs">
-
-                  KH
+                                            font-bold text-xs">KH
 
                 </div>
 
@@ -315,16 +736,16 @@
 
                   <p class="font-bold"
 
-                     th:if="${bill.booking != null
-                                       and bill.booking.customer != null}"
+                     th:if="${payment.booking != null
+      and payment.booking.customer != null}"
 
-                     th:text="${bill.booking.customer.fullName}">
+                     th:text="${payment.booking.customer.fullName}">
                   </p>
 
                   <p class="font-bold"
 
-                     th:if="${bill.booking == null
-                                       or bill.booking.customer == null}">
+                     th:if="${payment.booking == null
+      or payment.booking.customer == null}">
 
                     Không có khách
 
@@ -343,11 +764,11 @@
                                          bg-primary/10 text-primary
                                          text-xs font-bold"
 
-                                  th:if="${bill.booking != null
-                                  and bill.booking.departure != null
-                                  and bill.booking.departure.tour != null}"
+                                  th:if="${payment.booking != null
+      and payment.booking.departure != null
+      and payment.booking.departure.tour != null}"
 
-                                  th:text="${bill.booking.departure.tour.category.categoryName}">
+                                  th:text="${payment.booking.departure.tour.category.categoryName}">
                             </span>
 
             </td>
@@ -355,15 +776,15 @@
             <!-- DATE -->
             <td class="px-6 py-5 text-sm text-slate-500">
 
-                            <span th:if="${bill.billDate != null}"
+                            <span th:if="${payment.paymentDate != null}"
 
                                   th:text="${#temporals.format(
-                                  bill.billDate,
-                                  'HH:mm - dd/MM/yyyy'
-                              )}">
+payment.paymentDate,
+'HH:mm - dd/MM/yyyy'
+)}">
                             </span>
 
-              <span th:if="${bill.billDate == null}">
+              <span th:if="${payment.paymentDate == null}">
                                 Không có ngày
                             </span>
 
@@ -375,7 +796,7 @@
               <p class="text-2xl font-black text-primary"
 
                  th:text="${#numbers.formatDecimal(
-                                    bill.finalAmount,
+                                    payment.amount,
                                     0,
                                     'COMMA',
                                     0,
@@ -385,36 +806,14 @@
 
             </td>
             <td class="px-6 py-5 text-center">
-              <span
-                        th:text="${
-                    paymentStatus[bill.billId] == 'paid'
-                    ? 'Đã thanh toán'
 
-                    : paymentStatus[bill.billId] == 'cancelled'
-                    ? 'Đã hủy'
+    <span class="px-4 py-2 rounded-full
+                 text-xs font-bold border
+                 bg-blue-50 text-blue-600 border-blue-200"
 
-                    : paymentStatus[bill.billId] == 'completed'
-                    ? 'Hoàn thành'
+          th:text="${payment.paymentMethod}">
+    </span>
 
-                    : 'Chờ thanh toán'
-                    }"
-
-                        th:classappend="${
-                    paymentStatus[bill.billId] == 'paid'
-                    ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
-
-                    : paymentStatus[bill.billId] == 'cancelled'
-                    ? 'bg-red-50 text-red-600 border-red-200'
-
-                    : paymentStatus[bill.billId] == 'completed'
-                    ? 'bg-blue-50 text-blue-600 border-blue-200'
-
-                    : 'bg-orange-50 text-orange-600 border-orange-200'
-                    }"
-
-                        class="px-4 py-2 rounded-full
-                           text-xs font-bold border">
-              </span>
             </td>
 
           </tr>
@@ -432,7 +831,7 @@
         <p class="text-sm text-slate-500">
 
           Hiển thị
-          <span th:text="${billList.size()}"></span>
+          <span th:text="${paymentList.size()}"></span>
           giao dịch
 
         </p>
@@ -443,13 +842,11 @@
           <a th:if="${currentPage > 0}"
              th:href="@{/payment_management(
                        page=${currentPage - 1},
-                       keyword=${keyword},
-                       status=${status}
-                    )}"
-
+                       keyword=${keyword}
+                   )}"
              class="w-10 h-10 rounded-lg
-                               bg-white border
-                               flex items-center justify-center">
+                              bg-white border
+                              flex items-center justify-center">
 
             <
 
@@ -460,9 +857,8 @@
 
              th:href="@{/payment_management(
                        page=${i},
-                       keyword=${keyword},
-                       status=${status}
-                    )}"
+                       keyword=${keyword}
+                   )}"
 
              th:text="${i + 1}"
 
@@ -471,8 +867,8 @@
                        : 'bg-white text-slate-700 border'"
 
              class="w-10 h-10 rounded-lg
-                               flex items-center justify-center
-                               font-bold">
+                              flex items-center justify-center
+                              font-bold">
           </a>
 
           <!-- NEXT -->
@@ -480,13 +876,12 @@
 
              th:href="@{/payment_management(
                        page=${currentPage + 1},
-                       keyword=${keyword},
-                       status=${status}
-                    )}"
+                       keyword=${keyword}
+                   )}"
 
              class="w-10 h-10 rounded-lg
-                               bg-white border
-                               flex items-center justify-center">
+                              bg-white border
+                              flex items-center justify-center">
 
             >
 
