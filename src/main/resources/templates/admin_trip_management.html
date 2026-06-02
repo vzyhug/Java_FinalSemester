@@ -104,6 +104,10 @@
          th:classappend="${status == 'full'} ? 'bg-blue-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
         Đầy
       </a>
+      <a th:href="@{/admin/departures/filter(status='completed')}" class="px-4 py-2 rounded-lg transition font-semibold text-sm"
+         th:classappend="${status == 'completed'} ? 'bg-blue-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
+        Đã hoàn thành
+      </a>
       <a th:href="@{/admin/departures/filter(status='cancelled')}" class="px-4 py-2 rounded-lg transition font-semibold text-sm"
          th:classappend="${status == 'cancelled'} ? 'bg-blue-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
         Đã hủy
@@ -123,8 +127,8 @@
         <div class="flex items-center justify-between mb-2">
           <h3 class="text-lg font-bold" th:text="${dep.tour != null ? dep.tour.title : 'Tour lẻ'}">Tour Name</h3>
           <span class="px-3 py-1 rounded-full text-xs font-bold"
-                th:classappend="${dep.status == 'open' ? 'bg-green-400/30 text-green-200' : dep.status == 'full' ? 'bg-orange-400/30 text-orange-200' : 'bg-red-400/30 text-red-200'}"
-                th:text="${dep.status == 'open' ? 'Đang bán' : dep.status == 'full' ? 'Đầy' : 'Đã hủy'}">
+                th:classappend="${dep.status == 'open' ? 'bg-green-400/30 text-green-200' : (dep.status == 'full' ? 'bg-orange-400/30 text-orange-200' : (dep.status == 'completed' ? 'bg-blue-400/30 text-blue-200' : 'bg-red-400/30 text-red-200'))}"
+                th:text="${dep.status == 'open' ? 'Đang bán' : (dep.status == 'full' ? 'Đầy' : (dep.status == 'completed' ? 'Đã hoàn thành' : 'Đã hủy'))}">
           </span>
         </div>
         <p class="text-sm text-blue-100" th:if="${dep.tour != null && dep.tour.province != null}"
@@ -189,7 +193,7 @@
             <span class="material-symbols-outlined text-sm inline mr-1">visibility</span>
             Chi tiết
           </a>
-          <a th:href="@{/admin/departures/cancel/{id}(id=${dep.departureId})}"
+          <a th:if="${dep.status != 'cancelled' && dep.status != 'completed'}" th:href="@{/admin/departures/cancel/{id}(id=${dep.departureId})}"
              onclick="return confirm('Bạn có chắc chắn muốn hủy chuyến này?')"
              class="flex-1 text-red-600 hover:bg-red-50 py-2 rounded-lg transition font-bold text-sm text-center">
             <span class="material-symbols-outlined text-sm inline mr-1">block</span>

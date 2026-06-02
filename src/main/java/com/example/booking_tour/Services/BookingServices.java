@@ -58,11 +58,13 @@ public class BookingServices {
             }
             departure.setAvailableSeats(available);
 
-            // Cập nhật trạng thái thông minh cho Chuyến khởi hành
-            if (available <= 0) {
-                departure.setStatus("full");
-            } else if ("full".equals(departure.getStatus())) {
-                departure.setStatus("open");
+            // Cập nhật trạng thái thông minh cho Chuyến khởi hành (chỉ thay đổi nếu chưa hủy/hoàn thành)
+            if (!"cancelled".equalsIgnoreCase(departure.getStatus()) && !"completed".equalsIgnoreCase(departure.getStatus())) {
+                if (available <= 0) {
+                    departure.setStatus("full");
+                } else if ("full".equals(departure.getStatus())) {
+                    departure.setStatus("open");
+                }
             }
 
             tourDepartureRepository.save(departure);

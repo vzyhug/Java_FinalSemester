@@ -23,18 +23,27 @@
         </div>
 
         <div class="flex gap-2">
-            <a th:if="${dep.status != 'cancelled'}" th:href="@{/admin/departures/assign-guide/{id}(id=${dep.departureId})}" class="bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg font-bold hover:bg-indigo-100 transition flex items-center">
+            <a th:if="${dep.status != 'cancelled' && dep.status != 'completed'}" th:href="@{/admin/departures/assign-guide/{id}(id=${dep.departureId})}" class="bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg font-bold hover:bg-indigo-100 transition flex items-center">
                 <span class="material-symbols-outlined text-sm mr-1">person_add</span> Gán HDV
             </a>
 
-            <a th:if="${dep.status != 'cancelled'}" th:href="@{/admin/departures/edit/{id}(id=${dep.departureId})}" class="bg-amber-50 text-amber-600 px-4 py-2 rounded-lg font-bold hover:bg-amber-100 transition flex items-center">
+            <a th:if="${dep.status != 'cancelled' && dep.status != 'completed'}" th:href="@{/admin/departures/edit/{id}(id=${dep.departureId})}" class="bg-amber-50 text-amber-600 px-4 py-2 rounded-lg font-bold hover:bg-amber-100 transition flex items-center">
                 <span class="material-symbols-outlined text-sm mr-1">edit</span> Sửa thông tin
             </a>
-            <a th:if="${dep.status != 'cancelled'}" th:href="@{/admin/departures/cancel/{id}(id=${dep.departureId})}"
+            <a th:if="${dep.status != 'cancelled' && dep.status != 'completed'}" th:href="@{/admin/departures/cancel/{id}(id=${dep.departureId})}"
                onclick="return confirm('Bạn có chắc chắn muốn hủy chuyến này?')"
                class="bg-red-50 text-red-600 px-4 py-2 rounded-lg font-bold hover:bg-red-100 transition flex items-center">
                 <span class="material-symbols-outlined text-sm mr-1">block</span> Hủy chuyến
             </a>
+            
+            <!-- Nút Hoàn thành chuyến đi -->
+            <a th:if="${dep.status != 'cancelled' && dep.status != 'completed'}" 
+               th:href="@{/admin/departures/complete/{id}(id=${dep.departureId})}"
+               onclick="return confirm('Bạn có chắc chắn muốn hoàn thành chuyến khởi hành này?')"
+               class="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg font-bold hover:bg-blue-100 transition flex items-center">
+                <span class="material-symbols-outlined text-sm mr-1">task_alt</span> Hoàn thành
+            </a>
+
             <!-- Nút Phục hồi nếu còn trong tương lai/ngày hôm nay -->
             <a th:if="${dep.status == 'cancelled' && (dep.departureDate == null || !dep.departureDate.isBefore(T(java.time.LocalDate).now()))}"
                th:href="@{/admin/departures/restore/{id}(id=${dep.departureId})}"
@@ -45,8 +54,8 @@
 
             <!-- Phiên bản Vô hiệu hóa (Đã qua ngày khởi hành) -->
             <span th:if="${dep.status == 'cancelled' && dep.departureDate != null && dep.departureDate.isBefore(T(java.time.LocalDate).now())}"
-                  class="bg-slate-100 text-slate-400 px-4 py-2 rounded-lg font-bold flex items-center cursor-not-allowed border border-slate-200"
-                  title="Chuyến đi đã qua ngày khởi hành, không thể phục hồi bán">
+                   class="bg-slate-100 text-slate-400 px-4 py-2 rounded-lg font-bold flex items-center cursor-not-allowed border border-slate-200"
+                   title="Chuyến đi đã qua ngày khởi hành, không thể phục hồi bán">
                 <span class="material-symbols-outlined text-sm mr-1">history</span> Quá hạn phục hồi
             </span>
             <a th:href="@{/admin/departures}" class="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg font-bold hover:bg-slate-300 transition flex items-center">
@@ -67,8 +76,8 @@
                     <div>
                         <p class="text-sm font-bold text-slate-500 mb-1">Trạng thái</p>
                         <span class="px-3 py-1 rounded-full font-bold text-xs inline-block"
-                              th:classappend="${dep.status == 'open' ? 'bg-green-100 text-green-700' : (dep.status == 'full' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700')}"
-                              th:text="${dep.status == 'open' ? 'Đang mở bán' : (dep.status == 'full' ? 'Đã đầy' : 'Đã hủy')}">
+                              th:classappend="${dep.status == 'open' ? 'bg-green-100 text-green-700' : (dep.status == 'full' ? 'bg-orange-100 text-orange-700' : (dep.status == 'completed' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'))}"
+                              th:text="${dep.status == 'open' ? 'Đang mở bán' : (dep.status == 'full' ? 'Đã đầy' : (dep.status == 'completed' ? 'Đã hoàn thành' : 'Đã hủy'))}">
                         </span>
                     </div>
                     <div>

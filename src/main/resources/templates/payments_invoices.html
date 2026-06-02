@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+</head>
+<body>
+<div layout:fragment="content">
 <div class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto">
     <div class="mb-12">
         <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-primary tracking-tight mb-2">Thanh toán &amp; Xác nhận</h1>
@@ -129,16 +132,16 @@
                     <div class="space-y-4">
                         <div>
                             <h4 th:text="${departure.tour.title}" class="font-bold text-primary"></h4>
-                            <div class="flex items-center gap-1 text-xs text-on-surface-variant mt-1">
-                                <span th:text="|${#temporals.format(departure.departureDate, 'dd/MM/yyyy')} - ${#temporals.format(departure.departureDate, 'dd/MM/yyyy')}|" class="material-symbols-outlined text-sm">calendar_today</span>
-
+                            <div class="flex items-center gap-1.5 text-xs text-on-surface-variant mt-1.5 font-semibold">
+                                <span class="material-symbols-outlined text-sm">calendar_today</span>
+                                <span th:text="|${#temporals.format(departure.departureDate, 'dd/MM/yyyy')} - ${#temporals.format(departure.returnDate, 'dd/MM/yyyy')}|"></span>
                             </div>
                         </div>
                         <div class="flex items-center gap-4 py-3 bg-surface-container-low rounded-xl px-4">
                             <span class="material-symbols-outlined text-primary">group</span>
                             <div>
                                 <p class="text-xs font-bold text-on-surface-variant">Khách hàng</p>
-                                {<p th:text="|${adultCount} người lớn và ${childCount} trẻ em|" class="text-sm font-bold"></p>
+                                <p th:text="|${adultCount} người lớn và ${childCount} trẻ em|" class="text-sm font-bold"></p>
                             </div>
                         </div>
                         <div class="space-y-2 pt-2">
@@ -155,7 +158,7 @@
                                 <span th:text="|${#numbers.formatDecimal(totalAll, 0, 'COMMA', 0, 'POINT')} VNĐ|" class="text-primary"></span>
                             </div>
                         </div>
-                        <button id="submit-btn" type="submit" class="w-full py-4 rounded-full font-bold editorial-gradient text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 mt-4">
+                        <button id="submit-btn" type="submit" class="w-full py-4 rounded-full font-bold bg-primary text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 mt-4 hover:opacity-90">
                             <span id="submit-icon" class="material-symbols-outlined">lock</span>
                             <span id="submit-text">Xác nhận thanh toán</span>
                         </button>
@@ -200,7 +203,7 @@
 
         function disableSubmitForQR() {
             submitBtn.disabled = true;
-            submitBtn.classList.remove('editorial-gradient', 'bg-green-600', 'text-white');
+            submitBtn.classList.remove('bg-primary', 'bg-green-600', 'text-white');
             submitBtn.classList.add('bg-slate-300', 'text-slate-500', 'cursor-not-allowed');
             submitIcon.innerText = "hourglass_empty";
             submitText.innerText = "Đang chờ thanh toán...";
@@ -210,7 +213,7 @@
         function enableSubmitButton(text, icon) {
             submitBtn.disabled = false;
             submitBtn.classList.remove('bg-slate-300', 'bg-green-600', 'text-slate-500', 'cursor-not-allowed');
-            submitBtn.classList.add('editorial-gradient', 'text-white');
+            submitBtn.classList.add('bg-primary', 'text-white');
             submitIcon.innerText = icon;
             submitText.innerText = text;
             submitIcon.classList.remove('animate-spin');
@@ -221,7 +224,7 @@
             isPaid = true;
             
             submitBtn.disabled = false;
-            submitBtn.classList.remove('editorial-gradient', 'bg-slate-300', 'text-slate-500', 'cursor-not-allowed');
+            submitBtn.classList.remove('bg-primary', 'bg-slate-300', 'text-slate-500', 'cursor-not-allowed');
             submitBtn.classList.add('bg-green-600', 'text-white');
             submitIcon.innerText = "check_circle";
             submitIcon.classList.remove('animate-spin');
@@ -267,3 +270,6 @@
         updatePaymentDetails();
     });
 </script>
+</div>
+</body>
+</html>

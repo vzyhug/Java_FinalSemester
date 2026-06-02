@@ -323,6 +323,51 @@ public class DepartureController {
     }
 
     // ==========================================
+    // HOÀN THÀNH CHUYẾN ĐI (Cập nhật trạng thái completed)
+    // ==========================================
+    @GetMapping("/complete/{id}")
+    public String completeDeparture(
+            @PathVariable(value = "id") Integer departureId,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) {
+            return "redirect:/auth/loginForm";
+        }
+        try {
+            TourDeparture departure = departureService.getDepartureById(departureId);
+            if (departure == null) {
+                redirectAttributes.addAttribute("error", "Lỗi: Không tìm thấy chuyến đi.");
+                return "redirect:/admin/departures";
+            }
+
+            if ("cancelled".equalsIgnoreCase(departure.getStatus())) {
+                redirectAttributes.addAttribute("error", "Lỗi: Chuyến đi đã bị hủy, không thể hoàn thành.");
+                return "redirect:/admin/departures/" + departureId;
+            }
+
+            if ("completed".equalsIgnoreCase(departure.getStatus())) {
+                redirectAttributes.addAttribute("error", "Chuyến đi này đã được đánh dấu hoàn thành trước đó.");
+                return "redirect:/admin/departures/" + departureId;
+            }
+
+            boolean success = departureService.completeDeparture(departureId);
+
+            if (success) {
+                redirectAttributes.addAttribute("success", "Cập nhật trạng thái hoàn thành chuyến đi thành công!");
+                return "redirect:/admin/departures/" + departureId;
+            } else {
+                redirectAttributes.addAttribute("error", "Lỗi: Không thể cập nhật trạng thái hoàn thành.");
+                return "redirect:/admin/departures/" + departureId;
+            }
+        } catch (Exception e) {
+            redirectAttributes.addAttribute("error", "Lỗi: " + e.getMessage());
+            return "redirect:/admin/departures";
+        }
+    }
+
+    // ==========================================
     // HIỂN THỊ FORM SỬA CHUYẾN ĐI
     // ==========================================
     @GetMapping("/edit/{id}")
