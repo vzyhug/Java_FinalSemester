@@ -150,27 +150,27 @@ public class EmployeeController {
             @RequestParam("roleId") Integer roleId,
             RedirectAttributes redirectAttributes) {
 
-        // 1. Kiểm tra Họ và tên không được trống
+        // Kiểm tra Họ và tên không được trống
         if (employee.getFullName() == null || employee.getFullName().trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Họ và tên không được để trống!");
             return "redirect:/employees/add";
         }
-        // 2. Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
+        // Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
         if (employee.getEmail() == null || employee.getEmail().trim().isEmpty() || !employee.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Email không đúng định dạng!");
             return "redirect:/employees/add";
         }
-        // 3. Kiểm tra số điện thoại chỉ được chứa số
+        // Kiểm tra số điện thoại chỉ được chứa số
         if (employee.getPhone() == null || employee.getPhone().trim().isEmpty() || !employee.getPhone().matches("^[0-9]+$")) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Số điện thoại phải là số!");
             return "redirect:/employees/add";
         }
-        // 4. Kiểm tra Tên đăng nhập không trống
+        // Kiểm tra Tên đăng nhập không trống
         if (employee.getUsername() == null || employee.getUsername().trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Tên đăng nhập không được để trống!");
             return "redirect:/employees/add";
         }
-        // 5. Kiểm tra độ dài mật khẩu tối thiểu 5 ký tự
+        // Kiểm tra độ dài mật khẩu tối thiểu 5 ký tự
         if (employee.getPasswordHash() == null || employee.getPasswordHash().length() < 5) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Mật khẩu phải có ít nhất 5 ký tự!");
             return "redirect:/employees/add";
@@ -244,22 +244,22 @@ public class EmployeeController {
             @RequestParam("roleId") Integer roleId,
             RedirectAttributes redirectAttributes) {
 
-        // 1. Kiểm tra Họ và tên không được trống
+        // Kiểm tra Họ và tên không được trống
         if (employee.getFullName() == null || employee.getFullName().trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Họ và tên không được để trống!");
             return "redirect:/employees/edit/" + employee.getEmployeeId();
         }
-        // 2. Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
+        // Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
         if (employee.getEmail() == null || employee.getEmail().trim().isEmpty() || !employee.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Email không đúng định dạng!");
             return "redirect:/employees/edit/" + employee.getEmployeeId();
         }
-        // 3. Kiểm tra số điện thoại chỉ được chứa số
+        // Kiểm tra số điện thoại chỉ được chứa số
         if (employee.getPhone() == null || employee.getPhone().trim().isEmpty() || !employee.getPhone().matches("^[0-9]+$")) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Số điện thoại phải là số!");
             return "redirect:/employees/edit/" + employee.getEmployeeId();
         }
-        // 4. Kiểm tra Tên đăng nhập không trống
+        // Kiểm tra Tên đăng nhập không trống
         if (employee.getUsername() == null || employee.getUsername().trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Lỗi: Tên đăng nhập không được để trống!");
             return "redirect:/employees/edit/" + employee.getEmployeeId();

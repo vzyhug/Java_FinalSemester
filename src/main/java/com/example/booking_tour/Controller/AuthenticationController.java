@@ -4,10 +4,9 @@ import com.example.booking_tour.Model.Employee;
 import com.example.booking_tour.Repository.EmployeeRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -16,6 +15,9 @@ public class AuthenticationController {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/loginForm")
     public String loginForm(Model model) {
@@ -30,7 +32,7 @@ public class AuthenticationController {
 
         Employee employee = employeeRepository.findByUsername(username);
 
-        if (employee != null && employee.getPasswordHash().equals(password) && employee.getIsActive()) {
+        if (employee != null && passwordEncoder.matches(password, employee.getPasswordHash()) && employee.getIsActive()) {
             session.setAttribute("loggedInAdmin", employee);
 
             if (employee.getRole().getRoleName().equalsIgnoreCase("Admin")) {

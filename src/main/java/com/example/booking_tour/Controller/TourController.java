@@ -231,12 +231,7 @@ public class TourController {
         return "admin_tour_detail"; // Trỏ sang file HTML mới
     }
 
-    // ==========================================
     // THÊM TOUR MỚI
-    // ==========================================
-    // ==========================================
-    // THÊM TOUR MỚI (CHUẨN LOGIC)
-    // ==========================================
     @PostMapping("/save")
     public String saveTour(
             @RequestParam("title") String title,
@@ -328,7 +323,6 @@ public class TourController {
 
         return "add_tour";
     }
-    // Sửa thành chỉ còn /delete/{id}
     @GetMapping("/delete/{id}")
     public String deleteTour(@PathVariable(value = "id") Integer tourId,
                              HttpSession session,

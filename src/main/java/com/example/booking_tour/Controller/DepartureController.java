@@ -54,15 +54,15 @@ public class DepartureController {
         try {
             List<TourDeparture> departures;
 
-            // 1. Logic lọc dữ liệu (Ưu tiên lọc theo tháng/năm nếu người dùng click vào khối Thống kê)
+            //Logic lọc dữ liệu (Ưu tiên lọc theo tháng/năm nếu người dùng click vào khối Thống kê)
             if (filterMonth != null && filterYear != null) {
                 departures = departureService.getDeparturesByMonthAndYear(filterMonth, filterYear);
             }
-            // 2. Lọc theo form tìm kiếm Tên / Ngày cụ thể
+            // Lọc theo form tìm kiếm Tên / Ngày cụ thể
             else if ((keyword != null && !keyword.trim().isEmpty()) || date != null) {
                 departures = departureService.searchDepartures(keyword, date);
             }
-            // 3. Mặc định lấy tất cả
+            // Mặc định lấy tất cả
             else {
                 departures = departureService.getAllDepartures();
             }
@@ -107,7 +107,7 @@ public class DepartureController {
     }
 
     // ==========================================
-    // XỬ LÝ LƯU CHUYẾN ĐI MỚI (PHẦN BẠN BỊ THIẾU)
+    // XỬ LÝ LƯU CHUYẾN ĐI MỚI
     // ==========================================
     @PostMapping("/save")
     public String saveDeparture(
@@ -145,7 +145,7 @@ public class DepartureController {
             }
         }
 
-        // 4. KIỂM TRA ĐỒNG BỘ SỐ NGÀY (Tuyệt đối không dùng departure.getTour() ở đây nữa)
+        // 4. KIỂM TRA ĐỒNG BỘ SỐ NGÀY
         try {
             Tour originalTour = tourService.getTourById(tourId); // Chỉ dùng tourId lấy từ form
 
@@ -182,7 +182,7 @@ public class DepartureController {
             return "redirect:/admin/departures/add";
         }
     }    // ==========================================
-    // CHI TIẾT CHUYẾN ĐI (Đã thêm list Bookings)
+    // CHI TIẾT CHUYẾN ĐI
     // ==========================================
     @GetMapping("/{id}")
     public String getDepartureDetail(
@@ -276,7 +276,7 @@ public class DepartureController {
     }
 
     // ==========================================
-    // HỦY CHUYẾN ĐI (Đã nâng cấp an toàn nghiệp vụ)
+    // HỦY CHUYẾN ĐI
     // ==========================================
     @GetMapping("/cancel/{id}")
     public String cancelDeparture(
@@ -289,21 +289,21 @@ public class DepartureController {
             return "redirect:/auth/loginForm";
         }
         try {
-            // 1. Lấy thông tin chuyến đi ra trước để kiểm tra
+            //Lấy thông tin chuyến đi ra trước để kiểm tra
             TourDeparture departure = departureService.getDepartureById(departureId);
 
             if (departure != null) {
-                // 2. Tính số lượng khách đã đặt
+                //Tính số lượng khách đã đặt
                 int bookedSeats = departure.getMaxSeats() - departure.getAvailableSeats();
 
-                // 3. CHẶN TỪ GỐC: Nếu có khách thì không cho hủy
+                // CHẶN TỪ GỐC: Nếu có khách thì không cho hủy
                 if (bookedSeats > 0) {
                     redirectAttributes.addAttribute("error", "Không thể hủy! Chuyến này đang có " + bookedSeats + " vé đã được đặt. Vui lòng hủy vé/hoàn tiền cho khách trước.");
                     return "redirect:/admin/departures/" + departureId;
                 }
             }
 
-            // 4. Nếu an toàn (0 khách), tiến hành hủy mềm
+            // Nếu an toàn (0 khách), tiến hành hủy mềm
             boolean success = departureService.cancelDeparture(departureId);
 
             if (success) {
@@ -385,7 +385,7 @@ public class DepartureController {
             model.addAttribute("departure", departure);
             model.addAttribute("tours", tourService.getAllTours()); // Đổ lại danh sách Tour cho Dropdown
 
-            return "edit_departure"; // Mở file HTML bạn vừa tạo lúc nãy
+            return "edit_departure";
         } catch (Exception e) {
             return "redirect:/admin/departures";
         }
@@ -395,7 +395,7 @@ public class DepartureController {
     // ==========================================
     @PostMapping("/update")
     public String updateDeparture(@ModelAttribute("departure") TourDeparture departure, RedirectAttributes redirectAttributes) {
-        // 1. Kiểm tra logic ngày tháng (Ngày về không được trước ngày đi)
+        //  Kiểm tra logic ngày tháng (Ngày về không được trước ngày đi)
         if (departure.getReturnDate() != null && departure.getDepartureDate() != null) {
             if (departure.getReturnDate().isBefore(departure.getDepartureDate())) {
                 redirectAttributes.addAttribute("error", "Ngày trở về không thể diễn ra trước ngày khởi hành!");
@@ -403,7 +403,7 @@ public class DepartureController {
             }
         }
 
-        // 1.5. Kiểm tra giá tiền không âm và logic giá vé
+        //  Kiểm tra giá tiền không âm và logic giá vé
         if (departure.getAdultPrice() != null && departure.getAdultPrice().compareTo(java.math.BigDecimal.ZERO) < 0) {
             redirectAttributes.addAttribute("error", "Lỗi: Giá người lớn không được là số âm!");
             return "redirect:/admin/departures/edit/" + departure.getDepartureId();
@@ -420,15 +420,13 @@ public class DepartureController {
         }
 
         try {
-            // 2. Lấy dữ liệu cũ từ Database để đối chiếu
+            // Lấy dữ liệu cũ từ Database để đối chiếu
             TourDeparture oldDep = departureService.getDepartureById(departure.getDepartureId());
 
             if (oldDep != null) {
-                // Tính toán thông minh: Giữ lại số vé đã bán, chỉ update ghế trống
                 int bookedSeats = oldDep.getMaxSeats() - oldDep.getAvailableSeats(); // Số vé khách đã mua
                 int newAvailable = departure.getMaxSeats() - bookedSeats; // Số ghế trống mới
 
-                // Nếu Admin lỡ tay giảm tổng số ghế xuống thấp hơn số vé đã bán -> Báo lỗi ngay
                 if (newAvailable < 0) {
                     redirectAttributes.addAttribute("error", "Lỗi: Tổng số chỗ mới không được nhỏ hơn số vé đã bán (" + bookedSeats + " vé)!");
                     return "redirect:/admin/departures/edit/" + departure.getDepartureId();
@@ -437,11 +435,9 @@ public class DepartureController {
                 departure.setAvailableSeats(newAvailable);
                 departure.setStatus(oldDep.getStatus()); // Giữ nguyên trạng thái cũ (Đang bán/Đã đầy)
 
-                // Giữ nguyên HDV cũ nếu form không có chỗ sửa HDV
                 departure.setGuide(oldDep.getGuide());
             }
 
-            // 3. Lưu xuống Database (Vì đối tượng đã có ID nên JPA sẽ tự hiểu là lệnh UPDATE)
             departureService.saveDeparture(departure);
 
             redirectAttributes.addAttribute("success", "Cập nhật chuyến đi thành công!");
@@ -491,14 +487,12 @@ public class DepartureController {
             TourDeparture departure = departureService.getDepartureById(departureId);
 
             if (departure != null && "cancelled".equals(departure.getStatus())) {
-                // RÀNG BUỘC PHỤC HỒI: Không cho phép phục hồi nếu đã qua ngày khởi hành
                 java.time.LocalDate today = java.time.LocalDate.now();
                 if (departure.getDepartureDate() != null && departure.getDepartureDate().isBefore(today)) {
                     redirectAttributes.addFlashAttribute("error", "Lỗi: Chuyến đi này đã qua ngày khởi hành (" + departure.getDepartureDate().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "), không thể phục hồi bán!");
                     return "redirect:/admin/departures/" + departureId;
                 }
 
-                // Logic thông minh: Kiểm tra xem còn chỗ không để set trạng thái chuẩn
                 if (departure.getAvailableSeats() > 0) {
                     departure.setStatus("open"); // Còn chỗ thì mở bán lại
                 } else {
@@ -529,7 +523,6 @@ public class DepartureController {
 
             model.addAttribute("departure", departure);
 
-            // Đổ danh sách Hướng dẫn viên ra để chọn
             model.addAttribute("guides", adminService.getAllAdmins());
 
             return "assign_guide";

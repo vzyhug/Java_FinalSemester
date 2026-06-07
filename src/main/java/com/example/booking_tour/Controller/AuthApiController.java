@@ -21,16 +21,16 @@ public class AuthApiController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginData, HttpSession session) {
-        String email = loginData.get("username"); // Trong JS tôi gửi "username" đại diện cho email
+        String email = loginData.get("username");
         String password = loginData.get("password");
 
         Customer loggedInCustomer = customerService.login(email, password);
         
         if (loggedInCustomer != null) {
-            // 1. LƯU SESSION ĐỂ THYMELEAF HOẠT ĐỘNG (Trang chủ hiển thị tên)
+            // LƯU SESSION ĐỂ THYMELEAF HOẠT ĐỘNG
             session.setAttribute("loggedInCustomer", loggedInCustomer);
             
-            // 2. TẠO JWT TOKEN ĐỂ FRONTEND LƯU LOCALSTORAGE (Quản lý 20 phút)
+            // .TẠO JWT TOKEN ĐỂ FRONTEND LƯU LOCALSTORAGE
             String token = jwtUtils.generateToken(email);
             
             Map<String, Object> response = new HashMap<>();
@@ -43,18 +43,18 @@ public class AuthApiController {
         }
     }
 
-    // Tự động khôi phục Session (Phục vụ trường hợp tắt Server mở lại)
+    // Tự động khôi phục Session
     @PostMapping("/restore-session")
     public ResponseEntity<?> restoreSession(@RequestHeader(value = "Authorization", required = false) String authHeader, HttpSession session) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(401).body("Missing token");
         }
-        
+
         String token = authHeader.substring(7);
         if (jwtUtils.validateToken(token)) {
             String email = jwtUtils.getEmailFromToken(token);
-            Customer customer = customerService.findByEmail(email); 
-            
+            Customer customer = customerService.findByEmail(email);
+
             if(customer != null) {
                session.setAttribute("loggedInCustomer", customer);
                return ResponseEntity.ok(Map.of("message", "Khôi phục thành công"));

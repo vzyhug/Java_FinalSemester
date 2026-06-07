@@ -5,6 +5,7 @@ import com.example.booking_tour.Repository.BillRepository;
 import com.example.booking_tour.Repository.PaymentRepository;
 import com.example.booking_tour.Services.EmployeeServices;
 import com.example.booking_tour.Services.PaymentServices;
+import com.example.booking_tour.Repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -24,19 +25,16 @@ public class PayManagementController {
     private PaymentRepository paymentRepository;
 
     @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
     private EmployeeServices employeeService;
 
     @Autowired
     private PaymentServices paymentServices;
 
 
-    // =========================================================================
-    // QUẢN LÝ GIAO DỊCH & HÓA ĐƠN (Payment/Transaction Management)
-    // - Hỗ trợ lọc danh sách hóa đơn theo trạng thái: đã thanh toán (paid), chờ thanh toán (pending), đã hủy (cancelled).
-    // - Hỗ trợ tìm kiếm theo Mã hóa đơn (billNumber).
-    // - Thống kê động tổng doanh thu thực tế và tổng số lượng theo từng trạng thái.
-    // - Thực hiện lọc và phân trang trong bộ nhớ (In-memory filtering & pagination) để đảm bảo đếm số lượng chính xác 100%.
-    // =========================================================================
+
 //    @GetMapping("/payment_management")
 //    public String paymentManagement(
 //            Model model,
@@ -164,11 +162,15 @@ public class PayManagementController {
         Page<Payment> paymentPage =
                 paymentServices.findAll(page);
 
-        BigDecimal totalRevenue =
-                paymentPage.getContent()
-                        .stream()
-                        .map(Payment::getAmount)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+//        BigDecimal totalRevenue =
+//                paymentPage.getContent()
+//                        .stream()
+//                        .map(Payment::getAmount)
+//                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalRevenue = bookingRepository.calculateTotalRevenue();
+        if (totalRevenue == null) {
+            totalRevenue = BigDecimal.ZERO;
+        }
 
         model.addAttribute("paymentList",
                 paymentPage.getContent());

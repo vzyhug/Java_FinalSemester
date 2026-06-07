@@ -107,7 +107,7 @@ public class LocationManagementController {
 //    }
 
     // =========================================================================
-    // QUẢN LÝ ĐỊA ĐIỂM & DANH SÁCH TỈNH THÀNH (Location & Province Management)
+    // QUẢN LÝ ĐỊA ĐIỂM & DANH SÁCH TỈNH THÀNH
     // =========================================================================
     @GetMapping({"/location_management", "/province_list"})
     public String locationManagement(

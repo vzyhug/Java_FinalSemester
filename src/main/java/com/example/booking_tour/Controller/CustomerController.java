@@ -1,10 +1,9 @@
 package com.example.booking_tour.Controller;
 
-
-
 import com.example.booking_tour.Model.*;
 import com.example.booking_tour.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +12,9 @@ import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -40,9 +34,11 @@ public class CustomerController {
 
     private final PaymentServices paymentService;
     private final BillServices billService;
+    private final PasswordEncoder passwordEncoder;
     // Hiển thị trang đăng nhập cho khách hàng
     @GetMapping("loginForm")
     public String loginForm(Model model) {
+        customerServices.migratePasswords();
         return "redirect:/login";
     }
 
@@ -277,7 +273,7 @@ public class CustomerController {
                 customerServices.getCustomerById(loggedInCustomer.getCustomerId());
 
         // kiểm tra mật khẩu cũ
-        if (!customer.getPasswordHash().equals(currentPassword)) {
+        if (!passwordEncoder.matches(currentPassword, customer.getPasswordHash())) {
 
             model.addAttribute("customer", customer);
             model.addAttribute("error", "Mật khẩu hiện tại không đúng!");
@@ -330,21 +326,21 @@ public class CustomerController {
                 customerServices.getCustomerById(
                         loggedInCustomer.getCustomerId());
 
-        // 1. Kiểm tra Họ và tên không được trống
+        //  Kiểm tra Họ và tên không được trống
         if (formCustomer.getFullName() == null || formCustomer.getFullName().trim().isEmpty()) {
             model.addAttribute("customer", customer);
             model.addAttribute("error", "Lỗi: Họ và tên không được để trống!");
             return "personal_profile";
         }
 
-        // 2. Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
+        // Kiểm tra định dạng Email hợp lệ
         if (formCustomer.getEmail() == null || formCustomer.getEmail().trim().isEmpty() || !formCustomer.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
             model.addAttribute("customer", customer);
             model.addAttribute("error", "Lỗi: Email không đúng định dạng!");
             return "personal_profile";
         }
 
-        // 3. Kiểm tra số điện thoại chỉ chứa các chữ số
+        // Kiểm tra số điện thoại chỉ chứa các chữ số
         if (formCustomer.getPhone() == null || formCustomer.getPhone().trim().isEmpty() || !formCustomer.getPhone().matches("^[0-9]+$")) {
             model.addAttribute("customer", customer);
             model.addAttribute("error", "Lỗi: Số điện thoại phải là số!");
@@ -412,7 +408,7 @@ public class CustomerController {
     }
 
     // ==========================================
-    // 3. THÊM KHÁCH HÀNG MỚI (Từ phía Admin)
+    // 3. THÊM KHÁCH HÀNG MỚI
     // ==========================================
     @GetMapping("/add")
     public String showAddCustomerForm(Model model, HttpSession session) {

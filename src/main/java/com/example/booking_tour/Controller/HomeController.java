@@ -18,6 +18,7 @@ import com.example.booking_tour.Model.Customer;
 import com.example.booking_tour.Repository.EmployeeRepository;
 import com.example.booking_tour.Services.CustomerServices;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 import java.time.LocalDate;
@@ -46,6 +47,9 @@ public class HomeController {
     @Autowired
     CustomerServices customerServices;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("")
     public String home(Model model)
     {
@@ -66,7 +70,7 @@ public class HomeController {
                                Model model) {
         // 1. Thử đăng nhập Nhân viên / Admin trước
         Employee employee = employeeRepository.findByUsername(usernameOrEmail);
-        if (employee != null && employee.getPasswordHash().equals(password) && employee.getIsActive()) {
+        if (employee != null && passwordEncoder.matches(password, employee.getPasswordHash()) && employee.getIsActive()) {
             session.setAttribute("loggedInAdmin", employee);
             if (employee.getRole().getRoleName().equalsIgnoreCase("Admin")) {
                 return "redirect:/admin/dashboard";

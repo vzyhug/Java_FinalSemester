@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -168,7 +167,7 @@ public class CustomerServices {
     // ==================== DATA RETRIEVAL ====================
 
     /**
-     * Lấy danh sách TẤT CẢ khách hàng
+     * Lấy danh sách tất cả khách hàng
      */
     public List<Customer> getAllCustomers() {
         try {
@@ -310,20 +309,20 @@ public class CustomerServices {
     public void toggleCustomerStatus(Integer customerId) {
         System.out.println("--- BẮT ĐẦU VÀO SERVICE ---");
 
-        // 1. Tìm khách hàng
+        //Tìm khách hàng
         Customer customer = customerRepository.findById(customerId).orElse(null);
 
         if (customer != null) {
             System.out.println("- Đã tìm thấy khách hàng: " + customer.getFullName());
             System.out.println("- Trạng thái cũ trong DB: " + customer.getIsActive());
 
-            // 2. Đổi trạng thái
+            //Đổi trạng thái
             boolean currentStatus = customer.getIsActive() != null ? customer.getIsActive() : true;
             customer.setIsActive(!currentStatus);
 
             System.out.println("- Trạng thái MỚI chuẩn bị lưu: " + customer.getIsActive());
 
-            // 3. Lưu xuống DB
+            //Lưu xuống DB
             customerRepository.save(customer);
             System.out.println("- Đã gọi lệnh SAVE thành công!");
 

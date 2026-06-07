@@ -20,7 +20,6 @@ public class PaymentController {
     @Autowired
     private BookingServices bookingServices;
 
-    // 1. Endpoint nhận dữ liệu Đặt Tour và khởi tạo Thanh toán
     @PostMapping("/process")
     public String processPayment(@ModelAttribute BookingPaymentDTO dto, HttpSession session, Model model) {
 
@@ -35,7 +34,6 @@ public class PaymentController {
         }
 
         try {
-            // Lưu trực tiếp vào Database để hoàn thiện Booking
             bookingServices.saveBookingAndPassengerAndPayment(dto, bookingStage1, bookingPassengers, loggedInCustomer);
 
             // Xóa session sau khi lưu xong
@@ -50,15 +48,12 @@ public class PaymentController {
         }
     }
 
-    // 2. Endpoint nhận Callback (Kết quả trả về) từ cổng thanh toán
     @GetMapping("/vnpay-return")
     public String paymentReturn(@RequestParam(value = "vnp_ResponseCode", required = false) String responseCode,
                                 HttpSession session, Model model) {
 
-        // Giả lập: Nếu không truyền param lên thì cứ cho là thành công ("00")
         if (responseCode == null || "00".equals(responseCode)) {
 
-            // LẤY LẠI DỮ LIỆU TẠM: Ép kiểu lại thành DTO đã lưu trước đó
             BookingPaymentDTO bookingData = (BookingPaymentDTO) session.getAttribute("TEMP_BOOKING");
 
             if (bookingData != null) {

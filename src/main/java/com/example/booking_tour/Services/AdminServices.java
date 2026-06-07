@@ -5,6 +5,7 @@ import com.example.booking_tour.Model.Employee;
 import com.example.booking_tour.Model.Payment;
 import com.example.booking_tour.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,6 +29,9 @@ public class AdminServices {
     @Autowired
     private TourRepository tourRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // ==================== AUTHENTICATION ====================
     public Employee adminLogin(String username, String password) {
         try {
@@ -39,7 +43,7 @@ public class AdminServices {
             }
 
             // Kiểm tra mật khẩu (hiện tại so sánh trực tiếp, sau này dùng BCrypt)
-            if (!employee.getPasswordHash().equals(password)) {
+            if (!passwordEncoder.matches(password, employee.getPasswordHash())) {
                 return null;
             }
 

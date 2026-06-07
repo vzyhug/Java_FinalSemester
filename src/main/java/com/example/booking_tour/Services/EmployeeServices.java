@@ -3,6 +3,7 @@ package com.example.booking_tour.Services;
 import com.example.booking_tour.Model.Employee;
 import com.example.booking_tour.Repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,12 +13,19 @@ public class EmployeeServices {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // lấy tất cả nhân viên
     public List<Employee> getAllEmployees(){
         return employeeRepository.findAll();
     }
     //thêm nhân viên mới
     public Employee saveEmployee(Employee employee){
+        String raw = employee.getPasswordHash();
+        if (raw != null && !raw.trim().isEmpty() && !CustomerServices.isAlreadyHashed(raw)) {
+            employee.setPasswordHash(passwordEncoder.encode(raw));
+        }
         return employeeRepository.save(employee);
     }
     public void deleteEmployee(Integer id) {

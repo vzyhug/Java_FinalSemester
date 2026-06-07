@@ -14,9 +14,7 @@ public class ProvinceController {
     @Autowired
     private ProvinceRepository provinceRepository;
 
-    // ================= REDIRECT ROOT =================
-    // - Chuyển hướng người dùng về trang quản lý địa điểm tổng hợp để tránh lỗi 404
-    // =================================================
+
     @GetMapping
     public String index() {
         return "redirect:/location_management";

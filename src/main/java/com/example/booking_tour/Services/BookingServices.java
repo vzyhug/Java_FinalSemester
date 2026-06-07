@@ -34,9 +34,7 @@ public class BookingServices {
     @Autowired
     private com.example.booking_tour.Repository.TourDepartureRepository tourDepartureRepository;
 
-    // =========================================================================
-    // CẬP NHẬT SỐ CHỖ DYNAMIC (Recalculate available seats based on active bookings)
-    // =========================================================================
+    // CẬP NHẬT SỐ CHỖ
     public void updateAvailableSeats(Integer departureId) {
         if (departureId == null) return;
         TourDeparture departure = tdServices.getTourDepartureById(departureId);

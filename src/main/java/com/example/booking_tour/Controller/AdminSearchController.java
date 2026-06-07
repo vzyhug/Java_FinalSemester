@@ -26,14 +26,13 @@ public class AdminSearchController {
             HttpSession session,
             Model model) {
 
-        // 1. Giữ lại trạng thái đăng nhập của Admin ngoài Layout
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
             return "redirect:/auth/loginForm";
         }
         model.addAttribute("admin", loggedInAdmin);
 
-        // 2. Xử lý tìm kiếm thực tế dưới DB và thảy ngược lại cho giao diện kết quả
+        // Xử lý tìm kiếm thực tế dưới DB và thảy ngược lại cho giao diện kết quả
         if (keyword != null && !keyword.trim().isEmpty()) {
             model.addAttribute("searchedTours", tourService.searchTours(keyword));
             model.addAttribute("searchedCustomers", customerService.searchCustomersByName(keyword));

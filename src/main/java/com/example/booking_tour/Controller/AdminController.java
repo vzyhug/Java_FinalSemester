@@ -42,7 +42,6 @@ public class AdminController {
                 endDate = java.time.LocalDate.parse(endDateStr);
             }
 
-            // CHẶN NGAY NẾU NGÀY ĐI > NGÀY VỀ
             if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
                 model.addAttribute("error", "Lỗi: Ngày bắt đầu không thể lớn hơn ngày kết thúc!");
                 // Hủy biến startDate và endDate để truy vấn DB không bị lỗi, lấy All-time tạm
@@ -71,11 +70,10 @@ public class AdminController {
         boolean isFiltered = (startDate != null || endDate != null);
 
         if (isFiltered) {
-            // Đã lọc -> Lấy TẤT CẢ các giao dịch nằm trong khoảng thời gian này
             model.addAttribute("recentBookings", adminService.getBookingsListByDateRange(start, end));
             model.addAttribute("isFiltered", true);
         } else {
-            // Không lọc -> Chỉ lấy 5 giao dịch mới nhất
+            // Không lọc thì Chỉ lấy 5 giao dịch mới nhất
             model.addAttribute("recentBookings", adminService.getRecentBookings(5));
             model.addAttribute("isFiltered", false);
         }
