@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Vietnam Expeditions | Trải Nghiệm Du Lịch Tuyển Chọn</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,700;0,900;1,900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f0f0f9",
+                        "surface-bright": "#f9f9ff",
+                        "on-primary-container": "#bbd0ff",
+                        "surface-container": "#ededf6",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e1e2ea",
+                        "primary-container": "#0056b3",
+                        "secondary": "#a43c12",
+                        "surface": "#f9f9ff",
+                        "primary-fixed-dim": "#acc7ff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e7e8f0",
+                        "on-secondary-fixed-variant": "#822800",
+                        "primary-fixed": "#d7e2ff",
+                        "on-surface": "#191c21",
+                        "on-tertiary-container": "#ffc2a7",
+                        "tertiary-fixed-dim": "#ffb694",
+                        "background": "#f9f9ff",
+                        "outline-variant": "#c2c6d4",
+                        "on-secondary-container": "#6b1f00",
+                        "surface-container-low": "#f2f3fc",
+                        "on-background": "#191c21",
+                        "on-secondary-fixed": "#380c00",
+                        "primary": "#003f87",
+                        "inverse-surface": "#2e3037",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#424752",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#722b00",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#983c00",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#acc7ff",
+                        "on-primary-fixed-variant": "#004491",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#727784",
+                        "surface-dim": "#d9d9e2",
+                        "secondary-fixed": "#ffdbcf",
+                        "surface-container-highest": "#e1e2ea",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-tint": "#115cb9",
+                        "on-tertiary-fixed": "#351000",
+                        "secondary-container": "#fe7e4f",
+                        "on-primary-fixed": "#001a40",
+                        "secondary-fixed-dim": "#ffb59c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Be Vietnam Pro"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-shadow-sm {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+         display: none;
+         }
+
+        .no-scrollbar {
+         -ms-overflow-style: none;
+         scrollbar-width: none;
+         }
+    </style>
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm dark:shadow-none">
+    <div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+        <a th:href="@{/}" class="text-2xl font-black text-blue-900 dark:text-white italic font-['Be_Vietnam_Pro'] tracking-tight hover:opacity-80 transition-opacity decoration-transparent">
+            Vietnam Expeditions
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" th:href="@{/}">Điểm đến</a>
+            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" th:href="@{/tour}">Tour</a>
+<!--            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" href="#">Ưu đãi</a>-->
+<!--            <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300" href="#">Giới thiệu</a>-->
+        </div>
+        <div class="flex items-center gap-4">
+            <th:block th:if="${session.loggedInCustomer != null}">
+                <a th:href="@{/customer/profile}"
+                   class="text-blue-900 dark:text-white font-bold hover:text-blue-600 transition">
+                    Xin chào,
+                    <span th:text="${session.loggedInCustomer.fullName}"></span>
+                </a>
+                <a th:href="@{/customer/logout}"
+                   class="px-4 py-2 rounded-full text-sm font-bold text-red-600 hover:bg-red-50 transition-transform active:scale-90 inline-block">
+                    Đăng xuất
+                </a>
+            </th:block>
+            <th:block th:if="${session.loggedInCustomer == null}">
+                <a th:href="@{/login}"
+                   class="px-6 py-2 rounded-full font-bold text-blue-800 dark:text-blue-400 hover:bg-slate-100/50 transition-transform active:scale-90 inline-block">
+                    Đăng nhập
+                </a>
+            </th:block>
+        </div>
+    </div>
+</nav>
+
+<div layout:fragment="content" ></div>
+
+<!-- Footer -->
+<footer class="w-full rounded-t-[2rem] mt-20 bg-slate-50 dark:bg-slate-950">
+    <div class="w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto">
+        <div class="mb-8 md:mb-0">
+            <div class="font-black text-xl text-blue-900 dark:text-white mb-4">Vietnam Expeditions</div>
+            <p class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm leading-relaxed max-w-xs">
+                © 2024 Vietnam Expeditions. Những trải nghiệm du lịch được chế tác tỉ mỉ.
+            </p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-8 md:gap-12">
+            <a class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm hover:text-blue-800 dark:hover:text-blue-300 transition-opacity opacity-80 hover:opacity-100" href="#">Chính sách bảo mật</a>
+            <a class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm hover:text-blue-800 dark:hover:text-blue-300 transition-opacity opacity-80 hover:opacity-100" href="#">Điều khoản dịch vụ</a>
+            <a class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm hover:text-blue-800 dark:hover:text-blue-300 transition-opacity opacity-80 hover:opacity-100" href="#">Liên hệ</a>
+            <a class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm hover:text-blue-800 dark:hover:text-blue-300 transition-opacity opacity-80 hover:opacity-100" href="#">Hỏi đáp</a>
+            <a class="text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-sm hover:text-blue-800 dark:hover:text-blue-300 transition-opacity opacity-80 hover:opacity-100" href="#">Cẩm nang du lịch</a>
+        </div>
+        <div class="flex gap-4 mt-8 md:mt-0">
+            <button class="w-10 h-10 rounded-full flex items-center justify-center bg-white shadow-sm hover:bg-primary hover:text-white transition-all text-primary border border-slate-100">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'opsz' 20;">public</span>
+            </button>
+            <button class="w-10 h-10 rounded-full flex items-center justify-center bg-white shadow-sm hover:bg-primary hover:text-white transition-all text-primary border border-slate-100">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'opsz' 20;">share</span>
+            </button>
+        </div>
+    </div>
+</footer>
+</body></html>

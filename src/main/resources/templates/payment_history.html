@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user_layout}">
+<title>Lịch sử thanh toán - Vietnam Expeditions</title>
+
+<div layout:fragment="content">
+  <!-- Main Content Canvas -->
+  <div class="pt-28 px-4 md:px-12 pb-12 min-h-screen">>
+    <div class="max-w-6xl mx-auto">
+      <!-- Header Section -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div>
+          <span class="text-secondary font-bold text-sm tracking-widest uppercase mb-2 block">Quản lý tài chính</span>
+          <h1 class="text-4xl md:text-5xl font-extrabold text-primary tracking-tight">Lịch sử thanh toán</h1>
+          <p class="text-on-surface-variant mt-3 max-w-lg leading-relaxed">
+            Theo dõi tất cả các giao dịch của bạn với Vietnam Expeditions. Bạn có thể xem chi tiết và tải hóa đơn cho từng chuyến đi.
+          </p>
+        </div>
+        <div class="flex gap-4">
+          <div class="bg-surface-container-low p-4 rounded-xl flex flex-col gap-1 min-w-[160px]">
+            <span class="text-xs text-on-surface-variant font-medium">Tổng chi tiêu</span>
+            <span class="text-2xl font-bold text-primary"
+                  th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+          </span>
+          </div>
+        </div>
+      </div>
+      <!-- Transactions Grid/Table Section -->
+      <section class="bg-surface-container-low rounded-3xl p-1 md:p-2 overflow-hidden shadow-sm">
+        <div class="overflow-x-auto overflow-y-auto max-h-[520px]">
+          <table class="w-full text-left border-collapse">
+            <thead>
+            <tr class="text-on-surface-variant text-sm font-semibold border-b border-outline-variant/10">
+              <th class="px-6 py-5">Mã giao dịch</th>
+              <th class="px-6 py-5">Tên tour</th>
+              <th class="px-6 py-5">Ngày thanh toán</th>
+              <th class="px-6 py-5">Số tiền</th>
+              <th class="px-6 py-5">Phương thức</th>
+              <th class="px-6 py-5">Trạng thái</th>
+              <th class="px-6 py-5 text-right">Tác vụ</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/10">
+
+            <tr th:each="payment : ${payments}"
+                class="hover:bg-surface-container-lowest transition-colors group">
+
+              <!-- Mã giao dịch -->
+              <td class="px-6 py-6 font-mono text-xs text-primary font-bold"
+                  th:text="'#PAY-' + ${payment.paymentId}">
+              </td>
+
+              <!-- Tên tour -->
+              <td class="px-6 py-6">
+                <div class="flex items-center gap-3">
+
+                  <!-- Ảnh tour -->
+                  <div class="w-10 h-10 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
+
+                    <img class="w-full h-full object-cover"
+                         th:src="${payment.booking != null
+                       and payment.booking.departure != null
+                       and payment.booking.departure.tour != null
+                       and payment.booking.departure.tour.imagesThumbnails != null
+                       ? payment.booking.departure.tour.imagesThumbnails.imgURL
+                       : 'https://via.placeholder.com/100'}"
+                         alt="tour"/>
+                  </div>
+
+                  <!-- Tên tour -->
+                  <span class="font-bold text-sm text-on-surface"
+                        th:text="${payment.booking != null
+                      and payment.booking.departure != null
+                      and payment.booking.departure.tour != null}
+                      ? ${payment.booking.departure.tour.title}
+                      : 'Tour không xác định'">
+                </span>
+
+                </div>
+              </td>
+
+              <!-- Ngày thanh toán -->
+              <td class="px-6 py-6 text-sm text-on-surface-variant"
+                  th:text="${#temporals.format(payment.paymentDate, 'dd/MM/yyyy')}">
+              </td>
+
+              <!-- Số tiền -->
+              <td class="px-6 py-6 text-sm font-bold text-primary"
+                  th:text="${#numbers.formatDecimal(payment.amount, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+              </td>
+
+              <!-- Phương thức -->
+              <td class="px-6 py-6 text-sm text-on-surface-variant"
+                  th:text="${payment.paymentMethod}">
+              </td>
+
+              <!-- Trạng thái -->
+              <td class="px-6 py-6">
+
+            <span th:if="${payment.notes == null}"
+                  class="inline-flex items-center px-3 py-1 rounded-full
+                 text-xs font-bold bg-amber-100 text-amber-700">
+               Đang xử lý
+            </span>
+
+                <span th:if="${payment.notes != null}"
+                      class="inline-flex items-center px-3 py-1 rounded-full
+                 text-xs font-bold bg-green-100 text-green-700"
+                      th:text="${payment.notes}">
+              </span>
+
+              </td>
+
+              <!-- Tải hóa đơn -->
+              <td class="px-6 py-6 text-right">
+
+                <a th:if="${payment.booking != null}"
+                   th:href="@{/bill/download/{id}(id=${payment.booking.bookingId})}"
+                   class="inline-flex items-center gap-2 px-4 py-2
+                  bg-surface-container-highest text-primary rounded-full
+                  text-xs font-bold hover:bg-primary hover:text-white
+                  transition-all active:scale-95">
+
+            <span class="material-symbols-outlined text-lg">
+                download
+            </span>
+
+                  Tải hóa đơn
+                </a>
+
+              </td>
+
+            </tr>
+
+            <!-- Nếu không có payment -->
+            <tr th:if="${#lists.isEmpty(payments)}">
+              <td colspan="7"
+                  class="text-center py-10 text-slate-500 text-sm">
+                Chưa có lịch sử thanh toán
+              </td>
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+      <!-- Featured Banner (Editorial Element) -->
+      <div class="mt-16 relative rounded-[2rem] overflow-hidden aspect-[21/9] md:aspect-[21/6]">
+        <img class="w-full h-full object-cover" data-alt="panoramic landscape of Ninh Binh peaks with a wooden row boat on a mirror-like river at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXte6c_AGhgzgfQ6yeFkoq7YYSDYY7gnRALMmrEutO54hsx9UST503sP6WNPD9swJkgBX-ihi0KiJQMbDYAzHK9atKwmuB_cgprgDM--adrHHYUdoqCv5Rv5KBjsRwh-LpCzmgKIyQd527zzOEjc6sAQmAJ_E8aN5QC7-96l01BK8V-jUMl_9u5gRIDv46KbjHVgTq6lHV-OlO2vh2F7IPbUDAuWmGjX0Sp9b6AMoC0_JKPNBfuq8Rv7XkGoa1blsTtdV7JyrP4_cH"/>
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-transparent flex items-center px-12">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Mobile Navigation Bar -->
+  <footer class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 h-16 flex items-center justify-around z-50">
+    <button class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">explore</span>
+      <span class="text-[10px]">Khám phá</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">confirmation_number</span>
+      <span class="text-[10px]">Booking</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-primary">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+      <span class="text-[10px] font-bold">Thanh toán</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">account_circle</span>
+      <span class="text-[10px]">Cá nhân</span>
+    </button>
+  </footer>
+</div>
+</html>

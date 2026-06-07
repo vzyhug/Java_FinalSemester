@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/admin_layout :: layout(~{:: #detail-departure-content})}">
+<head>
+    <title>Chi tiết Chuyến đi - Vietnam Expeditions</title>
+</head>
+<body>
+<div id="detail-departure-content" class="p-8">
+
+    <div th:if="${error != null || param.error != null}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm flex items-center">
+        <span class="material-symbols-outlined mr-2">error</span>
+        <span th:text="${error != null ? error : param.error}"></span>
+    </div>
+
+    <div th:if="${success != null || param.success != null || message != null || param.message != null}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg shadow-sm flex items-center">
+        <span class="material-symbols-outlined mr-2">check_circle</span>
+        <span th:text="${success != null ? success : (message != null ? message : (param.success != null ? param.success : param.message))}"></span>
+    </div>
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <div>
+            <h1 class="text-3xl font-black text-blue-900 mb-2">Chi tiết Chuyến khởi hành</h1>
+            <p class="text-slate-500 text-lg font-semibold" th:text="${dep.tour != null ? dep.tour.title : 'Tour chưa cập nhật'}">Tên Tour</p>
+        </div>
+
+        <div class="flex gap-2">
+            <a th:if="${dep.status != 'cancelled' && dep.status != 'completed'}" th:href="@{/admin/departures/assign-guide/{id}(id=${dep.departureId})}" class="bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg font-bold hover:bg-indigo-100 transition flex items-center">
+                <span class="material-symbols-outlined text-sm mr-1">person_add</span> Gán HDV
+            </a>
+
+            <a th:if="${dep.status != 'cancelled' && dep.status != 'completed'}" th:href="@{/admin/departures/edit/{id}(id=${dep.departureId})}" class="bg-amber-50 text-amber-600 px-4 py-2 rounded-lg font-bold hover:bg-amber-100 transition flex items-center">
+                <span class="material-symbols-outlined text-sm mr-1">edit</span> Sửa thông tin
+            </a>
+            <a th:if="${dep.status != 'cancelled' && dep.status != 'completed'}" th:href="@{/admin/departures/cancel/{id}(id=${dep.departureId})}"
+               onclick="return confirm('Bạn có chắc chắn muốn hủy chuyến này?')"
+               class="bg-red-50 text-red-600 px-4 py-2 rounded-lg font-bold hover:bg-red-100 transition flex items-center">
+                <span class="material-symbols-outlined text-sm mr-1">block</span> Hủy chuyến
+            </a>
+            
+            <!-- Nút Hoàn thành chuyến đi -->
+            <a th:if="${dep.status != 'cancelled' && dep.status != 'completed'}" 
+               th:href="@{/admin/departures/complete/{id}(id=${dep.departureId})}"
+               onclick="return confirm('Bạn có chắc chắn muốn hoàn thành chuyến khởi hành này?')"
+               class="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg font-bold hover:bg-blue-100 transition flex items-center">
+                <span class="material-symbols-outlined text-sm mr-1">task_alt</span> Hoàn thành
+            </a>
+
+            <!-- Nút Phục hồi nếu còn trong tương lai/ngày hôm nay -->
+            <a th:if="${dep.status == 'cancelled' && (dep.departureDate == null || !dep.departureDate.isBefore(T(java.time.LocalDate).now()))}"
+               th:href="@{/admin/departures/restore/{id}(id=${dep.departureId})}"
+               onclick="return confirm('Bạn có chắc chắn muốn mở bán lại chuyến đi này?')"
+               class="bg-green-50 text-green-700 px-4 py-2 rounded-lg font-bold hover:bg-green-100 transition flex items-center">
+                <span class="material-symbols-outlined text-sm mr-1">restore_from_trash</span> Phục hồi
+            </a>
+
+            <!-- Phiên bản Vô hiệu hóa (Đã qua ngày khởi hành) -->
+            <span th:if="${dep.status == 'cancelled' && dep.departureDate != null && dep.departureDate.isBefore(T(java.time.LocalDate).now())}"
+                   class="bg-slate-100 text-slate-400 px-4 py-2 rounded-lg font-bold flex items-center cursor-not-allowed border border-slate-200"
+                   title="Chuyến đi đã qua ngày khởi hành, không thể phục hồi bán">
+                <span class="material-symbols-outlined text-sm mr-1">history</span> Quá hạn phục hồi
+            </span>
+            <a th:href="@{/admin/departures}" class="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg font-bold hover:bg-slate-300 transition flex items-center">
+                <span class="material-symbols-outlined text-sm mr-1">arrow_back</span> Trở về
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-4 md:col-span-2">
+                <h3 class="text-lg font-bold text-slate-800 border-b pb-2">Thông tin lịch trình</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-bold text-slate-500 mb-1">Mã chuyến đi (ID)</p>
+                        <p class="text-lg font-semibold text-slate-900" th:text="${'#' + dep.departureId}">#</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-500 mb-1">Trạng thái</p>
+                        <span class="px-3 py-1 rounded-full font-bold text-xs inline-block"
+                              th:classappend="${dep.status == 'open' ? 'bg-green-100 text-green-700' : (dep.status == 'full' ? 'bg-orange-100 text-orange-700' : (dep.status == 'completed' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'))}"
+                              th:text="${dep.status == 'open' ? 'Đang mở bán' : (dep.status == 'full' ? 'Đã đầy' : (dep.status == 'completed' ? 'Đã hoàn thành' : 'Đã hủy'))}">
+                        </span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-500 mb-1">Ngày khởi hành</p>
+                        <p class="text-lg font-semibold text-blue-900" th:text="${dep.departureDate != null ? #temporals.format(dep.departureDate, 'dd/MM/yyyy') : 'Chưa cập nhật'}">--</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-500 mb-1">Ngày trở về</p>
+                        <p class="text-lg font-semibold text-blue-900" th:text="${dep.returnDate != null ? #temporals.format(dep.returnDate, 'dd/MM/yyyy') : 'Chưa cập nhật'}">--</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4 md:col-span-2">
+                <h3 class="text-lg font-bold text-slate-800 border-b pb-2">Tài chính & Nhân sự</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-bold text-slate-500 mb-1">Số chỗ (Đã đặt / Tổng)</p>
+                        <p class="text-lg font-semibold text-slate-900">
+                            <span class="text-blue-600" th:text="${(dep.maxSeats ?: 0) - (dep.availableSeats ?: 0)}">0</span> /
+                            <span th:text="${dep.maxSeats ?: 0}">0</span>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-500 mb-1">Hướng dẫn viên</p>
+                        <p class="text-lg font-semibold text-slate-900" th:text="${dep.guide != null ? dep.guide.fullName : 'Chưa phân công'}">--</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-500 mb-1">Giá người lớn</p>
+                        <p class="text-lg font-semibold text-green-600" th:text="${dep.adultPrice != null ? #numbers.formatDecimal(dep.adultPrice, 0, 'COMMA', 0, 'POINT') + ' đ' : 'Chưa cập nhật'}">--</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-500 mb-1">Giá trẻ em</p>
+                        <p class="text-lg font-semibold text-green-600" th:text="${dep.childPrice != null ? #numbers.formatDecimal(dep.childPrice, 0, 'COMMA', 0, 'POINT') + ' đ' : 'Chưa cập nhật'}">--</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <!-- Modern Tab Header -->
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex flex-wrap items-center gap-4">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-blue-900">group</span> Danh sách khách hàng
+                </h2>
+                <!-- Sleek Tab Switcher -->
+                <div class="flex bg-slate-200/60 p-1 rounded-xl text-sm font-semibold border border-slate-200">
+                    <button id="btn-tab-bookings" type="button" onclick="switchTab('bookings')" class="px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 bg-white text-blue-955 shadow-sm border border-slate-100/50">
+                        <span class="material-symbols-outlined text-base">receipt_long</span>
+                        Đơn đặt tour
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-bold" th:text="${bookings != null ? #lists.size(bookings) : 0}">0</span>
+                    </button>
+                    <button id="btn-tab-passengers" type="button" onclick="switchTab('passengers')" class="px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
+                        <span class="material-symbols-outlined text-base">person</span>
+                        Hành khách thực tế
+                        <span class="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-bold animate-pulse" th:text="${passengers != null ? #lists.size(passengers) : 0}">0</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-xs text-slate-500 font-medium">
+                * Tổng cộng <span class="font-bold text-blue-600" th:text="${passengers != null ? #lists.size(passengers) : 0}">0</span> vé từ <span class="font-bold text-blue-600" th:text="${bookings != null ? #lists.size(bookings) : 0}">0</span> lượt đặt.
+            </div>
+        </div>
+
+        <!-- Tab Content 1: Bookings List -->
+        <div id="tab-bookings-content" class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-white text-slate-500 text-sm border-b">
+                    <th class="py-4 px-6 font-bold">Mã Đặt</th>
+                    <th class="py-4 px-6 font-bold">Khách hàng liên hệ</th>
+                    <th class="py-4 px-6 font-bold">Số điện thoại</th>
+                    <th class="py-4 px-6 font-bold text-center">Số vé (NL/TE)</th>
+                    <th class="py-4 px-6 font-bold text-right">Tổng tiền</th>
+                    <th class="py-4 px-6 font-bold">Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${bookings != null}" th:each="b : ${bookings}" class="border-b border-slate-50 hover:bg-slate-50 transition">
+                    <td class="py-3 px-6 font-semibold text-blue-900" th:text="${'#BKG' + b.bookingId}">#</td>
+                    <td class="py-3 px-6 font-medium text-slate-900" th:text="${b.customer != null ? b.customer.fullName : 'Khách vãng lai'}">Tên khách</td>
+                    <td class="py-3 px-6 text-slate-600" th:text="${b.customer != null ? b.customer.phone : '--'}">SĐT</td>
+                    <td class="py-3 px-6 text-center text-slate-700">
+                        <span th:text="${b.totalAdults ?: 0}">0</span> / <span th:text="${b.totalChildren ?: 0}">0</span>
+                    </td>
+
+                    <td class="py-3 px-6 text-right font-bold text-green-600" th:text="${b.totalAmount != null ? #numbers.formatDecimal(b.totalAmount, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}">0 đ</td>
+
+                    <td class="py-3 px-6">
+                            <span class="px-2 py-1 rounded-md text-xs font-bold"
+                                  th:if="${b.status != null}"
+                                  th:classappend="${b.status == 'confirmed' || b.status == 'paid' || b.status == 'completed' ? 'bg-green-100 text-green-700' : (b.status == 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700')}"
+                                  th:text="${b.status == 'confirmed' || b.status == 'paid' ? 'Đã thu tiền' : (b.status == 'completed' ? 'Hoàn thành' : (b.status == 'pending' ? 'Chờ thanh toán' : 'Đã hủy'))}">
+                            </span>
+                        <span th:if="${b.status == null}" class="text-slate-400 italic text-xs">Chưa có DL</span>
+                    </td>
+                </tr>
+
+                <tr th:if="${bookings == null or #lists.isEmpty(bookings)}">
+                    <td colspan="6" class="text-center py-10">
+                        <span class="material-symbols-outlined text-4xl text-slate-300 block mb-2">event_seat</span>
+                        <p class="text-slate-500 font-medium">Chưa có khách hàng nào đặt chuyến đi này.</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tab Content 2: Passengers List -->
+        <div id="tab-passengers-content" class="overflow-x-auto hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-white text-slate-500 text-sm border-b">
+                    <th class="py-4 px-6 font-bold">STT</th>
+                    <th class="py-4 px-6 font-bold">Tên Hành Khách</th>
+                    <th class="py-4 px-6 font-bold">Loại Vé</th>
+                    <th class="py-4 px-6 font-bold">Số CMND/CCCD</th>
+                    <th class="py-4 px-6 font-bold">Ngày sinh</th>
+                    <th class="py-4 px-6 font-bold">Đơn đặt liên kết</th>
+                    <th class="py-4 px-6 font-bold">Người đặt liên hệ</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${passengers != null}" th:each="p, iter : ${passengers}" class="border-b border-slate-50 hover:bg-slate-50 transition">
+                    <td class="py-3 px-6 text-slate-500 font-medium" th:text="${iter.count}">1</td>
+                    <td class="py-3 px-6 font-bold text-slate-800" th:text="${p.fullName}">Tên hành khách</td>
+                    <td class="py-3 px-6">
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold"
+                              th:classappend="${p.passengerType != null && p.passengerType.name() == 'adult' ? 'bg-indigo-100 text-indigo-700' : 'bg-teal-100 text-teal-700'}"
+                              th:text="${p.passengerType != null && p.passengerType.name() == 'adult' ? 'Người lớn' : 'Trẻ em'}">
+                            Người lớn
+                        </span>
+                    </td>
+                    <td class="py-3 px-6 text-slate-600 font-mono" th:text="${p.idCard != null && p.idCard != '' ? p.idCard : '--'}">--</td>
+                    <td class="py-3 px-6 text-slate-600" th:text="${p.dateOfBirth != null ? #temporals.format(p.dateOfBirth, 'dd/MM/yyyy') : '--'}">--</td>
+                    <td class="py-3 px-6 font-semibold text-blue-900" th:text="${p.booking != null ? '#BKG' + p.booking.bookingId : '--'}">#BKG0</td>
+                    <td class="py-3 px-6 text-slate-600 font-medium" th:text="${p.booking != null && p.booking.customer != null ? p.booking.customer.fullName : 'Khách vãng lai'}">Liên hệ</td>
+                </tr>
+
+                <tr th:if="${passengers == null or #lists.isEmpty(passengers)}">
+                    <td colspan="7" class="text-center py-10">
+                        <span class="material-symbols-outlined text-4xl text-slate-300 block mb-2">person_off</span>
+                        <p class="text-slate-500 font-medium">Chưa có hành khách nào đăng ký cho chuyến đi này.</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Client-side Tab Switching Script -->
+    <script>
+        function switchTab(tab) {
+            const btnBookings = document.getElementById('btn-tab-bookings');
+            const btnPassengers = document.getElementById('btn-tab-passengers');
+            const contentBookings = document.getElementById('tab-bookings-content');
+            const contentPassengers = document.getElementById('tab-passengers-content');
+
+            if (tab === 'bookings') {
+                btnBookings.className = "px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 bg-white text-blue-950 shadow-sm border border-slate-100/50 font-semibold";
+                btnPassengers.className = "px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 text-slate-600 hover:text-slate-900 font-semibold";
+                
+                contentBookings.classList.remove('hidden');
+                contentPassengers.classList.add('hidden');
+            } else {
+                btnBookings.className = "px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 text-slate-600 hover:text-slate-900 font-semibold";
+                btnPassengers.className = "px-4 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 bg-white text-blue-955 shadow-sm border border-slate-100/50 font-semibold";
+                
+                contentBookings.classList.add('hidden');
+                contentPassengers.classList.remove('hidden');
+            }
+        }
+    </script>
+
+</div>
+</body>
+</html>

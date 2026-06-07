@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{user_layout}">
+
+<div layout:fragment="content">
+
+  <div class="text-xs text-slate-400 mb-4">
+    <a th:href="@{/customer/booking/{id}(id=${booking.bookingId})}" class="hover:text-primary flex items-center gap-1">
+      <span class="material-symbols-outlined text-xs">arrow_back</span> Quay lại chi tiết chuyến đi
+    </a>
+  </div>
+
+  <div class="mb-6">
+    <h2 class="text-2xl font-black text-primary tracking-tight">Đánh giá chuyến đi của bạn</h2>
+    <p class="text-xs text-slate-500 mt-1">
+      Chia sẻ trải nghiệm thực tế của bạn tại
+      <span class="font-bold text-slate-700" th:text="${booking.departure.tour.title}">Tên Tour</span> cùng Vietnam Expeditions.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <div class="lg:col-span-4 bg-surface-container-low rounded-xl p-5 border border-slate-100 space-y-4">
+      <div class="h-44 rounded-lg overflow-hidden bg-slate-200">
+        <img th:src="${booking.departure.tour.ImagesThumbnails.imgURL}" alt="Tour Image" class="w-full h-full object-cover">
+      </div>
+      <div>
+        <span class="bg-secondary/10 text-secondary text-[10px] font-black uppercase px-2.5 py-1 rounded" th:text="${booking.departure.tour.category?.categoryName ?: 'MẠO HIỂM / KHÁM PHÁ'}">MẠO HIỂM / KHÁM PHÁ</span>
+        <h3 class="text-lg font-bold text-primary mt-2" th:text="${booking.departure.tour.title}">Tên chuyến đi</h3>
+
+        <div class="mt-3 space-y-1.5 text-xs text-slate-500">
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">calendar_today</span>
+            Khởi hành: <span th:text="${#temporals.format(booking.departure.departureDate, 'dd/MM/yyyy')}">12/04/2026</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">location_on</span>
+            Điểm đến: <span th:text="${booking.departure.tour.province.provinceName}">Quảng Bình, Việt Nam</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">person</span>
+            Mã đặt tour: #<span th:text="${booking.bookingId}">123</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-8 bg-surface-container-lowest border border-slate-100 rounded-xl p-6 shadow-sm">
+
+      <form th:action="@{/customer/booking/{id}/review/save_review(id=${booking.bookingId})}" method="POST" class="space-y-6">
+
+        <div class="space-y-2">
+          <label for="tour-rating" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+            Bạn đánh giá tour này thế nào? (Từ 1 đến 5)
+          </label>
+
+          <div class="flex items-center gap-2">
+            <input
+                    type="number"
+                    id="tour-rating"
+                    name="rating"
+                    min="1"
+                    max="5"
+                    step="0.5"
+                    value="5.0"
+                    class="w-24 rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+            <span class="material-symbols-outlined text-amber-500 text-2xl select-none">star</span>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">Cảm nhận của bạn</label>
+          <textarea name="feedback" rows="4" required
+                    placeholder="Chia sẻ những kỷ niệm đáng nhớ nhất hoặc những góp ý để chúng tôi hoàn thiện hơn"
+                    class="w-full bg-surface-container-low border border-slate-200 rounded-lg p-3 text-sm focus:ring-1 focus:ring-primary focus:bg-white transition-all"></textarea>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
+          <a th:href="@{/customer/booking/{id}(id=${booking.bookingId})}"
+             class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600 rounded-lg transition-colors">
+            Hủy bỏ
+          </a>
+          <button type="submit" class="px-6 py-2.5 bg-secondary hover:bg-[#822800] text-white text-xs font-bold rounded-lg shadow-sm transition-colors">
+            Gửi đánh giá
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+</html>

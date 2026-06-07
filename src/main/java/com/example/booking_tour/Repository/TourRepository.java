@@ -1,31 +1,58 @@
 package com.example.booking_tour.Repository;
 
+import com.example.booking_tour.Model.Province;
 import com.example.booking_tour.Model.Tour;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
 
 @Repository
 public interface TourRepository extends JpaRepository<Tour, Integer> {
-    /**
-     * Tìm tour theo tên (có chứa keyword)
-     */
-    List<Tour> findByTitleContaining(String keyword);
 
-    /**
-     * ĐÃ SỬA: Thêm dấu gạch dưới (_) để map chính xác thuộc tính categoryId
-     * bên trong thực thể TourCategory liên kết.
-     */
+    List<Tour> findTop6ByOrderByTourIdDesc();
+
+    Integer countByProvince(Province province);
+
+    Page<Tour> findAll(Pageable pageable);
+
+    Page<Tour> findByTitleContainingIgnoreCase(String keyword, Pageable pageable);
+
     List<Tour> findByCategory_CategoryId(Integer categoryId);
 
-    /**
-     * ĐÃ SỬA: Thêm dấu gạch dưới (_) để map chính xác thuộc tính provinceId
-     * bên trong thực thể Province liên kết.
-     */
     List<Tour> findByProvince_ProvinceId(Integer provinceId);
 
-    /**
-     * Tìm tour theo trạng thái hoạt động
-     */
     List<Tour> findByIsActive(Boolean isActive);
+
+    List<Tour> findByCategory_CategoryIdIn(List<Integer> categoryIds);
+
+    List<Tour> findTop10ByOrderByTourIdDesc();
+
+    long countByProvince_ProvinceId(Integer provinceId);
+
+    @Override
+    @EntityGraph(attributePaths = {"images"})
+    List<Tour> findAll();
+
+    @EntityGraph(attributePaths = {"images"})
+    List<Tour> findTop4By();
+
+    List<Tour> findByTitleContaining(String title);
+
+    List<Tour> findByProvince(Province province);
+
+    List<Tour> findByDurationDays(int day);
+
+    List<Tour> findByPickupPoint(String pickupPoint);
+
+    List<Tour> findAllByOrderByMinPriceAsc();
+
+    List<Tour> findAllByOrderByMinPriceDesc();
+
+
 }
+

@@ -2,8 +2,12 @@ package com.example.booking_tour.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.BatchSize;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import jakarta.validation.constraints.*;
 
 @Data
 @Entity
@@ -14,7 +18,7 @@ public class TourDeparture {
     @Column(name = "departure_id")
     private Integer departureId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
 
@@ -30,9 +34,12 @@ public class TourDeparture {
     @Column(name = "available_seats", nullable = false)
     private Integer availableSeats;
 
+    @NotNull(message = "Giá người lớn không được để trống")
+    @DecimalMin(value = "0.0", message = "Giá người lớn không được là số âm")
     @Column(name = "adult_price", nullable = false, precision = 19, scale = 4)
     private BigDecimal adultPrice;
 
+    @DecimalMin(value = "0.0", message = "Giá trẻ em không được là số âm")
     @Column(name = "child_price", precision = 19, scale = 4)
     private BigDecimal childPrice;
 

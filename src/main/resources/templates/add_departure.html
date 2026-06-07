@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/admin_layout :: layout(~{:: #add-departure-content})}">
+<head>
+    <title>Thêm Chuyến đi Mới - Vietnam Expeditions</title>
+</head>
+<body>
+<div id="add-departure-content" class="p-8">
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-black text-blue-900 mb-2">Thêm Chuyến Khởi Hành Mới</h1>
+        <p class="text-slate-500">Tạo lịch khởi hành mới cho các tour có sẵn trong hệ thống</p>
+    </div>
+
+    <div th:if="${error != null || param.error != null}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm flex items-center max-w-3xl">
+        <span class="material-symbols-outlined mr-2">error</span>
+        <span th:text="${error != null ? error : param.error}"></span>
+    </div>
+
+    <div th:if="${success != null || param.success != null || message != null || param.message != null}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg shadow-sm flex items-center max-w-3xl">
+        <span class="material-symbols-outlined mr-2">check_circle</span>
+        <span th:text="${success != null ? success : (message != null ? message : (param.success != null ? param.success : param.message))}"></span>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 max-w-3xl">
+        <form th:action="@{/admin/departures/save}" th:object="${departure}" method="POST" class="space-y-6">
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Thuộc Tour <span class="text-red-500">*</span></label>
+
+                <select name="tourId" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-900 focus:ring-1 focus:ring-blue-900 outline-none transition" required>
+                    <option value="">-- Vui lòng chọn Tour --</option>
+                    <option th:each="t : ${tours}" th:value="${t.tourId}" th:data-days="${t.durationDays}" th:text="${t.title + ' (' + t.durationDays + ' ngày ' + t.durationNights + ' đêm)'}"></option>
+                </select>
+                <p class="text-xs text-slate-500 mt-1">Danh sách tour đang hoạt động</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Thời gian khởi hành <span class="text-red-500">*</span></label>
+
+                    <input type="date" name="departureDate" id="departureDate" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-900 outline-none" required/>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Thời gian trở về <span class="text-red-500">*</span></label>
+                    <input type="date" name="returnDate" id="returnDate" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-900 outline-none" required/>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-100">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Tổng số chỗ <span class="text-red-500">*</span></label>
+                    <input type="number" name="maxSeats" min="1" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-900 outline-none" required/>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Giá người lớn (VNĐ) <span class="text-red-500">*</span></label>
+                    <input type="number" name="adultPrice" min="0" step="1000" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-900 outline-none" required/>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Giá trẻ em (VNĐ) <span class="text-red-500">*</span></label>
+                    <input type="number" name="childPrice" min="0" step="1000" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-900 outline-none" required/>
+                </div>
+            </div>
+
+            <div class="flex gap-4 pt-6 border-t border-slate-100">
+                <button type="submit" class="bg-blue-900 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-800 transition flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">save</span>
+                    Lưu Chuyến Đi
+                </button>
+                <a th:href="@{/admin/departures}" class="bg-slate-100 text-slate-700 px-8 py-3 rounded-lg font-bold hover:bg-slate-200 transition">
+                    Hủy
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

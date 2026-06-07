@@ -44,6 +44,17 @@
             border-color: #2D318C;
             box-shadow: 0 0 0 0.25rem rgba(45, 49, 140, 0.1);
         }
+        .nav-pills .nav-link {
+            color: #6c757d;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #2D318C !important;
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body>
@@ -53,26 +64,24 @@
         <div class="col-md-5 col-lg-4">
             <div class="card auth-card p-4">
                 <div class="text-center mb-4">
-                    <h2 style="color: #2D318C; font-weight: 700;">Vietnam Expeditions</h2>
+                    <a th:href="@{/}" style="text-decoration: none;"><h2 style="color: #2D318C; font-weight: 700;">Vietnam Expeditions</h2></a>
                     <p class="text-muted">Chào mừng bạn trở lại!</p>
                 </div>
 
-
-                <form th:action="${isAdmin} ? @{/admin/login} : @{/customer/login}" method="post">
+                <form th:action="@{/login}" method="post">
 
                     <div th:if="${error}" class="alert alert-danger text-center small p-2 mb-3">
                         <span th:text="${error}"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label small fw-bold" th:text="${isAdmin} ? 'Tên đăng nhập Nhân viên' : 'Email Khách hàng'">Email hoặc Tên đăng nhập</label>
+                        <label class="form-label small fw-bold">Tên đăng nhập hoặc Email</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
-
                             <input type="text"
-                                   th:name="${isAdmin} ? 'username' : 'email'"
+                                   name="usernameOrEmail"
                                    class="form-control"
-                                   th:placeholder="${isAdmin} ? 'Nhập tài khoản admin...' : 'Nhập email của bạn'"
+                                   placeholder="Nhập email hoặc tài khoản..."
                                    required>
                         </div>
                     </div>
@@ -94,7 +103,7 @@
 
                     <button type="submit" class="btn btn-primary-custom w-100 text-white mb-3">Đăng nhập</button>
 
-                    <div class="text-center" th:if="${!isAdmin}">
+                    <div class="text-center" id="registerBlock">
                         <p class="small mb-0">Bạn chưa có tài khoản?
                             <a th:href="@{/customer/registerForm}" class="fw-bold text-decoration-none" style="color: #2D318C;">Đăng ký ngay</a>
                         </p>
@@ -104,6 +113,36 @@
         </div>
     </div>
 </div>
-
 </body>
+<!-- ==============================================
+     JAVASCRIPT: JWT + 20 PHÚT LOCALSTORAGE
+     ============================================== -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        checkSession();
+    });
+
+    // Hàm tự động check hạn 20 phút mỗi khi vào trang web (có thể bỏ vào thẻ <head> của file layout chung)
+    function checkSession() {
+        const token = localStorage.getItem('jwtToken');
+        const expirationTime = localStorage.getItem('tokenExpiration');
+
+        if (token && expirationTime) {
+            const currentTime = new Date().getTime();
+            if (currentTime > parseInt(expirationTime)) {
+                console.log("Phiên đã hết hạn (quá 20 phút). Đang xóa...");
+                handleLogoutClient();
+            } else {
+                console.log("Còn lại: " + Math.round((parseInt(expirationTime) - currentTime) / 60000) + " phút");
+            }
+        }
+    }
+
+    function handleLogoutClient() {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('tokenExpiration');
+        // Gọi API hoặc redirect để xóa session phía server
+        window.location.href = '/customer/logout';
+    }
+</script>
 </html>

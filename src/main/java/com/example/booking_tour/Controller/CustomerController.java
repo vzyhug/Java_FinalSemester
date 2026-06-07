@@ -1,45 +1,67 @@
 package com.example.booking_tour.Controller;
 
-import com.example.booking_tour.Model.Customer;
-import com.example.booking_tour.Model.Employee;
-import com.example.booking_tour.Services.CustomerServices;
+import com.example.booking_tour.Model.*;
+import com.example.booking_tour.Services.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 @Data
 @Controller
 @RequestMapping("/customer")
 @RequiredArgsConstructor
 public class CustomerController {
-    private final CustomerServices customerService;
+
+    @Autowired
+    private final CustomerServices customerServices;
+
+    @Autowired
+    private final BookingServices bookingServices;
+
+    @Autowired
+    private final ReviewServices reviewServices;
+
+    private final PaymentServices paymentService;
+    private final BillServices billService;
+    private final PasswordEncoder passwordEncoder;
     // Hiển thị trang đăng nhập cho khách hàng
     @GetMapping("loginForm")
     public String loginForm(Model model) {
-        // hiển thị form đăng nhập
-        model.addAttribute("customer", new Customer());
-        return "login_form"; // Trả về tên của view (customer_login.html)
+        customerServices.migratePasswords();
+        return "redirect:/login";
     }
 
     // Đăng nhập tài khoản khách hàng
     @PostMapping("login")
-    public String login(@RequestParam("email") String email, 
-                        @RequestParam("password") String password, 
-                        HttpSession session, 
+    public String login(@RequestParam("email") String email,
+                        @RequestParam("password") String password,
+                        HttpSession session,
                         Model model) {
-        Customer loggedInCustomer = customerService.login(email, password);
+
+        Customer loggedInCustomer = customerServices.login(email, password);
+
         if (loggedInCustomer != null) {
+
             session.setAttribute("loggedInCustomer", loggedInCustomer);
             return "redirect:/";
+
         } else {
-            model.addAttribute("error", "Email hoặc mật khẩu không chính xác!");
+
+            model.addAttribute("error",
+                    "Email hoặc mật khẩu không chính xác!");
+
+            model.addAttribute("isAdmin", false);
             return "login_form";
         }
     }
@@ -66,29 +88,31 @@ public class CustomerController {
             return "register_form"; // Trả lại form nếu có lỗi
         }
         // Lưu thông tin vào database
-        customerService.register(customer);
+        customerServices.register(customer);
         return "redirect:/customer/loginForm";
     }
-
 
     // Trang quản lý khách hàng
     @GetMapping
     public String customerManagement(HttpSession session, Model model) {
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
+            return "redirect:/auth/loginForm";
         }
 
         try {
-            Long totalCustomers = customerService.getTotalCustomers();
-            Long newCustomers = customerService.getNewCustomersThisMonth();
-            Double returnRate = customerService.getReturnRate();
-            Double avgRating = customerService.getAverageRating();
-            List<Customer> customers = customerService.getAllCustomers();
+            Long totalCustomers = customerServices.getTotalCustomers();
+            Long newCustomers = customerServices.getNewCustomersThisMonth();
+            Double returnRate = customerServices.getReturnRate();
+            Double avgRating = customerServices.getAverageRating();
+            List<Customer> customers = customerServices.getAllCustomers();
 
             model.addAttribute("totalCustomers", totalCustomers);
-            model.addAttribute("newCustomersThisMonth", customerService.getNewCustomersThisMonth());
-            model.addAttribute("returnRate", customerService.getReturnRate());
+            model.addAttribute("newCustomersThisMonth", customerServices.getNewCustomersThisMonth());
+            model.addAttribute("returnRate", customerServices.getReturnRate());
+
+
+            model.addAttribute("totalCustomers", totalCustomers);
             model.addAttribute("avgRating", avgRating);
             model.addAttribute("customers", customers);
             model.addAttribute("admin", loggedInAdmin);
@@ -109,18 +133,18 @@ public class CustomerController {
 
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
+            return "redirect:/auth/loginForm";
         }
 
         try {
-            List<Customer> results = customerService.searchCustomersByName(keyword);
+            List<Customer> results = customerServices.searchCustomersByName(keyword);
 
             model.addAttribute("customers", results);
             model.addAttribute("keyword", keyword);
-            model.addAttribute("totalCustomers", customerService.getTotalCustomers());
-            model.addAttribute("newCustomers", customerService.getNewCustomersThisMonth());
-            Double returnRate = customerService.getReturnRate();
-            model.addAttribute("avgRating", customerService.getAverageRating());
+            model.addAttribute("totalCustomers", customerServices.getTotalCustomers());
+            model.addAttribute("newCustomers", customerServices.getNewCustomersThisMonth());
+            Double returnRate = customerServices.getReturnRate();
+            model.addAttribute("avgRating", customerServices.getAverageRating());
             model.addAttribute("admin", loggedInAdmin);
 
             return "admin_customer_management";
@@ -135,23 +159,28 @@ public class CustomerController {
     public String getCustomerDetail(
             @PathVariable(value = "id") Integer customerId,
             HttpSession session,
-            Model model) {
+            Model model,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
 
         Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/loginForm";
+            return "redirect:/auth/loginForm";
         }
 
         try {
-            Customer customer = customerService.getCustomerById(customerId);
 
+            Customer customer = customerServices.getCustomerById(customerId);
             if (customer == null) {
-                model.addAttribute("error", "Khách hàng không tồn tại!");
-                return "admin_customer_management";
+                redirectAttributes.addFlashAttribute("error", "Khách hàng không tồn tại hoặc đã bị xóa!");
+                return "redirect:/customer";
             }
 
-            Long tourCount = customerService.getCustomerTourCount(customerId);
-            java.math.BigDecimal totalSpent = customerService.getCustomerTotalSpent(customerId);
+            Long tourCount = customerServices.getCustomerTourCount(customerId);
+            java.math.BigDecimal totalSpent = customerServices.getCustomerTotalSpent(customerId);
+
+
+            // Lấy lịch sử các tour khách đã đặt
+            model.addAttribute("bookings", customerServices.getCustomerBookings(customerId));
 
             model.addAttribute("customer", customer);
             model.addAttribute("tourCount", tourCount);
@@ -160,8 +189,360 @@ public class CustomerController {
 
             return "admin_customer_detail";
         } catch (Exception e) {
-            model.addAttribute("error", "Lỗi: " + e.getMessage());
-            return "admin_customer_management";
+            redirectAttributes.addFlashAttribute("error", "Lỗi: " + e.getMessage());
+            return "redirect:/customer";
         }
+    }
+
+    @GetMapping("booking")
+    public String customerBookingHistory(Model model, HttpSession session)
+    {
+        Customer customer = (Customer) session.getAttribute("loggedInCustomer");
+        List<Booking> listBookingOfCustomer=bookingServices.getBookingByPassenger(customer);
+        model.addAttribute("listBooking", listBookingOfCustomer);
+        return "my_tour";
+    }
+
+
+
+    @PostMapping("/toggle-status")
+    public String toggleCustomerStatus(
+            @RequestParam("customerId") Integer customerId,
+            HttpSession session,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+
+        System.out.println("===== NHẬN REQUEST KHÓA/MỞ KHÓA TỪ GIAO DIỆN =====");
+        System.out.println("Customer ID nhận được là: " + customerId);
+
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) {
+            return "redirect:/admin/loginForm";
+        }
+
+        try {
+            customerServices.toggleCustomerStatus(customerId);
+
+            redirectAttributes.addFlashAttribute("message", "Cập nhật trạng thái thành công!");
+        } catch (Exception e) {
+            // IN LỖI ĐỎ RA CONSOLE ĐỂ BẮT BỆNH
+            System.err.println("LỖI RỒI: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật: " + e.getMessage());
+        }
+
+        return "redirect:/customer";
+    }
+
+    //Profile
+    @GetMapping("/profile")
+    public String profile(HttpSession session, Model model) {
+
+        Customer loggedInCustomer =
+                (Customer) session.getAttribute("loggedInCustomer");
+
+        if (loggedInCustomer == null) {
+            return "redirect:/customer/loginForm";
+        }
+
+        // lấy dữ liệu mới nhất từ DB
+        Customer customer =
+                customerServices.getCustomerById(loggedInCustomer.getCustomerId());
+
+        model.addAttribute("customer", customer);
+
+        return "personal_profile";
+    }
+
+    /// Change password profile
+    @PostMapping("/change-password")
+    public String changePassword(
+            @RequestParam("currentPassword") String currentPassword,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("confirmPassword") String confirmPassword,
+            HttpSession session,
+            Model model) {
+
+        Customer loggedInCustomer =
+                (Customer) session.getAttribute("loggedInCustomer");
+
+        if (loggedInCustomer == null) {
+            return "redirect:/customer/loginForm";
+        }
+
+        Customer customer =
+                customerServices.getCustomerById(loggedInCustomer.getCustomerId());
+
+        // kiểm tra mật khẩu cũ
+        if (!passwordEncoder.matches(currentPassword, customer.getPasswordHash())) {
+
+            model.addAttribute("customer", customer);
+            model.addAttribute("error", "Mật khẩu hiện tại không đúng!");
+
+            return "customer_profile";
+        }
+
+        // kiểm tra xác nhận mật khẩu
+        if (!newPassword.equals(confirmPassword)) {
+
+            model.addAttribute("customer", customer);
+            model.addAttribute("error", "Xác nhận mật khẩu không khớp!");
+
+            return "customer_profile";
+        }
+
+        // kiểm tra độ dài
+        if (newPassword.length() < 6) {
+
+            model.addAttribute("customer", customer);
+            model.addAttribute("error", "Mật khẩu phải ít nhất 6 ký tự!");
+
+            return "customer_profile";
+        }
+
+        customerServices.changePassword(customer.getCustomerId(), newPassword);
+
+        model.addAttribute("customer", customer);
+        model.addAttribute("message", "Đổi mật khẩu thành công!");
+
+        return "personal_profile";
+    }
+
+
+    //update profile
+    @PostMapping("/profile/update")
+    public String updateProfile(@ModelAttribute Customer formCustomer,
+                                HttpSession session,
+                                Model model) {
+
+        Customer loggedInCustomer =
+                (Customer) session.getAttribute("loggedInCustomer");
+
+        if (loggedInCustomer == null) {
+            return "redirect:/customer/loginForm";
+        }
+
+        // lấy dữ liệu cũ từ DB
+        Customer customer =
+                customerServices.getCustomerById(
+                        loggedInCustomer.getCustomerId());
+
+        //  Kiểm tra Họ và tên không được trống
+        if (formCustomer.getFullName() == null || formCustomer.getFullName().trim().isEmpty()) {
+            model.addAttribute("customer", customer);
+            model.addAttribute("error", "Lỗi: Họ và tên không được để trống!");
+            return "personal_profile";
+        }
+
+        // Kiểm tra định dạng Email hợp lệ
+        if (formCustomer.getEmail() == null || formCustomer.getEmail().trim().isEmpty() || !formCustomer.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            model.addAttribute("customer", customer);
+            model.addAttribute("error", "Lỗi: Email không đúng định dạng!");
+            return "personal_profile";
+        }
+
+        // Kiểm tra số điện thoại chỉ chứa các chữ số
+        if (formCustomer.getPhone() == null || formCustomer.getPhone().trim().isEmpty() || !formCustomer.getPhone().matches("^[0-9]+$")) {
+            model.addAttribute("customer", customer);
+            model.addAttribute("error", "Lỗi: Số điện thoại phải là số!");
+            return "personal_profile";
+        }
+
+        // chỉ update field được sửa
+        if(formCustomer.getFullName() != null)
+            customer.setFullName(formCustomer.getFullName());
+
+        if(formCustomer.getEmail() != null)
+            customer.setEmail(formCustomer.getEmail());
+
+        if(formCustomer.getPhone() != null)
+            customer.setPhone(formCustomer.getPhone());
+
+        if(formCustomer.getAddress() != null)
+            customer.setAddress(formCustomer.getAddress());
+
+        // save object đầy đủ
+        customerServices.updateCustomer(customer);
+
+        session.setAttribute("loggedInCustomer", customer);
+
+        model.addAttribute("customer", customer);
+        model.addAttribute("message", "Cập nhật thành công!");
+
+        return "personal_profile";
+    }
+    //payment history
+    @GetMapping("/payment-history")
+    public String paymentHistory(HttpSession session,
+                                 Model model) {
+
+        Customer loggedInCustomer =
+                (Customer) session.getAttribute("loggedInCustomer");
+
+        if (loggedInCustomer == null) {
+            return "redirect:/customer/loginForm";
+        }
+
+        Integer customerId = loggedInCustomer.getCustomerId();
+
+        List<Payment> payments =
+                paymentService.getPaymentsByCustomer(customerId);
+
+        List<Bill> bills =
+                billService.getBillsByCustomer(customerId);
+
+        // Tính tổng các giao dịch SUCCESS
+        double totalAmount = payments.stream()
+                .filter(p -> p.getNotes() == null || "SUCCESS".equalsIgnoreCase(p.getNotes()))
+                .map(Payment::getAmount)
+                .filter(Objects::nonNull)
+                .mapToDouble(BigDecimal::doubleValue)
+                .sum();
+
+        model.addAttribute("payments", payments);
+        model.addAttribute("bills", bills);
+
+        // THÊM DÒNG NÀY
+        model.addAttribute("totalAmount", totalAmount);
+
+        return "payment_history";
+    }
+
+    // ==========================================
+    // 3. THÊM KHÁCH HÀNG MỚI
+    // ==========================================
+    @GetMapping("/add")
+    public String showAddCustomerForm(Model model, HttpSession session) {
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/admin/loginForm";
+
+        model.addAttribute("customer", new Customer());
+        return "add_customer";
+    }
+
+    @PostMapping("/save")
+    public String saveCustomer(@ModelAttribute("customer") Customer customer, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        // 1. Kiểm tra Họ và tên không được trống
+        if (customer.getFullName() == null || customer.getFullName().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Họ và tên không được để trống!");
+            return "redirect:/customer/add";
+        }
+        // 2. Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
+        if (customer.getEmail() == null || customer.getEmail().trim().isEmpty() || !customer.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Email không đúng định dạng!");
+            return "redirect:/customer/add";
+        }
+        // 3. Kiểm tra số điện thoại chỉ được chứa số
+        if (customer.getPhone() == null || customer.getPhone().trim().isEmpty() || !customer.getPhone().matches("^[0-9]+$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Số điện thoại phải là số!");
+            return "redirect:/customer/add";
+        }
+        try {
+            // Cấp mật khẩu mặc định cho khách được Admin tạo tay (phải đủ 5 ký tự để thỏa mãn validation)
+            customer.setPasswordHash("123456");
+            customer.setIsActive(true);
+
+            customerServices.saveCustomer(customer);
+            redirectAttributes.addFlashAttribute("message", "Thêm khách hàng mới thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Email có thể đã tồn tại trong hệ thống.");
+            return "redirect:/customer/add";
+        }
+        return "redirect:/customer";
+    }
+
+    // ==========================================
+    // SỬA THÔNG TIN KHÁCH HÀNG
+    // ==========================================
+    @GetMapping("/edit/{id}")
+    public String showEditCustomerForm(@PathVariable("id") Integer id, Model model, HttpSession session) {
+        Employee loggedInAdmin = (Employee) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) return "redirect:/auth/loginForm";
+
+        Customer customer = customerServices.getCustomerById(id);
+        if (customer == null) {
+            return "redirect:/customer";
+        }
+        model.addAttribute("customer", customer);
+        return "edit_customer";
+    }
+
+    @PostMapping("/update")
+    public String updateCustomer(@ModelAttribute("customer") Customer customer, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        // 1. Kiểm tra Họ và tên không được trống
+        if (customer.getFullName() == null || customer.getFullName().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Họ và tên không được để trống!");
+            return "redirect:/customer/edit/" + customer.getCustomerId();
+        }
+        // 2. Kiểm tra định dạng Email hợp lệ (Regex có tên miền và phần mở rộng)
+        if (customer.getEmail() == null || customer.getEmail().trim().isEmpty() || !customer.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Email không đúng định dạng!");
+            return "redirect:/customer/edit/" + customer.getCustomerId();
+        }
+        // 3. Kiểm tra số điện thoại chỉ được chứa số
+        if (customer.getPhone() == null || customer.getPhone().trim().isEmpty() || !customer.getPhone().matches("^[0-9]+$")) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: Số điện thoại phải là số!");
+            return "redirect:/customer/edit/" + customer.getCustomerId();
+        }
+        try {
+            // Rất quan trọng: Lấy dữ liệu cũ để không làm mất mật khẩu và ngày tạo
+            Customer oldCustomer = customerServices.getCustomerById(customer.getCustomerId());
+            if (oldCustomer != null) {
+                customer.setPasswordHash(oldCustomer.getPasswordHash());
+                customer.setCreatedAt(oldCustomer.getCreatedAt());
+                customer.setIsActive(oldCustomer.getIsActive());
+
+                customerServices.saveCustomer(customer);
+                redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin khách hàng thành công!");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật: " + e.getMessage());
+            return "redirect:/customer/edit/" + customer.getCustomerId();
+        }
+        return "redirect:/customer";
+    }
+
+    @GetMapping("/booking/{idBooking}/review")
+    public String customerBookingReview(Model model,
+                                        @PathVariable("idBooking") int idBooking,
+                                        HttpSession session)
+    {
+        Booking booking=bookingServices.getBookingById(idBooking);
+        model.addAttribute("booking", booking);
+        Customer Customer=(Customer)session.getAttribute("loggedInCustomer");
+
+        return  "my_tour_review";
+    }
+
+    @PostMapping("/booking/{idBooking}/review/save_review")
+    public String saveReview(Model model,
+                             @PathVariable("idBooking") int idBooking,
+                             @RequestParam("feedback") String feedback,
+                             @RequestParam("rating") double rating,
+                             HttpSession session )
+    {
+        Booking booking=bookingServices.getBookingById(idBooking);
+        Customer customer=(Customer)session.getAttribute("loggedInCustomer");
+        Review review=new Review(customer,booking.getDeparture().getTour(), feedback,rating);
+        reviewServices.addReview(review);
+        return "redirect:/customer/booking/"+idBooking;
+    }
+
+    @GetMapping("/booking/{idBooking}")
+    public String customerBookingHistory(Model model, @PathVariable("idBooking") int idBooking,
+                                         HttpSession session)
+    {
+        Customer customer = (Customer) session.getAttribute("loggedInCustomer");
+        Booking booking=bookingServices.getBookingById(idBooking);
+        List<BookingPassenger> listPassenger=bookingServices.getPassengerByBookingId(idBooking);
+        //Kiểm tra điều kiện để hiển thị nút review
+        int showReview=0;
+        List<Review> review=reviewServices.getAllReviewByCustomerAnhTour(customer,booking.getDeparture().getTour());
+        if ("completed".equalsIgnoreCase(booking.getStatus()) && review.isEmpty()) {
+            showReview = 1;
+        }
+        model.addAttribute("listPassenger", listPassenger);
+        model.addAttribute("booking", booking);
+        model.addAttribute("showReview",showReview);
+        return "my_tour_detail";
     }
 }

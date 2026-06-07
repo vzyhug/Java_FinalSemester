@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class DepartureService {
+public class DepartureServices {
     @Autowired
     private TourDepartureRepository tourDepartureRepository;
 
@@ -289,19 +289,53 @@ public class DepartureService {
     }
 
     /**
-     * Hủy chuyến đi (soft delete)
+     * Hủy chuyến đi (chuyển trạng thái sang cancelled)
      */
     public boolean cancelDeparture(Integer departureId) {
         try {
-            TourDeparture departure = getDepartureById(departureId);
+            // Đã sửa 'departureRepository' thành 'tourDepartureRepository'
+            TourDeparture departure = tourDepartureRepository.findById(departureId).orElse(null);
+
             if (departure != null) {
+                // Đổi trạng thái thành 'cancelled' (đã hủy)
                 departure.setStatus("cancelled");
+                // Lưu lại vào Database
                 tourDepartureRepository.save(departure);
                 return true;
             }
             return false;
         } catch (Exception e) {
-            System.out.println("Lỗi trong cancelDeparture: " + e.getMessage());
+            System.out.println("Lỗi khi hủy chuyến: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Hoàn thành chuyến đi (chuyển trạng thái sang completed và hoàn thành các booking liên quan)
+     */
+    @org.springframework.transaction.annotation.Transactional
+    public boolean completeDeparture(Integer departureId) {
+        try {
+            TourDeparture departure = tourDepartureRepository.findById(departureId).orElse(null);
+            if (departure != null) {
+                departure.setStatus("completed");
+                tourDepartureRepository.save(departure);
+
+                // Cập nhật các booking tương ứng từ confirmed/paid sang completed
+                List<Booking> bookings = bookingRepository.findByDeparture_DepartureId(departureId);
+                if (bookings != null) {
+                    for (Booking b : bookings) {
+                        if ("confirmed".equalsIgnoreCase(b.getStatus()) || "paid".equalsIgnoreCase(b.getStatus())) {
+                            b.setStatus("completed");
+                            bookingRepository.save(b);
+                        }
+                    }
+                }
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            System.out.println("Lỗi khi hoàn thành chuyến đi: " + e.getMessage());
             return false;
         }
     }
@@ -323,5 +357,16 @@ public class DepartureService {
             System.out.println("Lỗi trong assignGuide: " + e.getMessage());
             return false;
         }
+    }
+
+
+    public List<TourDeparture> searchDepartures(String keyword, LocalDate date) {
+        return tourDepartureRepository.searchDepartures(keyword, date);
+    }
+    public List<TourDeparture> getDeparturesByMonthAndYear(int month, int year) {
+        return tourDepartureRepository.getDeparturesByMonthAndYear(month, year);
+    }
+    public List<TourDeparture> getPendingGuideDeparturesList() {
+        return tourDepartureRepository.findByGuideIsNull();
     }
 }

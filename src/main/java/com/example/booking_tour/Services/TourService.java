@@ -1,5 +1,6 @@
 package com.example.booking_tour.Services;
 
+import com.example.booking_tour.Model.Province;
 import com.example.booking_tour.Model.Tour;
 import com.example.booking_tour.Model.TourDeparture;
 import com.example.booking_tour.Repository.TourDepartureRepository;
@@ -192,5 +193,36 @@ public class TourService {
             System.out.println("Lỗi trong deactivateTour: " + e.getMessage());
             return false;
         }
+    }
+
+    //------- Thuy - Tourservice -----------
+    @Autowired
+    TourRepository repo;
+
+    //Lấy tour dựa trên id
+    public Tour getToursByTourId(Integer id)
+    {
+        return repo.findById(id).orElse(null);
+    }
+
+    //Sort danh sách trên giá
+    public List<Tour> sortTourByPrice(boolean isAcs)
+    {
+        if(isAcs)
+        {
+            return repo.findAllByOrderByMinPriceAsc();
+        }
+        return repo.findAllByOrderByMinPriceDesc();
+    }
+
+    //Lấy danh sách tour dựa trên provide
+    public List<Tour> getTourByProvince(Province province)
+    {
+        return repo.findByProvince(province);
+    }
+
+    public List<Tour> get4Tours()
+    {
+        return repo.findTop4By();
     }
 }
